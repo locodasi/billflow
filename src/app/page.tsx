@@ -1,5 +1,7 @@
 import Image from "next/image";
 
+// Este deberia validar la sesion y redireccionar a loggin o a la url base de dasboard (osea no existe nada en localhost.com/)
+
 export default function Home() {
   return (
     <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">

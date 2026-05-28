@@ -1,0 +1,8 @@
+@import "./reset.css";
+@import "./vars.css";
+
+body {
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
+    font-family: var(--font-sans), sans-serif;
+}
