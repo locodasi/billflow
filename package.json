@@ -6,13 +6,16 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "icons": "node generateIcons.js"
   },
   "dependencies": {
+    "@supabase/auth-helpers-nextjs": "0.15.0",
+    "@supabase/supabase-js": "2.106.2",
     "next": "16.2.6",
     "react": "19.2.4",
     "react-dom": "19.2.4",
-    "styled-components": "^6.4.2"
+    "styled-components": "6.4.2"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "4",

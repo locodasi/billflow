@@ -1,7 +1,8 @@
 'use client'
 
-import InputWrapper, {InputStyle} from "./Input";
+import InputWrapper, {InputStyle} from "./InputWrapper";
 import { TextInputProps } from "./types";
+
 
 const TextInput = ({onChange, value, disabled, error, label, placeholder, styles}: TextInputProps) => {
 

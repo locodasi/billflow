@@ -2,7 +2,9 @@
 
 import {useState} from "react";
 
-import InputWrapper, {InputStyle} from "./Input";
+import Icon from "@/components/icons/Icon";
+
+import InputWrapper, {InputStyle} from "./InputWrapper";
 import { PasswordInputProps } from "./types";
 
 const PasswordInput = ({onChange, value, disabled, error, label, placeholder, styles, showToggle}: PasswordInputProps) => {
@@ -20,7 +22,12 @@ const PasswordInput = ({onChange, value, disabled, error, label, placeholder, st
             />
 
             {showToggle && (
-                <p>a</p>
+                <Icon 
+                    icon={type === "password" ? "eye-empty" : "eye-off"}
+                    size={20}
+                    iconColor={"var(--Icons-icon-700)"}
+                    onClick={() => setType(type === "password" ? "text" : "password")}
+                />
             )}
         </InputWrapper>
     )

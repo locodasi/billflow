@@ -8,7 +8,7 @@ const InputWrapper = ({ label, error, disabled, children}: {label?: string, erro
         <Wrapper>
             {label && <Label>{label}</Label>}
 
-            <InputWrapperStyle error={!!error} style={{ opacity: disabled ? 0.5 : 1, pointerEvents: disabled ? 'none' : 'auto' }}>
+            <InputWrapperStyle $error={!!error} style={{ opacity: disabled ? 0.5 : 1, pointerEvents: disabled ? 'none' : 'auto' }}>
                 {children}
             </InputWrapperStyle>
 
@@ -47,7 +47,7 @@ export const Label = styled.p`
     line-height: 1.25rem; /* 142.857% */
 `;
 
-export const InputWrapperStyle = styled.div<{ error?: boolean}>`
+export const InputWrapperStyle = styled.div<{ $error?: boolean}>`
     display: flex;
     padding: var(--padding-8, 0.5rem) var(--padding-8, 0.5rem) var(--padding-8, 0.5rem) var(--padding-12, 0.75rem);
     justify-content: space-between;
@@ -61,7 +61,7 @@ export const InputWrapperStyle = styled.div<{ error?: boolean}>`
     /* Effects/Shadows/button-shadow-base */
     box-shadow: 0px 1px 2px 0px rgba(21, 28, 36, 0.05);
 
-    ${({ error }) => error && `
+    ${({ $error }) => $error && `
         border: 1px solid var(--Error-500, #FF4D4D);
     `}
 
