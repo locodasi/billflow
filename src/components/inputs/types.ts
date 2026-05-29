@@ -1,0 +1,33 @@
+export interface BaseInputProps {
+    label?: string;
+    placeholder?: string;
+    error?: string;
+    disabled?: boolean;
+    styles?: React.CSSProperties;
+}
+
+export interface TextInputProps extends BaseInputProps {
+    value: string;
+    onChange: (value: string) => void;
+}
+
+export interface NumberInputProps extends BaseInputProps {
+    value: number;
+    onChange: (value: number) => void;
+    min?: number;
+    max?: number;
+    step?: number;
+}
+
+export interface PasswordInputProps extends BaseInputProps {
+    value: string;
+    onChange: (value: string) => void;
+    showToggle?: boolean;
+}
+
+export interface DateInputProps extends BaseInputProps {
+    value: string;          // format "YYYY-MM-DD"
+    onChange: (value: string) => void;
+    min?: string;
+    max?: string;
+}

@@ -79,3 +79,29 @@ create index on public.payments(project_id);
 create index on public.payments(status);
 create index on public.payment_invoices(payment_id);
 create index on public.payment_invoices(invoice_id);
+
+
+-- Función que se ejecuta cuando se crea un usuario
+create or replace function public.handle_new_user()
+returns trigger
+language plpgsql
+security definer set search_path = public
+as $$
+begin
+    insert into public.profiles (id, email, full_name, language, role)
+    values (
+        new.id,
+        new.email,
+        coalesce(new.raw_user_meta_data->>'full_name', ''),
+        coalesce(new.raw_user_meta_data->>'language', 'en'),
+        'client'
+    );
+    return new;
+end;
+$$;
+
+-- Trigger que llama a la función al crear un usuario
+create or replace trigger on_auth_user_created
+    after insert on auth.users
+    for each row
+    execute function public.handle_new_user();

@@ -254,7 +254,7 @@
 }
 
 /* color-tokens-light-mode.css */
-:root {
+/* :root {
 	--Background-Colors-bg-disabled: var(--Base-200);
 	--Background-Colors-bg-primary: var(--Base-0-White);
 	--Background-Colors-bg-primary_hover: var(--Base-50);
@@ -318,10 +318,11 @@
 
 	--Scrollbar-track: #CED2DA;
 	--Scrollbar-thumb: #97A1AF;
-}
+} */
 
 
-[data-theme='dark'] {
+/* [data-theme='dark'] { */
+:root{
   /* color-tokens-dark-mode.css */
 	--Background-Colors-bg-disabled: var(--Base-800);
 	--Background-Colors-bg-primary: var(--Base-900);
