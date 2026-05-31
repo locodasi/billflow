@@ -33,3 +33,42 @@ const Tooltip = ({ content, children, position, interactive = false, theme = "cu
 };
 
 export default Tooltip;
+
+
+import { useState, useCallback } from 'react';
+
+interface ClickTooltipProps {
+    content: (close: () => void) => React.ReactNode; // ← recibe fn para cerrar
+    children: React.ReactElement;
+    position?: Placement;
+    interactive?: boolean;
+    theme?: "transparent" | "custom";
+    offset?: [number, number];
+}
+
+export const ClickTooltip = ({ content, children, position, interactive = true, theme = "custom", offset = [0, 10] }: ClickTooltipProps) => {
+    const [visible, setVisible] = useState(false);
+
+    const close = useCallback(() => setVisible(false), []);
+    const toggle = useCallback(() => setVisible(v => !v), []);
+
+    return (
+        <Tippy
+            render={attrs => (
+                <div className="tippy-box" data-theme={theme} {...attrs}>
+                    <div className="tippy-content">
+                        {content(close)} {/* ← le pasás close al contenido */}
+                    </div>
+                </div>
+            )}
+            visible={visible}
+            onClickOutside={close}
+            placement={position || "bottom"}
+            appendTo={() => document.body}
+            interactive={interactive}
+            offset={offset}
+        >
+            <span onClick={toggle}>{children}</span>
+        </Tippy>
+    );
+};

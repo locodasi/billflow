@@ -7,12 +7,12 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { useUserStore } from "@/stores/userStore";
-import {useProjectsStore} from "@/stores/projectStore";
 
 import Icon from "@/components/icons/Icon";
 
 import SidenavButton from "./SidenavButton";
 import UserButton from "./UserButton";
+import SelectProject from "./SelectProject";
 
 
 const Sidenav = () => {
@@ -23,18 +23,18 @@ const Sidenav = () => {
 
     const router = useRouter();
 
-    const goTo = (url:string) => {
+    const goTo = (url: string) => {
         router.push(url);
     }
 
     return (
         <Wrapper $isExpanded={isExpanded}>
             <div style={{ display: "flex", alignItems: "center", justifyContent: isExpanded ? "space-between" : "center" }}>
-                {isExpanded && <Project />}
+                {isExpanded && <SelectProject />}
                 <Icon icon={isExpanded ? "sidebar-collapse" : "sidebar-expand"} size={24} iconColor="var(--Icons-icon-400)" grab onClick={() => setIsExpanded(prev => !prev)} />
             </div>
 
-            <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem"}}>
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
                 <SidenavButton isExpanded={isExpanded} text="Facturas" icon="page" onClick={() => goTo("/invoices")} />
                 <SidenavButton isExpanded={isExpanded} text="Recibos" icon="journal" onClick={() => goTo("/payments")} />
                 {role === "admin" && <SidenavButton isExpanded={isExpanded} text="Clientes" icon="user" onClick={() => goTo("/clients")} />}
@@ -62,29 +62,3 @@ const Wrapper = styled.div<{ $isExpanded: boolean }>`
     gap: 1rem;
 `;
 
-const Project = () => {
-    const projects = useProjectsStore(state => state.projects);
-    const project = useProjectsStore(state => state.project);
-    
-    return(
-        <ProjectWrapper>
-            <p>{project ? project.name : "No project selected"}</p>
-            <p>{projects.length} projects</p>
-        </ProjectWrapper>
-    )
-}
-
-const ProjectWrapper = styled.div`
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: var(--Background-Colors-bg-primary);
-    border: 1px solid var(--Border-Colors-border-secondary);
-    border-radius: 0.5rem;
-    width: 100%;
-
-    color: var(--Text-text-primary);
-    font-size: 0.875rem;
-    padding: 0.5rem;
-    border-radius: 0.5rem;
-`;
