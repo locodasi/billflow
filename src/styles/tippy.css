@@ -1,0 +1,34 @@
+.tippy-box[data-theme~='custom'] {
+	display: flex;
+	padding: 0.375rem 0.5rem;
+	align-items: center;
+	gap: 0.25rem;
+	border-radius: 0.5rem;
+	background: var(--Background-Colors-bg-tertiary, #F2F4F7);
+
+	color: var(--Text-text-primary, #141C25);
+
+	/* Paragraph S/Medium */
+	font-family: Inter;
+	font-size: 0.875rem;
+	font-style: normal;
+	font-weight: 500;
+	line-height: 1.25rem; /* 142.857% */
+}
+
+.tippy-box[data-theme~='custom'] > .tippy-arrow {
+	color: var(--Background-Colors-bg-tertiary, #F2F4F7);
+}
+
+.tippy-box[data-theme~='transparent'] {
+	padding: 0;
+	background: transparent;
+	box-shadow: none;
+	border: none;
+}
+
+.tippy-box[data-theme~='transparent'] > .tippy-arrow {
+	background: transparent;
+	box-shadow: none;
+	display: none;
+}

@@ -27,6 +27,8 @@ type ReturnIconProps = {
     iconColor?: string;
     fillColor?: string;
     grab?: boolean;
+    onlySvg?: boolean;
+    className?: string;
 };
 
 type IconWrapperProps = {
@@ -128,6 +130,8 @@ export const ReturnIcon = ({
     iconColor,
     grab,
     fillColor,
+    onlySvg,
+    className,
 }: ReturnIconProps) => {
     if (typeof icon === "string") {
         return (
@@ -137,6 +141,8 @@ export const ReturnIcon = ({
                 fillColor={fillColor}
                 iconColor={iconColor}
                 grab={grab}
+                onlySvg={onlySvg}
+                className={className}
             />
         );
     }

@@ -254,7 +254,7 @@
 }
 
 /* color-tokens-light-mode.css */
-/* :root {
+:root {
 	--Background-Colors-bg-disabled: var(--Base-200);
 	--Background-Colors-bg-primary: var(--Base-0-White);
 	--Background-Colors-bg-primary_hover: var(--Base-50);
@@ -318,11 +318,10 @@
 
 	--Scrollbar-track: #CED2DA;
 	--Scrollbar-thumb: #97A1AF;
-} */
+}
 
 
-/* [data-theme='dark'] { */
-:root{
+[data-theme='dark'] {
   /* color-tokens-dark-mode.css */
 	--Background-Colors-bg-disabled: var(--Base-800);
 	--Background-Colors-bg-primary: var(--Base-900);
@@ -332,7 +331,7 @@
 	--Background-Colors-bg-quarterary: var(--Base-700);
 	--Background-Colors-bg-secondary: var(--Base-800);
 	--Background-Colors-bg-secondary_hover: var(--Base-750);
-	--Background-Colors-bg-tertiary: var(--Base-750);
+	--Background-Colors-bg-tertiary: var(--Base-750); 
 
 
 	--Background-Colors-bg-primary-30-percent: color-mix(in srgb, var(--Background-Colors-bg-primary) 70%, transparent);

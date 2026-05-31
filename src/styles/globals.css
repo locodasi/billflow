@@ -1,8 +1,13 @@
 @import "./reset.css";
 @import "./vars.css";
+@import "./tippy.css";
 
 body {
     background-color: var(--bg-tertiary);
     color: var(--text-primary);
     font-family: var(--font-inter), var(--font-sans), sans-serif;
+}
+
+* {
+    font-family: var(--font-inter);
 }

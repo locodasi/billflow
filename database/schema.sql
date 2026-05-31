@@ -105,3 +105,30 @@ create or replace trigger on_auth_user_created
     after insert on auth.users
     for each row
     execute function public.handle_new_user();
+
+
+-- Primero activás RLS en la tabla
+alter table public.profiles enable row level security;
+
+-- Policy para que cada usuario solo vea su propio perfil
+create policy "Users can view own profile"
+on public.profiles
+for select
+using (auth.uid() = id);
+
+-- La reemplazás usando security definer para evitar la recursión
+create or replace function public.get_user_role(user_id uuid)
+returns text
+language sql
+security definer
+as $$
+    select role from public.profiles where id = user_id;
+$$;
+
+-- Policy de admin sin recursión
+create policy "Admin can view all profiles"
+on public.profiles
+for select
+using (
+    public.get_user_role(auth.uid()) = 'admin'
+);
