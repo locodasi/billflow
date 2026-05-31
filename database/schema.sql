@@ -132,3 +132,53 @@ for select
 using (
     public.get_user_role(auth.uid()) = 'admin'
 );
+
+-- Clients: solo el admin puede ver, crear, editar
+create policy "Admin can manage clients"
+on public.clients
+for all
+using (
+    public.get_user_role(auth.uid()) = 'admin'
+);
+
+-- Projects: solo el admin puede ver, crear, editar
+create policy "Admin can manage projects"
+on public.projects
+for all
+using (
+    public.get_user_role(auth.uid()) = 'admin'
+);
+
+-- Stats por cliente (para /clients)
+create or replace view client_stats as
+select
+    c.id as client_id,
+    c.name,
+    c.email,
+    count(distinct p.id) as project_count,
+    coalesce(sum(i.amount), 0) as total_invoiced,
+    coalesce(sum(case when i.status = 'paid' then i.amount else 0 end), 0) as total_paid,
+    coalesce(sum(case when i.status = 'pending' then i.amount else 0 end), 0) as total_pending
+from clients c
+left join projects p on p.client_id = c.id
+left join invoices i on i.project_id = p.id
+group by c.id, c.name, c.email;
+
+-- Stats por proyecto (para /clients/[clientId])
+create or replace view project_stats as
+select
+    p.id as project_id,
+    p.name,
+    p.client_id,
+    p.currency,
+    p.bill_address,
+    coalesce(sum(i.amount), 0) as total_invoiced,
+    coalesce(sum(case when i.status = 'paid' then i.amount else 0 end), 0) as total_paid,
+    coalesce(sum(case when i.status = 'pending' then i.amount else 0 end), 0) as total_pending,
+    count(i.id) as invoice_count
+from projects p
+left join invoices i on i.project_id = p.id
+group by p.id, p.name, p.client_id, p.currency, p.bill_address;
+
+alter view client_stats set (security_invoker = on);
+alter view project_stats set (security_invoker = on);

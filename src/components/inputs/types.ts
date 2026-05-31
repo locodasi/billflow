@@ -11,6 +11,12 @@ export interface TextInputProps extends BaseInputProps {
     onChange: (value: string) => void;
 }
 
+export interface SearchInputProps extends BaseInputProps {
+    onSearch: (value: string) => void;
+    placeholder?: string;
+    delay?: number;
+}
+
 export interface NumberInputProps extends BaseInputProps {
     value: number;
     onChange: (value: number) => void;

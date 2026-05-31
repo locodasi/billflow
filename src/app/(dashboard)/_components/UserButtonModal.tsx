@@ -5,9 +5,7 @@ import {useRouter} from "next/navigation";
 import { logout } from "@/lib/auth";
 
 import { useUIStore } from "@/stores/uiStore";
-import { useUserStore } from "@/stores/userStore";
 
-import Icon from "@/components/icons/Icon";
 import Tabs, { Tab } from "@/components/Tab";
 import IconButton from "@/components/IconButton";
 
@@ -18,8 +16,6 @@ const UserButtonModal = () => {
     const { theme, setTheme } = useUIStore();
 
     const router = useRouter();
-
-    const { fullName, role } = useUserStore();
 
     const handleLogout = async () => {
         try {

@@ -53,6 +53,7 @@ export const InputWrapperStyle = styled.div<{ $error?: boolean}>`
     justify-content: space-between;
     align-items: center;
     align-self: stretch;
+    gap: 0.25rem;
 
     border-radius: var(--radius-m, 0.625rem);
     border: 1px solid var(--Border-Colors-border-secondary, #E4E7EC);

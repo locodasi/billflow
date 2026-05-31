@@ -51,6 +51,15 @@ const SIZES = {
     }
 }
 
+const ICON_SIZE = {
+    "extra-small": 13,
+    "ultra-small": 16,
+    "small": 16,
+    "medium": 20,
+    "large": 20,
+    "extra-large": 20
+}
+
 interface ButtonProps {
     text: string;
     onClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
@@ -74,9 +83,9 @@ const Button: React.FC<ButtonProps> = ({ text, onClick, type = "default", disabl
     return(
         // <div> removed this recently to give it 100% width (check if it breaks anything)
             <ButtonComponent onClick={onClick} disabled={disabled} style={cssStyles} $border={border} $size={size} type={buttonType}>
-                {firstIcon && <ReturnIcon icon={firstIcon} size={16} iconColor="var(--Icons-icon-700)" />}
+                {firstIcon && <ReturnIcon icon={firstIcon} size={ICON_SIZE[size]} iconColor="var(--Icons-icon-700)" grab/>}
                 {text}
-                {secondIcon && <ReturnIcon icon={secondIcon} size={16} iconColor="var(--Icons-icon-700)" />}
+                {secondIcon && <ReturnIcon icon={secondIcon} size={ICON_SIZE[size]} iconColor="var(--Icons-icon-700)" grab/>}
             </ButtonComponent>
         // </div>
     )

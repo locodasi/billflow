@@ -10,14 +10,15 @@ interface SidenavButtonProps {
     isExpanded: boolean;
     text: string;
     icon: Icons;
+    onClick: () => void;
 }
 
-const SidenavButton = ({ isExpanded, text, icon }: SidenavButtonProps) => {
+const SidenavButton = ({ isExpanded, text, icon, onClick }: SidenavButtonProps) => {
 
     if (!isExpanded) {
         return (
             <Tooltip content={text} position="right" arrow={false}>
-                <Wrapper $isExpanded={isExpanded}>
+                <Wrapper $isExpanded={isExpanded} onClick={onClick}>
                     <Icon icon={icon} size={24} iconColor="var(--Icons-icon-400)" grab />
                 </Wrapper>
             </Tooltip>
@@ -25,7 +26,7 @@ const SidenavButton = ({ isExpanded, text, icon }: SidenavButtonProps) => {
     }
 
     return (
-        <Wrapper $isExpanded={isExpanded}>
+        <Wrapper $isExpanded={isExpanded} onClick={onClick}>
             <Icon icon={icon} size={20} iconColor="var(--Icons-icon-400)" grab />
             {isExpanded && <Text>{text}</Text>}
         </Wrapper>
