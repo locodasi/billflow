@@ -1,7 +1,7 @@
 // src/app/(dashboard)/clients/[id]/actions.ts
 'use server'
 
-import { supabaseAdmin } from "@/lib/supabase.server";
+import { createServerClient } from "@/lib/supabase.server";
 import { ActionResult } from "@/types/actions";
 
 export const createProjectAction = async (
@@ -21,7 +21,9 @@ export const createProjectAction = async (
         error: { field: "currency", message: "La moneda es requerida" }
     };
 
-    const { data, error } = await supabaseAdmin
+    const supabase = await createServerClient();
+
+    const { data, error } = await supabase
         .from("projects")
         .insert({
             client_id: clientId,
@@ -63,7 +65,9 @@ export const updateProjectAction = async (
         error: { field: "currency", message: "La moneda es requerida" }
     };
 
-    const { data, error } = await supabaseAdmin
+    const supabase = await createServerClient();
+
+    const { data, error } = await supabase
         .from("projects")
         .update({
             name,

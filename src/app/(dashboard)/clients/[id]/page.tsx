@@ -1,21 +1,22 @@
 // src/app/(dashboard)/clients/[id]/page.tsx
 "use server"
 
-import { supabaseAdmin } from "@/lib/supabase.server";
+import { createServerClient } from "@/lib/supabase.server";
 import ClientView from "./_components/ClientView";
 
 const ClientPage = async ({ params }: { params: { id: string } }) => {
 
     const { id } = await params;
+    const supabase = await createServerClient();
 
-    const { data: client } = await supabaseAdmin
+    const { data: client } = await supabase
         .from("client_stats")
         .select("*")
         .eq("client_id", id)
         .single();
 
 
-    const { data: projects } = await supabaseAdmin
+    const { data: projects } = await supabase
         .from("project_stats")
         .select("*")
         .eq("client_id", id);

@@ -1,8 +1,16 @@
 // src/app/(dashboard)/clients/actions.ts
 'use server'
 
-import { supabaseAdmin } from "@/lib/supabase.server";
+import { createClient } from "@supabase/supabase-js";
+
 import { ActionResult } from "@/types/actions";
+
+import serverEnv from "@/lib/env.server";
+
+const supabaseAdmin = createClient(
+    serverEnv.SUPABASE_URL,
+    serverEnv.SUPABASE_SECRET_KEY,
+);
 
 export const createClient_action = async (
     name: string,
