@@ -1,9 +1,19 @@
+
+export interface InputStylesConfig {
+    wrapper?: React.CSSProperties;
+    label?: React.CSSProperties;
+    input?: React.CSSProperties;
+    underText?: React.CSSProperties;
+}
+
 export interface BaseInputProps {
     label?: string;
     placeholder?: string;
     error?: string;
     disabled?: boolean;
-    styles?: React.CSSProperties;
+    styles?: InputStylesConfig;
+    underText?: string;
+    
 }
 
 export interface TextInputProps extends BaseInputProps {

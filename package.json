@@ -10,17 +10,18 @@
     "icons": "node generateIcons.js"
   },
   "dependencies": {
-    "@supabase/ssr": "^0.10.3",
+    "@supabase/ssr": "0.10.3",
     "@supabase/supabase-js": "2.106.2",
     "@tippyjs/react": "4.2.6",
     "next": "16.2.6",
+    "pdfjs-dist": "^6.0.227",
     "react": "19.2.4",
     "react-dom": "19.2.4",
-    "react-select": "^5.10.2",
-    "react-textarea-autosize": "^8.5.9",
+    "react-select": "5.10.2",
+    "react-textarea-autosize": "8.5.9",
     "styled-components": "6.4.2",
-    "tippy.js": "^6.3.7",
-    "zustand": "^5.0.14"
+    "tippy.js": "6.3.7",
+    "zustand": "5.0.14"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "4",

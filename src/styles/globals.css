@@ -11,3 +11,22 @@ body {
 * {
     font-family: var(--font-inter);
 }
+
+::-webkit-scrollbar {
+	width: 6px; /* scroll width */
+	height: 6px; /* scroll heigth */
+}
+
+::-webkit-scrollbar-track {
+	background: var(--Scrollbar-track);
+	border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+	background: var(--Scrollbar-thumb);
+	border-radius: 6px; /* Thumb Corner Radius */
+}
+
+::-webkit-scrollbar-thumb:hover {
+	/* background: #555; Thumb color on hover */
+}

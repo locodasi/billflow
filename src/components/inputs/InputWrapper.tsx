@@ -2,15 +2,21 @@
 
 import styled from "styled-components";
 
-const InputWrapper = ({ label, error, disabled, children}: {label?: string, error?: string, disabled?: boolean, children?: React.ReactNode}) => {
+import { InputStylesConfig } from "./types";
+
+const InputWrapper = ({ label, error, disabled, children, styles, underText }: {label?: string, error?: string, disabled?: boolean, children?: React.ReactNode, styles?: InputStylesConfig, underText?: string}) => {
 
     return(
         <Wrapper>
             {label && <Label>{label}</Label>}
 
-            <InputWrapperStyle $error={!!error} style={{ opacity: disabled ? 0.5 : 1, pointerEvents: disabled ? 'none' : 'auto' }}>
+            <InputWrapperStyle $error={!!error} style={{ ...styles?.wrapper, opacity: disabled ? 0.5 : 1, pointerEvents: disabled ? 'none' : 'auto' }}>
                 {children}
             </InputWrapperStyle>
+
+            {underText && (
+                <UnderText style={styles?.underText}>{underText}</UnderText>
+            )}
 
             {error && (
                 <Errorwrapper>
@@ -81,6 +87,17 @@ const Errorwrapper = styled.div`
     display: flex;
     align-items: center;
     gap: var(--4, 0.25rem);
+`;
+
+const UnderText = styled.p`
+    color: var(--Text-text-tertiary, #637083);
+
+    /* Paragraph S/Regular */
+    font-family: Inter;
+    font-size: 0.875rem;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1.25rem; /* 142.857% */
 `;
 
 const ErrorText = styled.p`

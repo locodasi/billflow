@@ -48,6 +48,8 @@ const NewProjectModal = ({ clientId, onClose, onCreated }: NewProjectModalProps)
 
         const result = await createProjectAction(clientId, name, currency, billAddress);
 
+        console.log("Create project result:", result);
+
         if (!result.success) {
             setErrors({ [result.error.field]: result.error.message });
             setLoading(false);
@@ -94,7 +96,7 @@ const NewProjectModal = ({ clientId, onClose, onCreated }: NewProjectModalProps)
                             <Button text="Cancelar" onClick={onClose} />
                             <Button text="Crear proyecto" buttonType="submit" disabled={loading} onClick={handleSubmit} />
                         </div>
-                        {/* {error && <p style={{ color: "red" }}>{error}</p>} */}
+                        {errors.general && <p style={{ color: "red" }}>{errors.general}</p>}
                     </Fields>
 
                 </form>

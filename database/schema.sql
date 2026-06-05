@@ -182,3 +182,52 @@ group by p.id, p.name, p.client_id, p.currency, p.bill_address;
 
 alter view client_stats set (security_invoker = on);
 alter view project_stats set (security_invoker = on);
+
+create policy "Admins can insert storage objects" on storage.objects for insert to authenticated
+with
+  check (
+    bucket_id = 'documents'
+    and (
+      exists (
+        select
+          1
+        from
+          profiles p
+        where
+          p.id = auth.uid ()
+          and p.role = 'admin'
+      )
+      or exists (
+        select
+          1
+        from
+          projects p
+        where
+          p.id::text = split_part(name, '/', 1)
+          and p.client_id = auth.uid ()
+      )
+    )
+  );
+
+  create policy "Admins or owners can see storage objects"
+on storage.objects
+for select
+to authenticated
+using (
+  bucket_id = 'documents'
+  and (
+    exists (
+      select 1
+      from profiles p
+      where p.id = auth.uid()
+      and p.role = 'admin'
+    )
+    or exists (
+      select 1
+      from projects p
+      join clients c on c.id = p.client_id
+      where p.id::text = split_part(storage.objects.name, '/', 1)
+      and c.profile_id = auth.uid()
+    )
+  )
+);

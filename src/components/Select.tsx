@@ -17,15 +17,19 @@ interface Props {
     disabled?: boolean;
     textColor?: string;
     placeholder?: string;
+    borderColor?: string;
+    underText?: string;
+    styles?: InputStylesConfig;
 }
 
-const NormalSelect = ({ options, value, onChange, title, width, disabled = false, textColor, placeholder }: Props) => {
+const NormalSelect = ({ options, value, onChange, title, width, disabled = false, textColor, placeholder, borderColor, underText, styles }: Props) => {
 
     const customStyles: StylesConfig<{ value: string; label: string | JSX.Element; }, false> = {
         control: (provided) => ({
             ...provided,
+            ...styles?.wrapper,
             backgroundColor: disabled ? "var(--Background-Colors-bg-secondary, #1A232D)" : "var(--Background-Colors-bg-primary, #1A232D)", // background
-            borderColor: disabled ? "var(--Background-Colors-bg-secondary, #1A232D)" : "var(--Border-Colors-border-secondary, #1A232D)", // border
+            borderColor: borderColor || (disabled ? "var(--Background-Colors-bg-secondary, #1A232D)" : "var(--Border-Colors-border-secondary, #1A232D)"), // border
             boxShadow: "none", // para quitar el glow azul por defecto
             borderRadius: "0.625rem",
             width: "100%",
@@ -91,6 +95,8 @@ const NormalSelect = ({ options, value, onChange, title, width, disabled = false
                 onChange={(selectedOption) => onChange(selectedOption as { value: string; label: string | JSX.Element })} // Type assertion to match the expected type
                 placeholder={placeholder || "Select..."}
             />
+
+            <UnderText style={styles?.underText}>{underText}</UnderText>
         </div>
     )
 }
@@ -109,9 +115,21 @@ const Title = styled.p`
     line-height: 1.25rem; /* 142.857% */
 `;
 
+const UnderText = styled.p`
+    color: var(--Text-text-tertiary, #637083);
+
+    /* Paragraph S/Regular */
+    font-family: Inter;
+    font-size: 0.875rem;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1.25rem; /* 142.857% */
+`;
+
 import Icon, {Icons} from "./icons/Icon";
 
 import { JSX } from "react";
+import { InputStylesConfig } from "./inputs/types";
 
 export const OptionWithIcon = ({icon, text, iconColor}: {icon: Icons, text: string, iconColor?: string}) => {
 
