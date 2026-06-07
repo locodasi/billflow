@@ -318,6 +318,21 @@
 
 	--Scrollbar-track: #CED2DA;
 	--Scrollbar-thumb: #97A1AF;
+
+	--status-paid-text: var(--Success-700);
+	--status-paid-border: var(--Success-600);
+	--status-paid-bg: rgb(from var(--Success-500) r g b / 0.12);
+	--status-paid-solid: var(--Success-500);
+
+	--status-processing-text: var(--Warning-700);
+	--status-processing-border: var(--Warning-600);
+	--status-processing-bg: rgb(from var(--Warning-500) r g b / 0.12);
+	--status-processing-solid: var(--Warning-500);
+
+	--status-unpaid-text: var(--Error-700);
+	--status-unpaid-border: var(--Error-600);
+	--status-unpaid-bg: rgb(from var(--Error-500) r g b / 0.12);
+	--status-unpaid-solid: var(--Error-500);
 }
 
 
@@ -385,4 +400,19 @@
 
 	--Scrollbar-track: #141C25;
 	--Scrollbar-thumb: #414E62;
+
+	--status-paid-text: var(--Success-400);
+	--status-paid-border: var(--Success-500);
+	--status-paid-bg: rgb(from var(--Success-400) r g b / 0.15);
+	--status-paid-solid: var(--Success-500);
+
+	--status-processing-text: var(--Warning-400);
+	--status-processing-border: var(--Warning-500);
+	--status-processing-bg: rgb(from var(--Warning-400) r g b / 0.15);
+	--status-processing-solid: var(--Warning-500);
+
+	--status-unpaid-text: var(--Error-400);
+	--status-unpaid-border: var(--Error-500);
+	--status-unpaid-bg: rgb(from var(--Error-400) r g b / 0.15);
+	--status-unpaid-solid: var(--Error-500);
 }

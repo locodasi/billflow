@@ -1,6 +1,8 @@
 'use client'
 
-import {useState, useEffect} from "react";
+import {useState} from "react";
+
+import {useDebounce} from "@/utils/useDebounce";
 
 import Icon from "../icons/Icon";
 
@@ -8,27 +10,29 @@ import InputWrapper, {InputStyle} from "./InputWrapper";
 import { SearchInputProps } from "./types";
 
 
-const SearchInput = ({disabled, error, label, placeholder, styles, delay = 300, onSearch}: SearchInputProps) => {
+const SearchInput = ({disabled, error, label, placeholder, styles, delay = 300, onSearch, underText, width }: SearchInputProps) => {
     const [value, setValue] = useState("");
 
-    useEffect(() => {
-        const timeout = setTimeout(() => {
-            onSearch(value);
-        }, delay);
-        return () => clearTimeout(timeout);
-    }, [value, delay, onSearch]);
+    const debouncedSearch = useDebounce((text: string) => {
+        onSearch(text);
+    }, delay);
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setValue(e.target.value);
+        debouncedSearch(e.target.value);
+    };
 
     return(
-        <InputWrapper error={error} disabled={disabled} label={label}>
+        <InputWrapper error={error} disabled={disabled} label={label} styles={styles} underText={underText} width={width}>
 
             <Icon icon={"search"} size={16} />
 
             <InputStyle
                 type="text"
-                onChange={(e) => setValue(e.target.value)}
+                onChange={handleChange}
                 value={value}
                 placeholder={placeholder}
-                style={styles}
+                style={styles?.input}
             />
         </InputWrapper>
     )

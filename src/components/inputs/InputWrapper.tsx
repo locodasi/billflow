@@ -4,10 +4,10 @@ import styled from "styled-components";
 
 import { InputStylesConfig } from "./types";
 
-const InputWrapper = ({ label, error, disabled, children, styles, underText }: {label?: string, error?: string, disabled?: boolean, children?: React.ReactNode, styles?: InputStylesConfig, underText?: string}) => {
+const InputWrapper = ({ label, error, disabled, children, styles, underText, width }: {label?: string, error?: string, disabled?: boolean, children?: React.ReactNode, styles?: InputStylesConfig, underText?: string, width?: string}) => {
 
     return(
-        <Wrapper>
+        <Wrapper style={{width: width || '100%'}}>
             {label && <Label>{label}</Label>}
 
             <InputWrapperStyle $error={!!error} style={{ ...styles?.wrapper, opacity: disabled ? 0.5 : 1, pointerEvents: disabled ? 'none' : 'auto' }}>

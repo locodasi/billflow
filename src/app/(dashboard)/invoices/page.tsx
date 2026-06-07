@@ -1,6 +1,6 @@
 "use client";
 
-import {useState} from "react";
+import { useState, useEffect } from "react";
 
 import { supabase } from "@/lib/supabase";
 
@@ -11,40 +11,98 @@ import Header from "@/components/Header";
 
 import NewInvoiceModal from "./_components/modals/NewInvoiceModal";
 
+import { Invoice } from "@/types/Invoice";
+
+import {ITEMS_PER_PAGE} from "./_utils/constant";
+
+import { InvoiceFilters } from "./_types/filters";
+
+import Filters from "./_components/Filters";
+import InvoiceCard from "./_components/InvoiceCard";
+
 const Invoices = () => {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [invoices, setInvoices] = useState<Invoice[]>([]);
+    const [filters, setFilters] = useState<InvoiceFilters>({ projectId: '', page: 1 });
+    const [totalCount, setTotalCount] = useState(0);
+
 
     const projectName = useProjectsStore(s => s.project?.name);
+    const projectId = useProjectsStore(s => s.project?.id);
     const role = useUserStore(s => s.role);
 
-    const a = async () => {
-        const { data, error } = await supabase.storage
-            .from("documents")
-            .list(`ad7206ba-cc54-4534-9738-75f26f06ae9e/invoices`);
+    const fetchInvoices = async (filters: InvoiceFilters) => {
+        if (!filters.projectId) return
 
-        console.log(data, error);
+        let query = supabase
+            .from('invoices')
+            .select('*', { count: 'exact' })
+            .eq('project_id', filters.projectId)
+            .order('created_at', { ascending: false })
+            .order('invoice_number', { ascending: false })
+            .range((filters.page - 1) * ITEMS_PER_PAGE, (filters.page * ITEMS_PER_PAGE) - 1)
 
-        const { data: userData } = await supabase.auth.getUser();
+        if (filters.status && filters.status !== 'all') {
+            query = query.eq('status', filters.status)
+        }
 
-        console.log(userData.user?.id);
+        if (filters.search) {
+            query = query.or(`invoice_number.ilike.%${filters.search}%,currency.ilike.%${filters.search}%`)
+        }
 
-        const { data:a, error:b } = await supabase
-            .from("projects")
-            .select("id")
-            .limit(1);
+        const { data, error, count } = await query
 
-        console.log(a,b)
+        if (error) {
+            console.error('Error fetching invoices:', error)
+            return
+        }
+
+        setInvoices(data as Invoice[])
+        setTotalCount(count ?? 0)
     }
 
-    a();
+    useEffect(() => {
+        if (!projectId) return
+
+        const load = async () => {
+            await fetchInvoices({ ...filters, projectId })
+        }
+
+        load()
+    }, [projectId, filters])
+
+    const addInvoice = (invoice: Invoice) => {
+        if(totalCount >= ITEMS_PER_PAGE) {
+            setTotalCount(prev => prev + 1)
+            return
+        }
+
+        setInvoices(prev => [invoice, ...prev])
+    }
+
     return (
         <>
-            {isModalOpen && <NewInvoiceModal onClose={() => setIsModalOpen(false)} />}
+            {isModalOpen && <NewInvoiceModal onClose={() => setIsModalOpen(false)} addInvoice={addInvoice}/>}
 
             <Header title={`Facturas -- ${projectName}`} showButton={role === 'admin'} buttontext="Nueva factura" buttonIcon="plus" onButtonClick={() => setIsModalOpen(true)} />
+
+            <div style={{ padding: '1rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                <Filters filters={filters} setFilters={setFilters} count={totalCount} />
+
+                <div style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(auto-fill, minmax(500px, 1fr))',
+                    gap: '1rem'
+                }}>
+                    {invoices.map(invoice => (
+                        <InvoiceCard key={invoice.id} invoice={invoice} />
+                    ))}
+                </div>
+            </div>
         </>
     )
 }
 
 export default Invoices;
+

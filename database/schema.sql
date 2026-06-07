@@ -34,7 +34,7 @@ create table public.invoices (
     project_id uuid not null references public.projects(id) on delete cascade,
     amount numeric(14, 2) not null,
     currency text not null default 'USD',
-    status text not null default 'pending' check (status in ('pending', 'paid', 'overdue')),
+    status text not null default 'unpaid' check (status in ('pending', 'paid', 'unpaid')),
     issue_date date not null default current_date,
     due_date date,
     pdf_path text,
@@ -123,6 +123,20 @@ language sql
 security definer
 as $$
     select role from public.profiles where id = user_id;
+$$;
+
+create or replace function public.is_project_owner(project_id uuid)
+returns boolean
+language sql
+security definer
+as $$
+  select exists (
+    select 1 
+    from projects p
+    join clients c on c.id = p.client_id
+    where p.id = project_id
+    and c.profile_id = auth.uid()
+  );
 $$;
 
 -- Policy de admin sin recursión

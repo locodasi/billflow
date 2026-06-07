@@ -13,7 +13,7 @@ export interface BaseInputProps {
     disabled?: boolean;
     styles?: InputStylesConfig;
     underText?: string;
-    
+    width?: string;
 }
 
 export interface TextInputProps extends BaseInputProps {

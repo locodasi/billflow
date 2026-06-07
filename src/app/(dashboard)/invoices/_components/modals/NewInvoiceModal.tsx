@@ -5,11 +5,14 @@ import {useState} from "react";
 import Modal, { HeaderModal, WrapperModal } from "@/components/modals/Modal";
 import Icon from "@/components/icons/Icon";
 
+import { Invoice } from "@/types/Invoice";
+
 import UploadMode from "./UploadMode";
 
-const NewInvoiceModal = ({ onClose }: { onClose: () => void }) => {
+const NewInvoiceModal = ({ onClose, addInvoice }: { onClose: () => void, addInvoice: (invoice: Invoice) => void }) => {
 
     const [mode, setMode] = useState<"upload" | "manual">("upload");
+
 
     return (
         <Modal onClose={onClose}>
@@ -33,7 +36,7 @@ const NewInvoiceModal = ({ onClose }: { onClose: () => void }) => {
                     </ModeOption>
                 </div>
 
-                {mode === "upload" && <UploadMode />}
+                {mode === "upload" && <UploadMode close={onClose} addInvoice={addInvoice}/>}
 
             </WrapperModal>
         </Modal>
