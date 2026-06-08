@@ -40,6 +40,8 @@ create table public.invoices (
     pdf_path text,
     notes text,
     metadata jsonb,
+    exchange_rate_to_usd numeric not null,
+    amount_usd numeric not null,
     created_at timestamptz not null default now(),
 
     unique(project_id, invoice_number)
@@ -57,6 +59,8 @@ create table public.payments (
     receipt_pdf_path text,
     notes text,
     status text not null default 'pending' check (status in ('pending', 'approved', 'rejected')),
+    exchange_rate_to_usd numeric not null,
+    amount_usd numeric not null,
     created_at timestamptz not null default now(),
 
     unique(project_id, payment_number)
@@ -170,9 +174,9 @@ select
     c.name,
     c.email,
     count(distinct p.id) as project_count,
-    coalesce(sum(i.amount), 0) as total_invoiced,
-    coalesce(sum(case when i.status = 'paid' then i.amount else 0 end), 0) as total_paid,
-    coalesce(sum(case when i.status = 'pending' then i.amount else 0 end), 0) as total_pending
+    coalesce(sum(i.amount_usd), 0) as total_invoiced,
+    coalesce(sum(case when i.status = 'paid' then i.amount_usd else 0 end), 0) as total_paid,
+    coalesce(sum(case when i.status = 'pending' then i.amount_usd else 0 end), 0) as total_pending
 from clients c
 left join projects p on p.client_id = c.id
 left join invoices i on i.project_id = p.id
@@ -186,9 +190,9 @@ select
     p.client_id,
     p.currency,
     p.bill_address,
-    coalesce(sum(i.amount), 0) as total_invoiced,
-    coalesce(sum(case when i.status = 'paid' then i.amount else 0 end), 0) as total_paid,
-    coalesce(sum(case when i.status = 'pending' then i.amount else 0 end), 0) as total_pending,
+    coalesce(sum(i.amount_usd), 0) as total_invoiced,
+    coalesce(sum(case when i.status = 'paid' then i.amount_usd else 0 end), 0) as total_paid,
+    coalesce(sum(case when i.status = 'pending' then i.amount_usd else 0 end), 0) as total_pending,
     count(i.id) as invoice_count
 from projects p
 left join invoices i on i.project_id = p.id

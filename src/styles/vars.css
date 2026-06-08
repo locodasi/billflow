@@ -333,6 +333,22 @@
 	--status-unpaid-border: var(--Error-600);
 	--status-unpaid-bg: rgb(from var(--Error-500) r g b / 0.12);
 	--status-unpaid-solid: var(--Error-500);
+
+
+	--status-approved-text: var(--Success-700);
+	--status-approved-border: var(--Success-600);
+	--status-approved-bg: rgb(from var(--Success-500) r g b / 0.12);
+	--status-approved-solid: var(--Success-500);
+
+	--status-pending-text: var(--Warning-700);
+	--status-pending-border: var(--Warning-600);
+	--status-pending-bg: rgb(from var(--Warning-500) r g b / 0.12);
+	--status-pending-solid: var(--Warning-500);
+
+	--status-rejected-text: var(--Error-700);
+	--status-rejected-border: var(--Error-600);
+	--status-rejected-bg: rgb(from var(--Error-500) r g b / 0.12);
+	--status-rejected-solid: var(--Error-500);
 }
 
 
@@ -415,4 +431,20 @@
 	--status-unpaid-border: var(--Error-500);
 	--status-unpaid-bg: rgb(from var(--Error-400) r g b / 0.15);
 	--status-unpaid-solid: var(--Error-500);
+
+
+	--status-approved-text: var(--Success-400);
+	--status-approved-border: var(--Success-500);
+	--status-approved-bg: rgb(from var(--Success-400) r g b / 0.15);
+	--status-approved-solid: var(--Success-500);
+
+	--status-pending-text: var(--Warning-400);
+	--status-pending-border: var(--Warning-500);
+	--status-pending-bg: rgb(from var(--Warning-400) r g b / 0.15);
+	--status-pending-solid: var(--Warning-500);
+
+	--status-rejected-text: var(--Error-400);
+	--status-rejected-border: var(--Error-500);
+	--status-rejected-bg: rgb(from var(--Error-400) r g b / 0.15);
+	--status-rejected-solid: var(--Error-500);
 }

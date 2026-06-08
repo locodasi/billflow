@@ -3,13 +3,13 @@
 
 import { extractText, getDocumentProxy } from 'unpdf'
 
-type InvoiceData = {
-    invoiceNumber: string | null
+type PaymentData = {
+    paymentNumber: string | null
     amount: string | null
     currency: string | null
 }
 
-export async function parseInvoice(formData: FormData): Promise<InvoiceData> {
+export async function parsePayment(formData: FormData): Promise<PaymentData> {
     const file = formData.get('pdf') as File
     if (!file) throw new Error('No file provided')
 
@@ -19,8 +19,8 @@ export async function parseInvoice(formData: FormData): Promise<InvoiceData> {
 
     console.log("Texto extraído del PDF:", text);
 
-    const invoiceNumber = text.match(/(\d{4})\s+\d{2}\/\d{2}\/\d{4}/)?.[1] ?? null
-    const amount = text.match(/INVOICE TOTAL\s*[€$£]?\s*([\d.,]+)/i)?.[1] ?? null
+    const paymentNumber = text.match(/(\d{4})\s+\d{2}\/\d{2}\/\d{4}/)?.[1] ?? null
+    const amount = text.match(/Amount\s*[€$£]?\s*([\d.,]+)/i)?.[1] ?? null
     const currencyMatch = text.match(/ARS|USD|EUR|GBP|JPY|BRL|CAD|CHF|R\$|CA\$|[€£¥$]/)?.[0] ?? null
 
     const CURRENCY_SYMBOL_MAP: Record<string, string> = {
@@ -35,17 +35,19 @@ export async function parseInvoice(formData: FormData): Promise<InvoiceData> {
     const currency = currencyMatch ? (CURRENCY_SYMBOL_MAP[currencyMatch] ?? currencyMatch) : null
 
 
-    return { invoiceNumber, amount, currency }
+    return { paymentNumber, amount, currency }
 }
 
 import { createServerClient } from "@/lib/supabase.server";
-import { convertToUSD } from '@/lib/exchange-rate'
+import { convertToUSD } from "@/lib/exchange-rate";
 
-import { UploadInvoice } from './_components/modals/UploadMode'
+import { UploadPayload } from './_components/modals/UploadMode'
 
-export async function createInvoice(data: UploadInvoice, projectId: string) {
+
+// FALTA PASAR QUE FACTURAS PAGA, Y GENERAR LAS RELACIONES Y COMO SE DISTRIBUYE EL PAGO ENTRE FACTURAS SI ES QUE SE PAGAN VARIAS CON UN MISMO COMPROBANTE. TAMBIEN FALTA VER EL TEMA DE LOS ESTADOS DE LAS FACTURAS, SI SE PAGAN PARCIALMENTE O COMPLETAMENTE ETC
+export async function createPayload(data: UploadPayload, projectId: string) {
     // Validación
-    if (!data.invoiceNumber?.value) throw new Error('Invoice number requerido')
+    if (!data.paymentNumber?.value) throw new Error('Payment number requerido')
     if (!data.amount?.value) throw new Error('Amount requerido')
     if (!data.currency?.value) throw new Error('Currency requerido')
     if (!data.file) throw new Error('Archivo PDF requerido')
@@ -54,7 +56,7 @@ export async function createInvoice(data: UploadInvoice, projectId: string) {
 
     // Upload PDF
     const arrayBuffer = await data.file.arrayBuffer()
-    const filePath = `${projectId}/invoices/${data.invoiceNumber.value}.pdf`
+    const filePath = `${projectId}/payments/${data.paymentNumber.value}.pdf`
 
     const { error: uploadError } = await supabase.storage
         .from('documents')
@@ -65,20 +67,21 @@ export async function createInvoice(data: UploadInvoice, projectId: string) {
 
     if (uploadError) throw new Error(`Upload fallido: ${uploadError.message}`)
 
+    // Convertir a USD
     const { exchangeRate, amountUsd } = await convertToUSD(data.amount.value, data.currency.value)
 
-    // Insert invoice
-    const { data: invoice, error: insertError } = await supabase
-        .from('invoices')
+    // Insert payment
+    const { data: payment, error: insertError } = await supabase
+        .from('payments')
         .insert({
-            invoice_number: data.invoiceNumber.value,
+            payment_number: data.paymentNumber.value,
             project_id: projectId,
             amount: data.amount.value,
             currency: data.currency.value,
             notes: data.notes,
-            metadata: data.metadata,
-            pdf_path: filePath,
-            status: 'unpaid',
+            receipt_pdf_path: filePath,
+            status: 'pending',
+            payment_method: data.payment_method,
             exchange_rate_to_usd: exchangeRate,
             amount_usd: amountUsd,
         })
@@ -87,5 +90,5 @@ export async function createInvoice(data: UploadInvoice, projectId: string) {
 
     if (insertError) throw new Error(`Insert fallido: ${insertError.message}`)
 
-    return invoice
+    return payment;
 }

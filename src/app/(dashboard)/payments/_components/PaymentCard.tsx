@@ -9,30 +9,30 @@ import Button from "@/components/Button";
 
 import { formatDate } from "@/utils/timeFunctions";
 
-import { Invoice } from "@/types/Invoice";
- 
-const InvoiceCard = ({ invoice }: { invoice: Invoice }) => {
+import { Payment } from "@/types/payment";
+
+const PaymentCard = ({ payment }: { payment: Payment }) => {
 
     const handleDownload = async () => {
         const { data, error } = await supabase.storage
             .from('documents')
-            .download(invoice.pdf_path)
+            .download(payment.receipt_pdf_path)
 
         if (error || !data) return
 
         const url = URL.createObjectURL(data)
         const a = document.createElement('a')
         a.href = url
-        a.download = `${invoice.invoice_number}.pdf`
+        a.download = `${payment.payment_number}.pdf`
         a.click()
         URL.revokeObjectURL(url)
     }
 
     return (
-        <Card cardStyles={{ boxShadow: `-3px 0px 0px var(--status-${invoice.status.toLowerCase()}-solid)` }}>
+        <Card cardStyles={{ boxShadow: `-3px 0px 0px var(--status-${payment.status.toLowerCase()}-solid)` }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Title>{invoice.invoice_number}</Title>
-                <StatusChip text={invoice.status} status={invoice.status.toLowerCase()} />
+                <Title>{payment.payment_number}</Title>
+                <StatusChip text={payment.status} status={payment.status.toLowerCase()} />
             </div>
 
             <div style={{ width: '100%', height: '200px', background: 'red' }} />
@@ -40,9 +40,9 @@ const InvoiceCard = ({ invoice }: { invoice: Invoice }) => {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div style={{ display: 'flex', gap: '0.25rem', alignItems: 'center' }}>
                     <Icon icon={"calendar"} size={16} iconColor="var(--Text-text-tertiary, #667085)" />
-                    <Date>{formatDate(invoice.created_at)}</Date>
+                    <Date>{formatDate(payment.created_at)}</Date>
                 </div>
-                <Amount>${invoice.amount}<Currency>{invoice.currency}</Currency></Amount>
+                <Amount>${payment.amount}<Currency>{payment.currency}</Currency></Amount>
             </div>
 
             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.5rem', paddingTop: '0.5rem', borderTop: '1px solid var(--Border-Colors-border-secondary)' }}>
@@ -52,7 +52,7 @@ const InvoiceCard = ({ invoice }: { invoice: Invoice }) => {
     )
 }
 
-export default InvoiceCard;
+export default PaymentCard;
 
 const Title = styled.p`
     color: var(--Text-text-primary, #344051);
