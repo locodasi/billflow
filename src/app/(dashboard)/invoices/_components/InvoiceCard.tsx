@@ -10,8 +10,8 @@ import Button from "@/components/Button";
 import { formatDate } from "@/utils/timeFunctions";
 
 import { Invoice } from "@/types/Invoice";
- 
-const InvoiceCard = ({ invoice }: { invoice: Invoice }) => {
+
+const InvoiceCard = ({ invoice, onClick }: { invoice: Invoice, onClick: () => void }) => {
 
     const handleDownload = async () => {
         const { data, error } = await supabase.storage
@@ -29,7 +29,7 @@ const InvoiceCard = ({ invoice }: { invoice: Invoice }) => {
     }
 
     return (
-        <Card cardStyles={{ boxShadow: `-3px 0px 0px var(--status-${invoice.status.toLowerCase()}-solid)` }}>
+        <Card cardStyles={{ boxShadow: `-3px 0px 0px var(--status-${invoice.status.toLowerCase()}-solid)` }} onClick={onClick}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <Title>{invoice.invoice_number}</Title>
                 <StatusChip text={invoice.status} status={invoice.status.toLowerCase()} />

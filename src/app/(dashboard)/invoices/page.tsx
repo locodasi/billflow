@@ -19,6 +19,7 @@ import { InvoiceFilters } from "./_types/filters";
 
 import Filters from "./_components/Filters";
 import InvoiceCard from "./_components/InvoiceCard";
+import InvoiceDetailModal from "./_components/modals/InvoiceDetailModal";
 
 const Invoices = () => {
 
@@ -26,6 +27,7 @@ const Invoices = () => {
     const [invoices, setInvoices] = useState<Invoice[]>([]);
     const [filters, setFilters] = useState<InvoiceFilters>({ projectId: '', page: 1 });
     const [totalCount, setTotalCount] = useState(0);
+    const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);
 
 
     const projectName = useProjectsStore(s => s.project?.name);
@@ -96,10 +98,12 @@ const Invoices = () => {
                     gap: '1rem'
                 }}>
                     {invoices.map(invoice => (
-                        <InvoiceCard key={invoice.id} invoice={invoice} />
+                        <InvoiceCard key={invoice.id} invoice={invoice} onClick={() => setSelectedInvoice(invoice)} />
                     ))}
                 </div>
             </div>
+            
+            {selectedInvoice && <InvoiceDetailModal invoice={selectedInvoice} onClose={() => setSelectedInvoice(null)} />}
         </>
     )
 }

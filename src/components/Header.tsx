@@ -13,17 +13,17 @@ interface HeaderProps {
 const Header = ({ title, showButton, buttontext, buttonIcon, onButtonClick }: HeaderProps) => {
 
     return (
-        <Wrapper>
+        <HeaderWrapper>
             <Title>{title}</Title>
 
             {showButton && <Button size="small" text={buttontext || ""} firstIcon={buttonIcon || "2x2-cell"} onClick={onButtonClick || (() => {})} />}
-        </Wrapper>
+        </HeaderWrapper>
     )
 }
 
 export default Header;
 
-const Wrapper = styled.header`
+export const HeaderWrapper = styled.header`
     width: 100%;
     padding: 1rem;
     background-color: var(--Background-Colors-bg-secondary);

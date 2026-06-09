@@ -85,7 +85,7 @@ export default function DashboardLayout({
     return (
         <div style={{ display: "flex", height: "100vh" }}>
             <Sidenav />
-            <main style={{ flex: 1, overflow: "auto", backgroundColor: "var(--Background-Colors-bg-primary)" }}>
+            <main style={{ display: "flex", flexDirection: "column", height: "100%", width: "100%", backgroundColor: "var(--Background-Colors-bg-primary)" }}>
                 {children}
             </main>
         </div>

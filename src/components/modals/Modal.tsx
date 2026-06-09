@@ -65,7 +65,7 @@ export const HeaderModal = ({ title, onClose }: HeaderModalProps) => {
     )
 }
 
-const HeaderWrapper = styled.div`
+export const HeaderWrapper = styled.div`
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -77,10 +77,10 @@ const Title = styled.h2`
     font-weight: 500;
 `;
 
-export const WrapperModal = ({children}: {children: React.ReactNode}) => {
+export const WrapperModal = ({children, styles}: {children: React.ReactNode, styles?: React.CSSProperties}) => {
 
     return(
-        <Wrapper>
+        <Wrapper style={styles}>
             {children}
         </Wrapper>
     )
@@ -89,7 +89,6 @@ export const WrapperModal = ({children}: {children: React.ReactNode}) => {
 const Wrapper = styled.div`
     display: flex;
     flex-direction: column;
-    padding: 1rem;
     gap: 1rem;
     background-color: var(--Background-Colors-bg-primary);
     border: 1px solid var(--Border-Colors-border-primary);
