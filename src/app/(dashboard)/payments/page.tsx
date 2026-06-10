@@ -30,7 +30,6 @@ const PaymentsPage = () => {
 
     const projectName = useProjectsStore(s => s.project?.name);
     const projectId = useProjectsStore(s => s.project?.id);
-    const role = useUserStore(s => s.role);
 
     const fetchPayments = async (filters: PaymentFilters) => {
         if (!filters.projectId) return
@@ -92,7 +91,7 @@ const PaymentsPage = () => {
                 
                 <div style={{
                     display: 'grid',
-                    gridTemplateColumns: 'repeat(auto-fill, minmax(500px, 1fr))',
+                    gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
                     gap: '1rem'
                 }}>
                     {payments.map(payment => (

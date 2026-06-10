@@ -5,7 +5,7 @@ import { supabase } from "@/lib/supabase";
 import Card from "@/components/card/Card";
 import Icon from "@/components/icons/Icon";
 import { StatusChip } from "@/components/Chips";
-import Button from "@/components/Button";
+import IconButton from "@/components/IconButton";
 
 import { formatDate } from "@/utils/timeFunctions";
 
@@ -35,18 +35,18 @@ const PaymentCard = ({ payment }: { payment: Payment }) => {
                 <StatusChip text={payment.status} status={payment.status.toLowerCase()} />
             </div>
 
-            <div style={{ width: '100%', height: '200px', background: 'red' }} />
-
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Amount>${payment.amount}<Currency>{payment.currency}</Currency></Amount>
+            </div>
+
+            <div style={{ display: 'flex', justifyContent: 'space-between', gap: '0.5rem', paddingTop: '0.5rem', borderTop: '1px solid var(--Border-Colors-border-secondary)' }}>
+
                 <div style={{ display: 'flex', gap: '0.25rem', alignItems: 'center' }}>
                     <Icon icon={"calendar"} size={16} iconColor="var(--Text-text-tertiary, #667085)" />
                     <Date>{formatDate(payment.created_at)}</Date>
                 </div>
-                <Amount>${payment.amount}<Currency>{payment.currency}</Currency></Amount>
-            </div>
 
-            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.5rem', paddingTop: '0.5rem', borderTop: '1px solid var(--Border-Colors-border-secondary)' }}>
-                <Button text="Descargar" size="small" onClick={handleDownload} firstIcon={"download"} />
+                <IconButton size="small" onClick={handleDownload} icon={"download"} />
             </div>
         </Card>
     )
@@ -55,11 +55,11 @@ const PaymentCard = ({ payment }: { payment: Payment }) => {
 export default PaymentCard;
 
 const Title = styled.p`
-    color: var(--Text-text-primary, #344051);
+    color: var(--Text-text-tertiary, #344051);
     font-family: Inter;
     font-size: 1.25rem;
     font-weight: 500;
-    line-height: 1.5rem; /* 150% */
+    line-height: 1rem; /* 150% */
 `;
 
 const Date = styled.p`
@@ -70,7 +70,7 @@ const Date = styled.p`
 
 const Amount = styled.p`
     color: var(--Text-text-secondary, #344051);
-    font-size: 1rem;
+    font-size: 1.5rem;
     font-weight: 500;
 `;
 

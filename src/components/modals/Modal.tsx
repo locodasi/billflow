@@ -90,6 +90,7 @@ const Wrapper = styled.div`
     display: flex;
     flex-direction: column;
     gap: 1rem;
+    padding: 1rem;
     background-color: var(--Background-Colors-bg-primary);
     border: 1px solid var(--Border-Colors-border-primary);
     border-radius: 0.5rem;
