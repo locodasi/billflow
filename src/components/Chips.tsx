@@ -56,10 +56,10 @@ const ChipWrapper = styled.div<{$selected: boolean}>`
     }
 `;
 
-export const StatusChip = ({text, status}: {text: string, status: string}) => {
+export const StatusChip = ({text, status, style}: {text: string, status: string, style?: React.CSSProperties}) => {
 
     return(
-        <StatusChipWrapper $status={status}>
+        <StatusChipWrapper $status={status} style={style}>
             {text}
         </StatusChipWrapper>
     )

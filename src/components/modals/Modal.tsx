@@ -59,7 +59,7 @@ export const HeaderModal = ({ title, onClose }: HeaderModalProps) => {
 
     return(
         <HeaderWrapper>
-            <Title>{title}</Title>
+            <HeaderTitle>{title}</HeaderTitle>
             <Icon icon={"delete-circle"} size={24} onClick={onClose} />
         </HeaderWrapper>
     )
@@ -71,7 +71,7 @@ export const HeaderWrapper = styled.div`
     justify-content: space-between;
 `;
 
-const Title = styled.h2`
+export const HeaderTitle = styled.h2`
     color: var(--Text-text-primary);
     font-size: 1.25rem;
     font-weight: 500;
@@ -94,4 +94,6 @@ const Wrapper = styled.div`
     background-color: var(--Background-Colors-bg-primary);
     border: 1px solid var(--Border-Colors-border-primary);
     border-radius: 0.5rem;
+
+    max-height: 90vh;
 `;

@@ -14,9 +14,15 @@ import TextArea from "@/components/inputs/Textarea";
 import NumberInput from "@/components/inputs/NumberInput";
 import FileInput from "@/components/inputs/FileInput";
 import NormalSelect from "@/components/Select";
-import Button from "@/components/Button";
 
 import { Payment } from "@/types/payment";
+
+import { NewPaymentMode } from "./NewPaymentModal";
+
+import Footer from "./components/Footer";
+import MiddleArea from "./components/MiddleArea";
+import SelectMode from "./components/SelectMode";
+import InvoicesToPaid from "./components/InvoicesToPaid";
 
 const CURRENCIES = [
     { value: "USD", label: "Dólar estadounidense (USD)" },
@@ -65,7 +71,13 @@ const InitialState: UploadPayload = {
     payment_method: "manual",
 }
 
-const UploadMode = ({ close, addPayment }: { close: () => void, addPayment: (payment: Payment) => void }) => {
+export interface UploadModeProps {
+    close: () => void;
+    addPayment: (payment: Payment) => void;
+    mode: NewPaymentMode;
+    setMode: (mode: NewPaymentMode) => void;
+}
+const UploadMode = ({ close, addPayment, mode, setMode }: UploadModeProps) => {
 
     const [paymentData, setPaymentData] = useState<UploadPayload>(InitialState);
 
@@ -81,13 +93,13 @@ const UploadMode = ({ close, addPayment }: { close: () => void, addPayment: (pay
                 .select('payment_number')
                 .eq('project_id', projectId)
                 .order('payment_number', { ascending: false })
-                .range(0,1)
+                .range(0, 1)
 
-            if(error) return
+            if (error) return
 
             let paymentNumber = "PAY_0001";
 
-            if(data && data.length > 0) {
+            if (data && data.length > 0) {
                 paymentNumber = `PAY_${String(parseInt(data[0].payment_number.replace("PAY_", "")) + 1).padStart(4, "0")}`;
             }
 
@@ -165,56 +177,69 @@ const UploadMode = ({ close, addPayment }: { close: () => void, addPayment: (pay
     }
 
     return (
-        <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+        <>
 
-            {paymentData.file ? (
-                <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
-                    <FileItem file={paymentData.file} remove={() => setPaymentData({ ...paymentData, file: null })} />
-                    <DetectedCard text="Datos detectados automaticamente. Revisa y corrige si es necesario." />
-                </div>
-            ) : (
-                <FileInput onFileSelect={hanldeFileSelect} accept=".pdf" />
-            )}
+            <MiddleArea>
 
-            <div style={{ display: "flex", gap: "0.5rem" }}>
-                <TextInput
-                    label="Número de pago"
-                    placeholder="Ej. PAY_001-001-0000001"
-                    value={paymentData.paymentNumber.value}
-                    onChange={(v) => setPaymentData({ ...paymentData, paymentNumber: { automatic: false, value: v } })}
-                    styles={getAutoStyle(paymentData.paymentNumber.automatic)}
-                    underText={paymentData.paymentNumber.automatic ? "Detectado del PDF" : ""}
-                />
-                <NumberInput
-                    label="Monto"
-                    placeholder="Ej. 1000"
-                    value={paymentData.amount.value}
-                    onChange={(v) => setPaymentData({ ...paymentData, amount: { automatic: false, value: v } })}
-                    styles={getAutoStyle(paymentData.amount.automatic)}
-                    underText={paymentData.amount.automatic ? "Detectado del PDF" : ""}
-                />
-            </div>
+                <>
+                    <SelectMode mode={mode} setMode={setMode} />
 
-            <NormalSelect
-                title="Moneda"
-                placeholder="Selecciona un proveedor"
-                options={CURRENCIES}
-                value={CURRENCIES.find(currency => currency.value === paymentData.currency.value) || null}
-                onChange={(v) => setPaymentData({ ...paymentData, currency: { automatic: false, value: v.value } })}
-                underText={paymentData.currency.automatic ? "Detectado del PDF" : ""}
-                styles={getAutoStyle(paymentData.currency.automatic)}
+                    {paymentData.file ? (
+                        <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+                            <FileItem file={paymentData.file} remove={() => setPaymentData({ ...paymentData, file: null })} />
+                            <DetectedCard text="Datos detectados automaticamente. Revisa y corrige si es necesario." />
+                        </div>
+                    ) : (
+                        <FileInput onFileSelect={hanldeFileSelect} accept=".pdf" />
+                    )}
 
-            />
+                    <div style={{ display: "flex", gap: "0.5rem" }}>
+                        <TextInput
+                            label="Número de pago"
+                            placeholder="Ej. PAY_001-001-0000001"
+                            value={paymentData.paymentNumber.value}
+                            onChange={(v) => setPaymentData({ ...paymentData, paymentNumber: { automatic: false, value: v } })}
+                            styles={getAutoStyle(paymentData.paymentNumber.automatic)}
+                            underText={paymentData.paymentNumber.automatic ? "Detectado del PDF" : ""}
+                        />
+                        <NumberInput
+                            label="Monto"
+                            placeholder="Ej. 1000"
+                            value={paymentData.amount.value}
+                            onChange={(v) => setPaymentData({ ...paymentData, amount: { automatic: false, value: v } })}
+                            styles={getAutoStyle(paymentData.amount.automatic)}
+                            underText={paymentData.amount.automatic ? "Detectado del PDF" : ""}
+                        />
+                    </div>
 
-            <TextArea value={paymentData.notes} onChange={(v) => setPaymentData({ ...paymentData, notes: v })} label="Notas" placeholder="Opcional" minLines={5} />
+                    <NormalSelect
+                        title="Moneda"
+                        placeholder="Selecciona un proveedor"
+                        options={CURRENCIES}
+                        value={CURRENCIES.find(currency => currency.value === paymentData.currency.value) || null}
+                        onChange={(v) => setPaymentData({ ...paymentData, currency: { automatic: false, value: v.value } })}
+                        underText={paymentData.currency.automatic ? "Detectado del PDF" : ""}
+                        styles={getAutoStyle(paymentData.currency.automatic)}
 
-            {error && <p style={{ color: "red" }}>{error}</p>}
+                    />
 
-            <div style={{ display: "flex", gap: "0.5rem", alignSelf: "flex-end" }}>
-                <Button text="Cancelar" onClick={close} size="small" />
-                <Button text="Guardar" onClick={savePayment} type="primary" style="filled" size="small" disabled={!paymentData.file || isLoading}/>
-            </div>
-        </div>
+                    <TextArea value={paymentData.notes} onChange={(v) => setPaymentData({ ...paymentData, notes: v })} label="Notas" placeholder="Opcional" minLines={5}  maxLines={10}/>
+
+                    {error && <p style={{ color: "red" }}>{error}</p>}
+                </>
+
+                <>
+                    <InvoicesToPaid />
+
+                    <div style={{height: "400px", width: "100px", backgroundColor: "var(--Border-Colors-border-primary)"  }}>
+
+                    </div>
+                </>
+
+            </MiddleArea>
+
+            <Footer onClose={close} onSave={savePayment} enableSave={!!paymentData.file && !isLoading} />
+        </>
     )
 }
 
