@@ -89,3 +89,57 @@ export async function createInvoice(data: UploadInvoice, projectId: string) {
 
     return invoice
 }
+
+import JSZip from "jszip";
+
+export async function downloadUnpaidInvoicesPDF(projectId: string): Promise<{
+    data: number[] | null; // Uint8Array serializada como array para poder cruzar el boundary
+    error: string | null;
+}> {
+    // 1. Obtener facturas impagas del proyecto
+
+    const supabase = await createServerClient();
+
+    const { data: invoices, error: fetchError } = await supabase
+        .from("invoices")
+        .select("id, pdf_path")
+        .eq("project_id", projectId)
+        .eq("status", "unpaid")
+        .not("pdf_path", "is", null);
+
+    if (fetchError) return { data: null, error: fetchError.message };
+    if (!invoices?.length) return { data: null, error: "No hay facturas impagas con PDF." };
+
+    const zip = new JSZip();
+    const folder = zip.folder("unpaid_invoices")!;
+
+    const downloads = await Promise.allSettled(
+        invoices.map(async (invoice) => {
+            const { data, error } = await supabase.storage
+                .from("documents")
+                .download(invoice.pdf_path);
+
+            if (error || !data) throw new Error(`Error descargando ${invoice.pdf_path}: ${error?.message}`);
+
+            const buffer = await data.arrayBuffer();
+            const filename = invoice.pdf_path.split("/").pop() ?? `invoice-${invoice.id}.pdf`;
+            folder.file(filename, buffer);
+        })
+    );
+
+    // Loguear los que fallaron sin romper todo
+    downloads.forEach((result, i) => {
+        if (result.status === "rejected") {
+            console.error(`PDF ${i} falló:`, result.reason);
+        }
+    });
+
+    const successCount = downloads.filter((r) => r.status === "fulfilled").length;
+    if (successCount === 0) return { data: null, error: "Ningún PDF pudo descargarse." };
+
+    // 3. Generar el ZIP en memoria
+    const zipBuffer = await zip.generateAsync({ type: "uint8array" });
+
+    // Uint8Array no cruza el server/client boundary directamente → la convertimos a array
+    return { data: Array.from(zipBuffer), error: null };
+} 

@@ -14,7 +14,7 @@ const Header = ({ title, showButton, buttontext, buttonIcon, onButtonClick }: He
 
     return (
         <HeaderWrapper>
-            <Title>{title}</Title>
+            <HeaderTitle>{title}</HeaderTitle>
 
             {showButton && <Button size="small" text={buttontext || ""} firstIcon={buttonIcon || "2x2-cell"} onClick={onButtonClick || (() => {})} />}
         </HeaderWrapper>
@@ -33,7 +33,7 @@ export const HeaderWrapper = styled.header`
     justify-content: space-between;
 `;
 
-const Title = styled.h1`
+export const HeaderTitle = styled.h1`
     color: var(--Text-text-primary);
     font-size: 1.5rem;
     font-weight: 600;

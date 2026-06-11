@@ -7,19 +7,21 @@ import { supabase } from "@/lib/supabase";
 import { useProjectsStore } from "@/stores/projectStore";
 import { useUserStore } from "@/stores/userStore";
 
-import Header from "@/components/Header";
+import { HeaderTitle, HeaderWrapper } from "@/components/Header";
 
 import NewInvoiceModal from "./_components/modals/NewInvoiceModal";
 
 import { Invoice } from "@/types/Invoice";
 
-import {ITEMS_PER_PAGE} from "./_utils/constant";
+import { ITEMS_PER_PAGE } from "./_utils/constant";
 
 import { InvoiceFilters } from "./_types/filters";
 
 import Filters from "./_components/Filters";
 import InvoiceCard from "./_components/InvoiceCard";
 import InvoiceDetailModal from "./_components/modals/InvoiceDetailModal";
+import Button from "@/components/Button";
+import { downloadUnpaidInvoicesPDF } from "./actions";
 
 const Invoices = () => {
 
@@ -75,7 +77,7 @@ const Invoices = () => {
     }, [projectId, filters])
 
     const addInvoice = (invoice: Invoice) => {
-        if(totalCount >= ITEMS_PER_PAGE) {
+        if (totalCount >= ITEMS_PER_PAGE) {
             setTotalCount(prev => prev + 1)
             return
         }
@@ -83,11 +85,34 @@ const Invoices = () => {
         setInvoices(prev => [invoice, ...prev])
     }
 
+    const handleDownloadUnpaidInvoices = async () => {
+        if (!projectId) return;
+
+        const { data, error } = await downloadUnpaidInvoicesPDF(projectId);
+        if (error || !data) return console.error(error);
+
+        // Reconstruir el Uint8Array y disparar la descarga
+        const blob = new Blob([new Uint8Array(data)], { type: "application/zip" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "unpaid_invoices.zip";
+        a.click();
+        URL.revokeObjectURL(url);
+    }
+
     return (
         <>
-            {isModalOpen && <NewInvoiceModal onClose={() => setIsModalOpen(false)} addInvoice={addInvoice}/>}
+            {isModalOpen && <NewInvoiceModal onClose={() => setIsModalOpen(false)} addInvoice={addInvoice} />}
 
-            <Header title={`Facturas -- ${projectName}`} showButton={role === 'admin'} buttontext="Nueva factura" buttonIcon="plus" onButtonClick={() => setIsModalOpen(true)} />
+            <HeaderWrapper>
+                <HeaderTitle>{`Facturas -- ${projectName}`}</HeaderTitle>
+
+                <div style={{ display: 'flex', gap: '0.5rem' }}>
+                    <Button size="small" text="Descargar facturas impagas" firstIcon="download" onClick={handleDownloadUnpaidInvoices} />
+                    <Button size="small" text="Nueva factura" firstIcon="plus" onClick={() => setIsModalOpen(true)} />
+                </div>
+            </HeaderWrapper>
 
             <div style={{ padding: '1rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                 <Filters filters={filters} setFilters={setFilters} count={totalCount} />
@@ -102,7 +127,7 @@ const Invoices = () => {
                     ))}
                 </div>
             </div>
-            
+
             {selectedInvoice && <InvoiceDetailModal invoice={selectedInvoice} onClose={() => setSelectedInvoice(null)} />}
         </>
     )

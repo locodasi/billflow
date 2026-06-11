@@ -5,7 +5,6 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 
 import { useProjectsStore } from "@/stores/projectStore";
-import { useUserStore } from "@/stores/userStore";
 
 import Header from "@/components/Header";
 
