@@ -14,7 +14,7 @@ import FileInput from "@/components/inputs/FileInput";
 import NormalSelect from "@/components/Select";
 import Button from "@/components/Button";
 
-import { Invoice } from "@/types/Invoice";
+import { InvoiceSummary } from "@/types/Invoice";
 
 const CURRENCIES = [
     { value: "USD", label: "Dólar estadounidense (USD)" },
@@ -63,7 +63,7 @@ const InitialState: UploadInvoice = {
     metadata: {},
 }
 
-const UploadMode = ({close, addInvoice}: {close: () => void, addInvoice: (invoice: Invoice) => void}) => {
+const UploadMode = ({close, addInvoice}: {close: () => void, addInvoice: (invoice: InvoiceSummary) => void}) => {
 
     const [invoiceData, setInvoiceData] = useState<UploadInvoice>(InitialState);
 

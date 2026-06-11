@@ -14,4 +14,12 @@ export interface Invoice {
     notes: string;
     metadata: Record<string, unknown>;
     created_at: string;
+    exchange_rate_to_usd: number;
+    amount_usd: number;
+}
+
+export interface InvoiceSummary extends Invoice {
+    paid_amount:  number;
+    pending_amount: number;
+    outstanding_amount : number;
 }

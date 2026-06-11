@@ -3,6 +3,8 @@
 
 import { extractText, getDocumentProxy } from 'unpdf'
 
+import { InvoiceSummary } from '@/types/Invoice'
+
 type InvoiceData = {
     invoiceNumber: string | null
     amount: string | null
@@ -43,7 +45,7 @@ import { convertToUSD } from '@/lib/exchange-rate'
 
 import { UploadInvoice } from './_components/modals/UploadMode'
 
-export async function createInvoice(data: UploadInvoice, projectId: string) {
+export async function createInvoice(data: UploadInvoice, projectId: string): Promise<InvoiceSummary> {
     // Validación
     if (!data.invoiceNumber?.value) throw new Error('Invoice number requerido')
     if (!data.amount?.value) throw new Error('Amount requerido')
@@ -87,7 +89,12 @@ export async function createInvoice(data: UploadInvoice, projectId: string) {
 
     if (insertError) throw new Error(`Insert fallido: ${insertError.message}`)
 
-    return invoice
+    return {
+        ...invoice,
+        paid_amount: 0,
+        pending_amount: 0,
+        outstanding_amount: invoice.amount,
+    }
 }
 
 import JSZip from "jszip";

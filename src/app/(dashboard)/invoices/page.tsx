@@ -11,7 +11,7 @@ import { HeaderTitle, HeaderWrapper } from "@/components/Header";
 
 import NewInvoiceModal from "./_components/modals/NewInvoiceModal";
 
-import { Invoice } from "@/types/Invoice";
+import { InvoiceSummary } from "@/types/Invoice";
 
 import { ITEMS_PER_PAGE } from "./_utils/constant";
 
@@ -26,10 +26,10 @@ import { downloadUnpaidInvoicesPDF } from "./actions";
 const Invoices = () => {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [invoices, setInvoices] = useState<Invoice[]>([]);
+    const [invoices, setInvoices] = useState<InvoiceSummary[]>([]);
     const [filters, setFilters] = useState<InvoiceFilters>({ projectId: '', page: 1 });
     const [totalCount, setTotalCount] = useState(0);
-    const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);
+    const [selectedInvoice, setSelectedInvoice] = useState<InvoiceSummary | null>(null);
 
 
     const projectName = useProjectsStore(s => s.project?.name);
@@ -40,7 +40,7 @@ const Invoices = () => {
         if (!filters.projectId) return
 
         let query = supabase
-            .from('invoices')
+            .from('invoice_summary')
             .select('*', { count: 'exact' })
             .eq('project_id', filters.projectId)
             .order('created_at', { ascending: false })
@@ -62,7 +62,7 @@ const Invoices = () => {
             return
         }
 
-        setInvoices(data as Invoice[])
+        setInvoices(data as InvoiceSummary[])
         setTotalCount(count ?? 0)
     }
 
@@ -76,11 +76,12 @@ const Invoices = () => {
         load()
     }, [projectId, filters])
 
-    const addInvoice = (invoice: Invoice) => {
+    const addInvoice = (invoice: InvoiceSummary) => {
         if (totalCount >= ITEMS_PER_PAGE) {
             setTotalCount(prev => prev + 1)
             return
         }
+        
 
         setInvoices(prev => [invoice, ...prev])
     }

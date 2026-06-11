@@ -10,7 +10,7 @@ const InvoicePage = async ({ params }: { params: { id: string } }) => {
     const supabase = await createServerClient();
 
     const { data: invoice } = await supabase
-        .from("invoices")
+        .from("invoice_summary")
         .select("*")
         .eq("id", id)
         .single();

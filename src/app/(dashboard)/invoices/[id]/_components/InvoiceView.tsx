@@ -2,7 +2,7 @@
 
 import styled from "styled-components";
 
-import { Invoice } from "@/types/Invoice";
+import { InvoiceSummary } from "@/types/Invoice";
 
 import {HeaderWrapper} from "@/components/Header";
 import Path, {RedirectPath} from "@/components/Path";
@@ -11,7 +11,7 @@ import Title from "@/components/details/Title";
 import DownloadButton from "@/components/details/DownloadButton";
 import InvoiceDetail from "@/components/details/InvoiceDetail";
 
-const InvoiceView = ({ invoice }: { invoice: Invoice }) => {
+const InvoiceView = ({ invoice }: { invoice: InvoiceSummary }) => {
 
     return (
         <>
@@ -25,8 +25,6 @@ const InvoiceView = ({ invoice }: { invoice: Invoice }) => {
             </HeaderWrapper>
 
             <Wrapper>
-                
-
                 <InvoiceDetail invoice={invoice} pdfHeight="100%" pdfWidth="80%"/>
             </Wrapper>
         </>

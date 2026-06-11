@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-import { Invoice } from "@/types/Invoice"
+import { InvoiceSummary } from "@/types/Invoice"
 
 import { useProjectsStore } from "@/stores/projectStore";
 
@@ -10,7 +10,7 @@ import PDF from "./PDF"
 import InfoSection, { TwoRowData } from "./InfoSection"
 import ProgressBar from "../ProgressBar";
 
-const InvoiceDetail = ({invoice, pdfWidth, pdfHeight }: {invoice: Invoice, pdfWidth: string, pdfHeight: string}) => {
+const InvoiceDetail = ({invoice, pdfWidth, pdfHeight }: {invoice: InvoiceSummary, pdfWidth: string, pdfHeight: string}) => {
 
     const projectName = useProjectsStore(s => s.project?.name);
     
@@ -21,10 +21,11 @@ const InvoiceDetail = ({invoice, pdfWidth, pdfHeight }: {invoice: Invoice, pdfWi
             <div style={{ display: 'flex', flexDirection: 'column', width: '50%' }}>
                 <InfoSection title="RESUMEN DE PAGO">
                     <TwoRowData leftText="Total facturado" rightText={`${invoice.amount} ${invoice.currency}`} />
-                    <TwoRowData leftText="Cobrado" rightText={"300 ARS"} rightTextColor="var(--Success-600)" />
-                    <TwoRowData leftText="Pendiente" rightText={`100 ARS`} rightTextColor="var(--Error-600)" />
-                    <ProgressBar progress={30} color="success" />
-                    <PercentText>30% cobrado</PercentText>
+                    <TwoRowData leftText="Cobrado" rightText={`${invoice.paid_amount} ${invoice.currency}`} rightTextColor="var(--Success-600)" />
+                    <TwoRowData leftText="Pendiente" rightText={`${invoice.pending_amount} ${invoice.currency}`} rightTextColor="var(--Warning-600)" />
+                    <TwoRowData leftText="Adeudado" rightText={`${invoice.outstanding_amount } ${invoice.currency}`} rightTextColor="var(--Error-600)" />
+                    <ProgressBar progress={(invoice.paid_amount / invoice.amount) * 100} color="success" />
+                    <PercentText>{((invoice.paid_amount / invoice.amount) * 100).toFixed(0)}% cobrado</PercentText>
                 </InfoSection>
 
                 <InfoSection title="DETALLES">
