@@ -13,7 +13,7 @@ import ProgressBar from "../ProgressBar";
 const InvoiceDetail = ({invoice, pdfWidth, pdfHeight }: {invoice: InvoiceSummary, pdfWidth: string, pdfHeight: string}) => {
 
     const projectName = useProjectsStore(s => s.project?.name);
-    
+
     return (
         <div style={{ display: 'flex', flex: "1" }}>
             <PDF path={invoice.pdf_path} width={pdfWidth} height={pdfHeight} />

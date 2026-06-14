@@ -43,8 +43,6 @@ import { convertToUSD } from "@/lib/exchange-rate";
 
 import { UploadPayload } from './_components/modals/UploadMode'
 
-
-// FALTA PASAR QUE FACTURAS PAGA, Y GENERAR LAS RELACIONES Y COMO SE DISTRIBUYE EL PAGO ENTRE FACTURAS SI ES QUE SE PAGAN VARIAS CON UN MISMO COMPROBANTE. TAMBIEN FALTA VER EL TEMA DE LOS ESTADOS DE LAS FACTURAS, SI SE PAGAN PARCIALMENTE O COMPLETAMENTE ETC
 export async function createPayload(data: UploadPayload, projectId: string) {
     // Validación
     if (!data.paymentNumber?.value) throw new Error('Payment number requerido')
@@ -89,6 +87,40 @@ export async function createPayload(data: UploadPayload, projectId: string) {
         .single()
 
     if (insertError) throw new Error(`Insert fallido: ${insertError.message}`)
+
+    //Obtener las invoices que se quieren pagar
+
+    const { data: invoicesToPay, error: invoicesError } = await supabase
+        .from('invoice_summary')
+        .select('*')
+        .in('id', data.invoicesToPay.map(inv => inv.id))
+        .gt('outstanding_amount', 0)
+        .order('created_at', { ascending: true });
+
+    if (invoicesError) throw new Error(`Error al obtener facturas: ${invoicesError.message}`)
+
+    let totalPayed = data.amount.value;
+
+    for (const invoice of invoicesToPay) {
+        if (totalPayed <= 0) break;
+
+        const amountToPay = Math.min(invoice.outstanding_amount, totalPayed);
+
+        const { error: paymentInvoiceError } = await supabase
+            .from('payment_invoices')
+            .insert({
+                payment_id: payment.id,
+                invoice_id: invoice.id,
+                amount_applied: amountToPay,
+                amount_applied_usd: amountToPay * exchangeRate, // revisá la dirección
+            })
+
+        if (paymentInvoiceError) {
+            console.error(`Error al relacionar pago con factura: ${paymentInvoiceError.message}`)
+        }
+
+        totalPayed -= amountToPay;
+    }
 
     return payment;
 }

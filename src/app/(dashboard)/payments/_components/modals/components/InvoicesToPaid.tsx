@@ -8,7 +8,12 @@ import { InvoiceSummary } from "@/types/Invoice";
 
 import { useProjectsStore } from "@/stores/projectStore";
 
-const InvoicesToPaid = () => {
+interface InvoicesToPaidProps {
+    invoicesSelected: string[];
+    onSelectInvoice: (invoice: InvoiceSummary) => void;
+}
+
+const InvoicesToPaid = ({ invoicesSelected, onSelectInvoice }: InvoicesToPaidProps) => {
     const [invoices, setInvoices] = useState<InvoiceSummary[]>([]);
 
     const projectId = useProjectsStore(state => state.project?.id);
@@ -39,7 +44,7 @@ const InvoicesToPaid = () => {
             <Title>Facturas a cubrir</Title>
 
             {invoices.map((invoice, index) => (
-                <InvoiceItem key={invoice.id} invoice={invoice} selected={index % 2 === 0} />
+                <InvoiceItem key={invoice.id} invoice={invoice} selected={invoicesSelected.includes(invoice.id)} onSelect={() => onSelectInvoice(invoice)} />
             ))}
         </Wrapper>
     )
@@ -66,11 +71,11 @@ import ProgressBar from "@/components/ProgressBar";
 import { StatusChip } from "@/components/Chips";
 import CheckBox from "@/components/CheckButton";
 
-const InvoiceItem = ({ invoice, selected }: { invoice: InvoiceSummary, selected?: boolean }) => {
+const InvoiceItem = ({ invoice, selected, onSelect }: { invoice: InvoiceSummary, selected?: boolean, onSelect: () => void }) => {
 
     return(
-        <WrapperInvoice $selected={selected}>
-            <CheckBox checked={selected} onChange={() => {}} size="medium" color="primary"/>
+        <WrapperInvoice $selected={selected} onClick={onSelect}>
+            <CheckBox checked={selected} onChange={onSelect} size="medium" color="primary"/>
 
             <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem", flex: 1 }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>

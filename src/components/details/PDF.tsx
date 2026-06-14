@@ -5,7 +5,7 @@ import {useState, useEffect} from "react";
 
 const PDF = ({ path, width, height }: { path: string, width?: string, height?: string }) => {
 
-    const [url, setUrl] = useState<string>("")
+    const [url, setUrl] = useState<string | undefined>(undefined)
 
     useEffect(() => {
 
@@ -24,7 +24,7 @@ const PDF = ({ path, width, height }: { path: string, width?: string, height?: s
 
     return (
         <iframe
-            src={url}
+            src={url || undefined}
             style={{ width: width || '50vh', height: height || '80vh', border: 'none' }}
             title="Documento"
         />

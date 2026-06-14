@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation"
 import Modal, { HeaderWrapper, WrapperModal } from "@/components/modals/Modal";
 import Icon from "@/components/icons/Icon";
 
-import { Invoice } from "@/types/Invoice";
+import {InvoiceSummary } from "@/types/Invoice";
 
 import Button from "@/components/Button";
 
@@ -12,7 +12,7 @@ import Title from "@/components/details/Title";
 import DownloadButton from "@/components/details/DownloadButton";
 import InvoiceDetail from "@/components/details/InvoiceDetail";
 
-const InvoiceDetailModal = ({ invoice, onClose }: { invoice: Invoice, onClose: () => void }) => {
+const InvoiceDetailModal = ({ invoice, onClose }: { invoice: InvoiceSummary, onClose: () => void }) => {
 
     const router = useRouter();
 

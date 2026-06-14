@@ -5,7 +5,6 @@ import { createServerClient } from "@/lib/supabase.server";
 import InvoiceView from "./_components/InvoiceView";
 
 const InvoicePage = async ({ params }: { params: { id: string } }) => {
-
     const { id } = await params;
     const supabase = await createServerClient();
 

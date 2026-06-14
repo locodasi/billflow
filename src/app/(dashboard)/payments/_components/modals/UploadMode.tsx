@@ -14,6 +14,7 @@ import TextArea from "@/components/inputs/Textarea";
 import NumberInput from "@/components/inputs/NumberInput";
 import FileInput from "@/components/inputs/FileInput";
 import NormalSelect from "@/components/Select";
+import Icon from "@/components/icons/Icon";
 
 import { Payment } from "@/types/payment";
 
@@ -51,6 +52,7 @@ export interface UploadPayload {
     notes: string;
     file: File | null;
     payment_method: string;
+    invoicesToPay: InvoiceSummary[];
 }
 
 const InitialState: UploadPayload = {
@@ -69,6 +71,11 @@ const InitialState: UploadPayload = {
     notes: "",
     file: null,
     payment_method: "manual",
+    invoicesToPay: [],
+}
+
+const InvoicesTotal = (invoices: InvoiceSummary[]) => {
+    return invoices.reduce((total, invoice) => total + invoice.amount, 0);
 }
 
 export interface UploadModeProps {
@@ -176,6 +183,21 @@ const UploadMode = ({ close, addPayment, mode, setMode }: UploadModeProps) => {
         }
     }
 
+    const onSelectInvoice = (invoice: InvoiceSummary) => {
+        const isSelected = paymentData.invoicesToPay.some(inv => inv.id === invoice.id);
+        if (isSelected) {
+            setPaymentData({
+                ...paymentData,
+                invoicesToPay: paymentData.invoicesToPay.filter(inv => inv.id !== invoice.id)
+            });
+        } else {
+            setPaymentData({
+                ...paymentData,
+                invoicesToPay: [...paymentData.invoicesToPay, invoice]
+            });
+        }
+    }
+
     return (
         <>
 
@@ -223,24 +245,77 @@ const UploadMode = ({ close, addPayment, mode, setMode }: UploadModeProps) => {
 
                     />
 
-                    <TextArea value={paymentData.notes} onChange={(v) => setPaymentData({ ...paymentData, notes: v })} label="Notas" placeholder="Opcional" minLines={5}  maxLines={10}/>
+                    <TextArea value={paymentData.notes} onChange={(v) => setPaymentData({ ...paymentData, notes: v })} label="Notas" placeholder="Opcional" minLines={5} maxLines={10} />
 
                     {error && <p style={{ color: "red" }}>{error}</p>}
                 </>
 
                 <>
-                    <InvoicesToPaid />
+                    <InvoicesToPaid invoicesSelected={paymentData.invoicesToPay.map(invoice => invoice.id)} onSelectInvoice={onSelectInvoice} />
 
-                    <div style={{height: "400px", width: "100px", backgroundColor: "var(--Border-Colors-border-primary)"  }}>
+                    <InfoText />
 
-                    </div>
+                    <Area>
+                        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                            <Info>Monto del recibo</Info>
+                            <Info style={{ fontWeight: "bold", color: "var(--Text-text-primary)" }}>{paymentData.amount.value} {paymentData.currency.value}</Info>
+                        </div>
+
+                        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                            <Info>Facturas seleccionadas </Info>
+                            <Info style={{ fontWeight: "bold", color: "var(--Text-text-primary)" }}>
+                                {paymentData.invoicesToPay.length} - {InvoicesTotal(paymentData.invoicesToPay)} {paymentData.invoicesToPay[0]?.currency || paymentData.currency.value}
+                            </Info>
+                        </div>
+
+                        <Line />
+
+                        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                            <Info>Diferencia</Info>
+                            <Info style={{ fontWeight: "bold", color: InvoicesTotal(paymentData.invoicesToPay) > paymentData.amount.value ? "var(--Error-700)" : "var(--Success-700)" }}>
+                                {paymentData.amount.value - InvoicesTotal(paymentData.invoicesToPay)} {paymentData.currency.value}
+                            </Info>
+                        </div>
+                    </Area>
                 </>
 
             </MiddleArea>
 
-            <Footer onClose={close} onSave={savePayment} enableSave={!!paymentData.file && !isLoading} />
+            <Footer onClose={close} onSave={savePayment} enableSave={!!paymentData.file && paymentData.invoicesToPay.length > 0 && !isLoading} />
         </>
     )
 }
 
 export default UploadMode;
+
+import styled from "styled-components";
+import { InvoiceSummary } from "@/types/Invoice";
+import Line from "@/components/Line";
+
+const Area = styled.div`
+    padding: 0.5rem;
+    background-color: var(--Background-Colors-bg-secondary);
+    border-radius: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+
+    width: 400px;
+`;
+
+const InfoText = () => {
+    return (
+        <Area>
+            <div style={{ display: "flex", gap: "0.25rem" }}>
+                <Icon icon="warning-circle" size={24} iconColor="var(--Icons-icon-300)" />
+                <Info>El monto se distribuirá automáticamente de la factura más vieja a la más nueva.</Info>
+            </div>
+        </Area>
+    );
+}
+
+const Info = styled.p`
+    font-size: 0.875rem;
+    color: var(--Text-text-tertiary);
+    font-weight: 400;
+`;

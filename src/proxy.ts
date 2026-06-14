@@ -4,6 +4,12 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import env from "@/lib/env";
 
+const ADMIN_ONLY_ROUTES = [
+    "/clients",
+    "/metrics/global",
+    // agregás las que necesites
+];
+
 export async function proxy(req: NextRequest) {
     let res = NextResponse.next({
         request: {
@@ -48,6 +54,17 @@ export async function proxy(req: NextRequest) {
     if (isAuth && isLoginPage) {
         return NextResponse.redirect(new URL("/invoices", req.url));
     }
+
+    const isAdminZone = ADMIN_ONLY_ROUTES.some(route =>
+        req.nextUrl.pathname.startsWith(route)
+    );
+
+    const role = session?.user?.app_metadata?.role;
+
+    if (isAuth && isAdminZone && role !== "admin") {
+        return NextResponse.redirect(new URL("/invoices", req.url));
+    }
+
 }
 
 export const config = {
