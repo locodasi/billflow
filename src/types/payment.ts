@@ -8,7 +8,6 @@ export interface Payment {
     amount: number;
     currency: string;
     status: PaymentStatus;
-    payment_date: string;
     payment_method: string;
     notes: string;
     receipt_pdf_path: string;

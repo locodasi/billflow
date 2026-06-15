@@ -8,7 +8,6 @@ export interface Invoice {
     amount: number;
     currency: string;
     status: InvoiceStatus;
-    issue_date: string;
     due_date: string | null;
     pdf_path: string;
     notes: string;

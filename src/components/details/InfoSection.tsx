@@ -18,6 +18,7 @@ const InfoSectionWrapper = styled.div<{$useBorder?: boolean}>`
     gap: 0.25rem;
     padding: 1rem;
     border-bottom: ${({ $useBorder }) => $useBorder ? '1px solid var(--Border-Colors-border-secondary)' : 'none'};
+
 `;
 
 const InfoTitle = styled.p`
