@@ -21,12 +21,22 @@ interface InvoiceRelation {
     amount_applied: number;
     invoices: {
         invoice_number: string;
-        status: string;
         currency: string;
         created_at: string;
+    },
+    invoice_summary: {
+        computed_status: string;
     }
 }
-const PaymentDetail = ({ payment, pdfWidth, pdfHeight }: { payment: Payment, pdfWidth: string, pdfHeight: string }) => {
+
+interface PaymentDetailProps {
+    payment: Payment;
+    pdfWidth: string;
+    pdfHeight: string;
+    updatePaymentStatus: (paymentId: string, newStatus: "approved" | "rejected") => Promise<void>;
+}
+
+const PaymentDetail = ({ payment, pdfWidth, pdfHeight, updatePaymentStatus }: PaymentDetailProps) => {
 
     const [invoicesRelation, setInvoicesRelation] = useState<InvoiceRelation[]>([]);
     const projectName = useProjectsStore(s => s.project?.name);
@@ -40,9 +50,11 @@ const PaymentDetail = ({ payment, pdfWidth, pdfHeight }: { payment: Payment, pdf
                     amount_applied,
                     invoices (
                         invoice_number,
-                        status,
                         currency,
                         created_at
+                    ),
+                    invoice_summary (
+                        computed_status
                     )
                 `)
                 .eq('payment_id', payment.id);
@@ -72,8 +84,8 @@ const PaymentDetail = ({ payment, pdfWidth, pdfHeight }: { payment: Payment, pdf
                     {
                         role === "admin" && payment.status === "pending" && (
                             <div style={{display: "flex", justifyContent: "space-between"}}>
-                                <Button text="Aprobar" onClick={()=>{}} type="primary"/>
-                                <Button text="Rechazar" onClick={()=>{}} type="error"/>
+                                <Button text="Aprobar" onClick={() => updatePaymentStatus(payment.id, "approved")} type="primary"/>
+                                <Button text="Rechazar" onClick={() => updatePaymentStatus(payment.id, "rejected")} type="error"/>
                             </div>
                         )
                     }
@@ -89,7 +101,7 @@ const PaymentDetail = ({ payment, pdfWidth, pdfHeight }: { payment: Payment, pdf
                             <ElementAssociated
                                 key={relation.invoice_id}
                                 title={relation.invoices.invoice_number}
-                                status={relation.invoices.status}
+                                status={relation.invoice_summary.computed_status}
                                 moneyText={`${relation.amount_applied} ${relation.invoices.currency} aplicado`}
                                 date={relation.invoices.created_at}
                                 url={`/invoices/${relation.invoice_id}`}

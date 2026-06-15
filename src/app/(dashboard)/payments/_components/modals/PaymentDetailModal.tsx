@@ -13,7 +13,7 @@ import DownloadButton from "@/components/details/DownloadButton";
 import PaymentDetail from "@/components/details/PaymentDetail";
 
 
-const PaymentDetailModal = ({ payment, onClose }: { payment: Payment, onClose: () => void }) => {
+const PaymentDetailModal = ({ payment, onClose, updatePaymentStatus }: { payment: Payment, onClose: () => void, updatePaymentStatus: (paymentId: string, newStatus: "approved" | "rejected") => Promise<void> }) => {
 
     const router = useRouter();
 
@@ -34,7 +34,7 @@ const PaymentDetailModal = ({ payment, onClose }: { payment: Payment, onClose: (
                     </div>
                 </HeaderWrapper>
 
-                <PaymentDetail payment={payment} pdfWidth="50vw" pdfHeight="80vh" />
+                <PaymentDetail payment={payment} pdfWidth="50vw" pdfHeight="80vh" updatePaymentStatus={updatePaymentStatus}/>
 
             </WrapperModal>
         </Modal>

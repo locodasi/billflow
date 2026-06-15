@@ -19,6 +19,7 @@ import { PaymentFilters } from "./_types/filters";
 import Filters from "./_components/Filters";
 import PaymentCard from "./_components/PaymentCard";
 import PaymentDetailModal from "./_components/modals/PaymentDetailModal";
+import { updatePaymentStatus } from "./actions";
 
 const PaymentsPage = () => {
 
@@ -81,6 +82,12 @@ const PaymentsPage = () => {
         setPayments(prev => [payment, ...prev])
     }
 
+    const handleUpdatePaymentStatus = async (paymentId: string, newStatus: "approved" | "rejected") => {
+        await updatePaymentStatus(paymentId, newStatus);
+        setPayments(prev => prev.map(p => p.id === paymentId ? { ...p, status: newStatus } : p));
+        setSelectedPayment(prev => prev && prev.id === paymentId ? { ...prev, status: newStatus } : prev);
+    }
+
     return (
         <>
             {isModalOpen && <NewPaymentModal onClose={() => setIsModalOpen(false)} addPayment={addPayment} />}
@@ -101,7 +108,7 @@ const PaymentsPage = () => {
                 </div>
             </div>
 
-            {selectedPayment && <PaymentDetailModal payment={selectedPayment} onClose={() => setSelectedPayment(null)} />}
+            {selectedPayment && <PaymentDetailModal payment={selectedPayment} onClose={() => setSelectedPayment(null)} updatePaymentStatus={handleUpdatePaymentStatus} />}
         </>
     )
 }

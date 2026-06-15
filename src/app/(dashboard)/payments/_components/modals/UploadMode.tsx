@@ -75,7 +75,7 @@ const InitialState: UploadPayload = {
 }
 
 const InvoicesTotal = (invoices: InvoiceSummary[]) => {
-    return invoices.reduce((total, invoice) => total + invoice.amount, 0);
+    return invoices.reduce((total, invoice) => total + invoice.outstanding_amount, 0);
 }
 
 export interface UploadModeProps {

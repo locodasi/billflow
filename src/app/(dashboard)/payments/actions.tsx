@@ -88,8 +88,6 @@ export async function createPayload(data: UploadPayload, projectId: string) {
 
     if (insertError) throw new Error(`Insert fallido: ${insertError.message}`)
 
-    //Obtener las invoices que se quieren pagar
-
     const { data: invoicesToPay, error: invoicesError } = await supabase
         .from('invoice_summary')
         .select('*')
@@ -124,4 +122,15 @@ export async function createPayload(data: UploadPayload, projectId: string) {
 
     return payment;
 }
+
+export async function updatePaymentStatus(paymentId: string, newStatus: string) {
+    const supabase = await createServerClient();
+
+    const { error } = await supabase
+        .from('payments')
+        .update({ status: newStatus })
+        .eq('id', paymentId);
+
+    if (error) throw new Error(`Error al actualizar estado: ${error.message}`)
+} 
 

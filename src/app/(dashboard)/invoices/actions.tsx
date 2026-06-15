@@ -107,10 +107,10 @@ export async function downloadUnpaidInvoicesPDF(projectId: string): Promise<{
     const supabase = await createServerClient();
 
     const { data: invoices, error: fetchError } = await supabase
-        .from("invoices")
+        .from("invoice_summary")
         .select("id, pdf_path")
         .eq("project_id", projectId)
-        .eq("status", "unpaid")
+        .eq("computed_status", "unpaid") //Aca habria que ver si descargar deberia ser las que estan unpaid o las que tienen outstanding_amount = amount (osea no se pago ni se sta procesando un peso)
         .not("pdf_path", "is", null);
 
     if (fetchError) return { data: null, error: fetchError.message };
