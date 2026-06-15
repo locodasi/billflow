@@ -5,7 +5,6 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 
 import { useProjectsStore } from "@/stores/projectStore";
-import { useUserStore } from "@/stores/userStore";
 
 import { HeaderTitle, HeaderWrapper } from "@/components/Header";
 
@@ -31,10 +30,9 @@ const Invoices = () => {
     const [totalCount, setTotalCount] = useState(0);
     const [selectedInvoice, setSelectedInvoice] = useState<InvoiceSummary | null>(null);
 
-
+ 
     const projectName = useProjectsStore(s => s.project?.name);
     const projectId = useProjectsStore(s => s.project?.id);
-    const role = useUserStore(s => s.role);
 
     const fetchInvoices = async (filters: InvoiceFilters) => {
         if (!filters.projectId) return

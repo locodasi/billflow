@@ -18,7 +18,7 @@ const InvoiceView = ({ invoice }: { invoice: InvoiceSummary }) => {
             <HeaderWrapper>
                 <Path>
                     <RedirectPath path="/invoices" label="Facturas" />
-                    <Title text={invoice.invoice_number} status={invoice.status} />
+                    <Title text={invoice.invoice_number} status={invoice.computed_status} />
                 </Path>
 
                 <DownloadButton file_title={invoice.invoice_number} path={invoice.pdf_path} />

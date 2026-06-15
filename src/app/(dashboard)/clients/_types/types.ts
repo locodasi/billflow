@@ -3,9 +3,8 @@ export type Client = {
     name: string;
     email: string;
     project_count: number;
-    total_invoiced: number;
-    total_paid: number;
-    total_pending: number;
+    invoice_count: number;
+    total_invoiced_usd: number;
 }
 
 export type Project = {
@@ -14,7 +13,8 @@ export type Project = {
     name: string;
     currency: string;
     bill_address: string | null;
+    invoice_count: number;
     total_invoiced: number;
-    total_paid: number;
+    total_collected: number;
     total_pending: number;
 }

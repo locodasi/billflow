@@ -80,7 +80,6 @@ export async function createInvoice(data: UploadInvoice, projectId: string): Pro
             notes: data.notes,
             metadata: data.metadata,
             pdf_path: filePath,
-            status: 'unpaid',
             exchange_rate_to_usd: exchangeRate,
             amount_usd: amountUsd,
         })

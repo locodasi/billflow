@@ -11,7 +11,7 @@ import { formatDate } from "@/utils/timeFunctions";
 
 import { Payment } from "@/types/payment";
 
-const PaymentCard = ({ payment }: { payment: Payment }) => {
+const PaymentCard = ({ payment, onClick }: { payment: Payment, onClick: () => void }) => {
 
     const handleDownload = async () => {
         const { data, error } = await supabase.storage
@@ -29,7 +29,7 @@ const PaymentCard = ({ payment }: { payment: Payment }) => {
     }
 
     return (
-        <Card cardStyles={{ boxShadow: `-3px 0px 0px var(--status-${payment.status.toLowerCase()}-solid)` }}>
+        <Card cardStyles={{ boxShadow: `-3px 0px 0px var(--status-${payment.status.toLowerCase()}-solid)` }} onClick={onClick}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <Title>{payment.payment_number}</Title>
                 <StatusChip text={payment.status} status={payment.status.toLowerCase()} />

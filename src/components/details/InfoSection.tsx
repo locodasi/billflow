@@ -23,7 +23,7 @@ const InfoSectionWrapper = styled.div<{$useBorder?: boolean}>`
 
 const InfoTitle = styled.p`
     color: var(--Text-text-secondary, #344051);
-    font-size: 0.875rem;
+    font-size: 1rem;
     font-weight: 500;
 `;
 
@@ -31,8 +31,8 @@ export const TwoRowData = ({leftText, rightText, rightTextColor = "var(--Text-te
 
     return(
         <div style={{display: "flex", justifyContent: "space-between", alignItems:"center"}}>
-            <p style={{fontSize: '1rem', fontWeight: 500, color: "var(--Text-text-secondary, #344051)"}}>{leftText}</p>
-            <p style={{color: rightTextColor, fontSize: '1rem', fontWeight: 500}}>{rightText}</p>
+            <p style={{fontSize: '0.875rem', fontWeight: 500, color: "var(--Text-text-secondary, #344051)"}}>{leftText}</p>
+            <p style={{color: rightTextColor, fontSize: '0.875rem', fontWeight: 500}}>{rightText}</p>
         </div>
     )
 }

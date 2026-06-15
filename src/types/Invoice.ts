@@ -7,7 +7,6 @@ export interface Invoice {
     project_id: string;
     amount: number;
     currency: string;
-    status: InvoiceStatus;
     due_date: string | null;
     pdf_path: string;
     notes: string;
@@ -18,6 +17,7 @@ export interface Invoice {
 }
 
 export interface InvoiceSummary extends Invoice {
+    computed_status: InvoiceStatus;
     paid_amount:  number;
     pending_amount: number;
     outstanding_amount : number;

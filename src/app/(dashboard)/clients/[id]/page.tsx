@@ -21,7 +21,6 @@ const ClientPage = async ({ params }: { params: { id: string } }) => {
         .select("*")
         .eq("client_id", id);
 
-    // console.log("Projects:", projects);
     if (!client) return <p>Cliente no encontrado</p>;
 
     return <ClientView client={client} projects={projects ?? []} />;

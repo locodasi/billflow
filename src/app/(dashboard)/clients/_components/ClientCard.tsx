@@ -27,7 +27,7 @@ const ClientCard = ({client}: {client: Client}) => {
                     <TwoRowData boldText={client.project_count.toString()} normalText="Proyectos" />
                 </div>
                 <div style={{display: "flex", flexDirection: "column", paddingLeft: "0.5rem"}}>
-                    <TwoRowData boldText={`$${client.total_invoiced}`} normalText="Facturado" />
+                    <TwoRowData boldText={`$${client.total_invoiced_usd}`} normalText="Facturado (USD)" />
                 </div>
             </div>
         </Card>

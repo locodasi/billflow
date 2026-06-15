@@ -18,6 +18,7 @@ import { PaymentFilters } from "./_types/filters";
 
 import Filters from "./_components/Filters";
 import PaymentCard from "./_components/PaymentCard";
+import PaymentDetailModal from "./_components/modals/PaymentDetailModal";
 
 const PaymentsPage = () => {
 
@@ -25,6 +26,7 @@ const PaymentsPage = () => {
     const [payments, setPayments] = useState<Payment[]>([]);
     const [filters, setFilters] = useState<PaymentFilters>({ projectId: '', page: 1 });
     const [totalCount, setTotalCount] = useState(0);
+    const [selectedPayment, setSelectedPayment] = useState<Payment | null>(null);
 
 
     const projectName = useProjectsStore(s => s.project?.name);
@@ -94,10 +96,12 @@ const PaymentsPage = () => {
                     gap: '1rem'
                 }}>
                     {payments.map(payment => (
-                        <PaymentCard key={payment.id} payment={payment} />
+                        <PaymentCard key={payment.id} payment={payment} onClick={() => setSelectedPayment(payment)} />
                     ))}
                 </div>
             </div>
+
+            {selectedPayment && <PaymentDetailModal payment={selectedPayment} onClose={() => setSelectedPayment(null)} />}
         </>
     )
 }
