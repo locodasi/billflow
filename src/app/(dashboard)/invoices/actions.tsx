@@ -42,6 +42,8 @@ export async function parseInvoice(formData: FormData): Promise<InvoiceData> {
 
 import { createServerClient } from "@/lib/supabase.server";
 import { convertToUSD } from '@/lib/exchange-rate'
+import { invoiceUploadedEmailTemplate } from '@/lib/notifications/templates/email/helper'
+import { getUserByProjectId } from '@/lib/supabaseFunctions'
 
 import { UploadInvoice } from './_components/modals/UploadMode'
 
@@ -88,13 +90,34 @@ export async function createInvoice(data: UploadInvoice, projectId: string): Pro
 
     if (insertError) throw new Error(`Insert fallido: ${insertError.message}`)
 
+    const user = await getUserByProjectId(projectId);
+
+    const {data: project} = await supabase
+        .from('projects')
+        .select('name')
+        .eq('id', projectId)
+        .single()
+
+    // Enviar notificación de nueva factura
+    const result = await notificationService.send(
+        await invoiceUploadedEmailTemplate({ recipient: { name: user.fullName, email: user.email }, amount: data.amount.value, currency: data.currency.value, invoiceNumber: data.invoiceNumber.value, invoiceId: invoice.id, projectName: project?.name ?? "Tu proyecto" })
+    );
+
+    if (!result.success) {
+        console.error("[sendWelcomeNotification]", result.error);
+    }
+
     return {
         ...invoice,
         paid_amount: 0,
         pending_amount: 0,
         outstanding_amount: invoice.amount,
+        computed_status: "unpaid",
     }
 }
+
+import { notificationService } from "@/lib/notifications/notification-service";
+
 
 import JSZip from "jszip";
 

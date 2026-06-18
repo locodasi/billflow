@@ -7,14 +7,17 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "icons": "node generateIcons.js"
+    "icons": "node generateIcons.js",
+    "email:dev": "email dev --dir src/lib/notifications/templates/email"
   },
   "dependencies": {
+    "@react-email/components": "^1.0.12",
     "@supabase/ssr": "0.10.3",
     "@supabase/supabase-js": "2.106.2",
     "@tippyjs/react": "4.2.6",
     "jszip": "^3.10.1",
     "next": "16.2.6",
+    "nodemailer": "^9.0.1",
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "react-select": "5.10.2",
@@ -25,13 +28,16 @@
     "zustand": "5.0.14"
   },
   "devDependencies": {
+    "@react-email/ui": "6.6.3",
     "@tailwindcss/postcss": "4",
     "@types/jszip": "^3.4.1",
     "@types/node": "20",
+    "@types/nodemailer": "^8.0.1",
     "@types/react": "19",
     "@types/react-dom": "19",
     "eslint": "9",
     "eslint-config-next": "16.2.6",
+    "react-email": "^6.6.3",
     "tailwindcss": "4",
     "typescript": "5"
   },

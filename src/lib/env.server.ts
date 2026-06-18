@@ -4,6 +4,7 @@ import env from "./env";
 const serverEnv = {
     ...env,
     SUPABASE_SECRET_KEY: process.env.SUPABASE_SECRET_KEY!,
+    PERSONAL_EMAIL: process.env.PERSONAL_EMAIL!,
 } as const;
 
 export default serverEnv;

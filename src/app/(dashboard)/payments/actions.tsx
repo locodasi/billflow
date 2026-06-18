@@ -40,6 +40,9 @@ export async function parsePayment(formData: FormData): Promise<PaymentData> {
 
 import { createServerClient } from "@/lib/supabase.server";
 import { convertToUSD } from "@/lib/exchange-rate";
+import { notificationService } from '@/lib/notifications/notification-service'
+import { paymentsUploadedEmailTemplate } from '@/lib/notifications/templates/email/helper'
+import serverEnv from '@/lib/env.server'
 
 import { UploadPayload } from './_components/modals/UploadMode'
 
@@ -120,6 +123,21 @@ export async function createPayload(data: UploadPayload, projectId: string) {
         totalPayed -= amountToPay;
     }
 
+    const { data: project } = await supabase
+        .from('projects')
+        .select('name')
+        .eq('id', projectId)
+        .single()
+
+    // Enviar notificación de nuevo pago
+    const result = await notificationService.send(
+        await paymentsUploadedEmailTemplate({ recipient: { name: "Lucas", email: serverEnv.PERSONAL_EMAIL }, amount: data.amount.value, currency: data.currency.value, paymentNumber: data.paymentNumber.value, paymentId: payment.id, projectName: project?.name ?? "Tu proyecto" })
+    );
+
+    if (!result.success) {
+        console.error("[sendWelcomeNotification]", result.error);
+    }
+
     return payment;
 }
 
@@ -132,5 +150,5 @@ export async function updatePaymentStatus(paymentId: string, newStatus: string) 
         .eq('id', paymentId);
 
     if (error) throw new Error(`Error al actualizar estado: ${error.message}`)
-} 
+}
 
