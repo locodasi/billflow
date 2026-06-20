@@ -67,3 +67,30 @@ export async function paymentsUploadedEmailTemplate(
         ),
     });
 }
+
+import SetPasswordEmail from "./set-password.email";
+
+interface SetPasswordParams {
+    recipient: {
+        name: string;
+        email: string;
+    };
+    isNewAccount: boolean;
+    link: string;
+}
+
+export async function setPasswordEmailTemplate(
+    params: SetPasswordParams
+): Promise<EmailPayload> {
+    return renderEmail({
+        recipient: params.recipient,
+        subject: params.isNewAccount ? "Configura tu contraseña" : "Restablece tu contraseña",
+        component: (
+            <SetPasswordEmail
+                userName={params.recipient.name}
+                isNewAccount={params.isNewAccount}
+                link={params.link}
+            />
+        ),
+    });
+}

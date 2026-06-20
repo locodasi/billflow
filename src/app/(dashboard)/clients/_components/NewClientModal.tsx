@@ -42,9 +42,8 @@ const NewClientModal = ({ onClose, addClient }: { onClose: () => void, addClient
                 name,
                 email,
                 project_count: 0,
-                total_invoiced: 0,
-                total_paid: 0,
-                total_pending: 0,
+                invoice_count: 0,
+                total_invoiced_usd: 0,
             });
             
             onClose();

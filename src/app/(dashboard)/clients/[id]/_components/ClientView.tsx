@@ -7,6 +7,8 @@ import { useRouter } from "next/navigation";
 
 import { useState } from "react";
 
+import { sendSetPasswordEmail_action } from "@/actions/auth";
+
 import {useProjectsStore} from "@/stores/projectStore";
 
 import Header from "@/components/Header";
@@ -62,6 +64,7 @@ const ClientView = ({ client, projects }: { client: Client, projects: Project[] 
                         <TwoRowData boldText={clientState.project_count.toString()} normalText={"Proyectos"} reverse />
                         <TwoRowData boldText={clientState.total_invoiced_usd.toString()} normalText={"Total Facturado (USD)"} reverse />
                         <Button text="Editar" onClick={() => setModal("edit_client")} firstIcon={"edit-pencil"} style="outline" />
+                        <Button text="Reenviar link" onClick={() => sendSetPasswordEmail_action({ email: clientState.email, isNewAccount: false })} firstIcon={"link"} style="outline" />
                     </div>
                 </Card>
 

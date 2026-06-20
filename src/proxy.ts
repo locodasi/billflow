@@ -10,6 +10,13 @@ const ADMIN_ONLY_ROUTES = [
     // agregás las que necesites
 ];
 
+const PUBLIC_ROUTES = [
+    "/login",
+    "/set-password",
+    "/link-invalid",
+    // agregá otras rutas públicas de auth que tengas (recovery, etc.)
+];
+
 export async function proxy(req: NextRequest) {
     let res = NextResponse.next({
         request: {
@@ -44,10 +51,11 @@ export async function proxy(req: NextRequest) {
 
 
     const isAuth = !!session;
-    const isLoginPage = req.nextUrl.pathname.startsWith("/login");
+    const pathname = req.nextUrl.pathname;
+    const isPublicRoute = PUBLIC_ROUTES.some(route => pathname.startsWith(route));
+    const isLoginPage = pathname.startsWith("/login");
 
-    if (!isAuth && !isLoginPage) {
-        console.log("redirigiendo a login");
+    if (!isAuth && !isPublicRoute) {
         return NextResponse.redirect(new URL("/login", req.url));
     }
 

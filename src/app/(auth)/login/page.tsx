@@ -2,7 +2,7 @@
 
 import styled from "styled-components";
 
-import {useState} from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { login } from "@/lib/auth";
@@ -33,49 +33,38 @@ const Login = () => {
     }
 
     return (
-        <Wrapper>
-            <form onSubmit={handleSubmit} >
-                <Container>
-                    <Title>Iniciar Sesion</Title>
-                    <TextInput
-                        onChange={(value) => setEmail(value)}
-                        value={email}
-                        placeholder="jhondoe@gamil.com"
-                        label="Email"
-                        error={error}
-                    />
-                    <PasswordInput
-                        onChange={(value) => setPassword(value)}
-                        value={password}
-                        placeholder="********"
-                        label="Password"
-                        showToggle={true}
-                    />
-                    <Button
-                        text="Iniciar Sesion"
-                        onClick={handleLogin}
-                        style="filled"
-                        size="medium"
-                        type="primary"
-                        buttonType="submit"
-                        cssStyles={{ width: "100%" }}
-                    />
-                </Container>
-            </form>
-        </Wrapper>
+        <form onSubmit={handleSubmit} >
+            <Container>
+                <Title>Iniciar Sesion</Title>
+                <TextInput
+                    onChange={(value) => setEmail(value)}
+                    value={email}
+                    placeholder="jhondoe@gamil.com"
+                    label="Email"
+                    error={error}
+                />
+                <PasswordInput
+                    onChange={(value) => setPassword(value)}
+                    value={password}
+                    placeholder="********"
+                    label="Password"
+                    showToggle={true}
+                />
+                <Button
+                    text="Iniciar Sesion"
+                    onClick={handleLogin}
+                    style="filled"
+                    size="medium"
+                    type="primary"
+                    buttonType="submit"
+                    cssStyles={{ width: "100%" }}
+                />
+            </Container>
+        </form>
     )
 }
 
 export default Login;
-
-const Wrapper = styled.div`
-    height: 100vh;
-    width: 100vw;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--Background-Colors-bg-primary);
-`;
 
 const Container = styled.div`
     display: flex;
