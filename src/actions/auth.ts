@@ -29,6 +29,8 @@ export const sendSetPasswordEmail_action = async ({
     };
 
     // 1. Generar el link de recovery
+
+    console.log(`prueba: ${serverEnv.APP_URL}/set-password${isNewAccount ? "?mode=invite" : ""}`)
     const { data: linkData, error: linkError } = await supabaseAdmin.auth.admin.generateLink({
         type: "recovery",
         email,
