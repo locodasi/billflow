@@ -11,9 +11,16 @@ export const createServerClient = async () => {
             cookies: {
                 getAll() { return cookieStore.getAll() },
                 setAll(cookiesToSet) {
-                    cookiesToSet.forEach(({ name, value, options }) =>
-                        cookieStore.set(name, value, options)
-                    );
+                    try {
+                        cookiesToSet.forEach(({ name, value, options }) =>
+                            cookieStore.set(name, value, options)
+                        );
+                    } catch {
+                        // Llamado desde un Server Component, donde no se
+                        // pueden escribir cookies. Se ignora porque el
+                        // middleware (proxy.ts) ya refresca la sesión
+                        // en cada request.
+                    }
                 },
             },
         }

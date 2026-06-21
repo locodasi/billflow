@@ -58,7 +58,7 @@ const NewProjectModal = ({ clientId, onClose, onCreated }: NewProjectModalProps)
 
         addProject({bill_address: result.data.bill_address, client_id: result.data.client_id, currency: result.data.currency, name: result.data.name, id: result.data.project_id});
         
-        onCreated({...result.data, total_invoiced: 0, total_pending: 0, total_paid: 0});
+        onCreated({...result.data, total_invoiced: 0, total_pending: 0, invoice_count: 0, total_collected: 0});
         onClose();
     };
 
