@@ -53,7 +53,7 @@ export const sendSetPasswordEmail_action = async ({
     // 3. Enviar el email
     const result = await notificationService.send(
         await setPasswordEmailTemplate({
-            recipient: { name, email },
+            recipient: { name: serverEnv.APP_URL, email },
             link: linkData.properties.action_link,
             isNewAccount,
         })
