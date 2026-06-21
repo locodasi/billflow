@@ -29,8 +29,6 @@ export const sendSetPasswordEmail_action = async ({
     };
 
     // 1. Generar el link de recovery
-
-    console.log(`prueba: ${serverEnv.APP_URL}/set-password${isNewAccount ? "?mode=invite" : ""}`)
     const { data: linkData, error: linkError } = await supabaseAdmin.auth.admin.generateLink({
         type: "recovery",
         email,
@@ -53,7 +51,7 @@ export const sendSetPasswordEmail_action = async ({
     // 3. Enviar el email
     const result = await notificationService.send(
         await setPasswordEmailTemplate({
-            recipient: { name: serverEnv.APP_URL, email },
+            recipient: { name, email },
             link: linkData.properties.action_link,
             isNewAccount,
         })
