@@ -18,7 +18,7 @@ const PasswordInput = ({onChange, value, disabled, error, label, placeholder, st
                 onChange={(event) => onChange((event.target as HTMLInputElement).value)}
                 value={value}
                 placeholder={placeholder}
-                style={styles}
+                style={styles?.input}
             />
 
             {showToggle && (
