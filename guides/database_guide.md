@@ -138,3 +138,7 @@ automáticamente** (es una fila de datos, no estructura). Hacelo así:
 - [ ] El archivo está commiteado en Git antes de aplicarlo.
 - [ ] Se verificó el `--project-ref` correcto antes de pushear (fácil
       equivocarse de entorno si tenés más de uno linkeado).
+
+## 6. Agregar tu usuario admin
+
+Por ultimo agregue manualmente en la DB a su usuario, luego en profiles, cambie el role a admin y complete cualquier otro dato que sea diferente a sus necesidades en esa fila
