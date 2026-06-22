@@ -21,6 +21,7 @@ import InvoiceCard from "./_components/InvoiceCard";
 import InvoiceDetailModal from "./_components/modals/InvoiceDetailModal";
 import Button from "@/components/Button";
 import { downloadUnpaidInvoicesPDF } from "./actions";
+import { useUserStore } from "@/stores/userStore";
 
 const Invoices = () => {
 
@@ -30,7 +31,8 @@ const Invoices = () => {
     const [totalCount, setTotalCount] = useState(0);
     const [selectedInvoice, setSelectedInvoice] = useState<InvoiceSummary | null>(null);
 
- 
+    const role = useUserStore(s => s.role);
+
     const projectName = useProjectsStore(s => s.project?.name);
     const projectId = useProjectsStore(s => s.project?.id);
 
@@ -109,7 +111,7 @@ const Invoices = () => {
 
                 <div style={{ display: 'flex', gap: '0.5rem' }}>
                     <Button size="small" text="Descargar facturas impagas" firstIcon="download" onClick={handleDownloadUnpaidInvoices} />
-                    <Button size="small" text="Nueva factura" firstIcon="plus" onClick={() => setIsModalOpen(true)} />
+                    {role === "admin" && <Button size="small" text="Nueva factura" firstIcon="plus" onClick={() => setIsModalOpen(true)} />}
                 </div>
             </HeaderWrapper>
 
