@@ -3,7 +3,7 @@ import { create } from "zustand";
 import { registerStoreReset } from "./storeResetter";
 
 type Role = "admin" | "client";
-type Language = "es" | "en";
+export type Language = "es" | "en" | "de";
 
 interface UserStore {
     userId: string | null;
@@ -12,6 +12,7 @@ interface UserStore {
     language: Language;
     role: Role | null;
     setUser: (data: Omit<UserStore, "setUser" | "reset">) => void;
+    setLanguage: (language: Language) => void;
     reset: () => void;
 }
 
@@ -31,5 +32,6 @@ export const useUserStore = create<UserStore>()((set) => {
         ...INITIAL_STATE,
         reset,
         setUser: (data) => set(data),
+        setLanguage: (language: Language) => set({ language }),
     };
 });

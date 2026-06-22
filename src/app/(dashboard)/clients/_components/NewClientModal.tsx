@@ -10,9 +10,10 @@ import NormalSelect, {Option} from "@/components/Select";
 
 import { Client } from "../_types/types";
 
-const LANGUAGE_OPTIONS: Option[] = [
+export const LANGUAGE_OPTIONS: Option[] = [
     { value: "es", label: "Español" },
     { value: "en", label: "Inglés" },
+    { value: "de", label: "Alemán" },
 ];
 
 const NewClientModal = ({ onClose, addClient }: { onClose: () => void, addClient: (client: Client) => void }) => {
