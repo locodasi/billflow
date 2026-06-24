@@ -5,13 +5,21 @@ import { registerStoreReset } from "./storeResetter";
 type Role = "admin" | "client";
 export type Language = "es" | "en" | "de";
 
+export interface User {
+    userId: string | null;
+    fullName: string; 
+    email: string;
+    language: Language;
+    role: Role;
+}
+
 interface UserStore {
     userId: string | null;
-    fullName: string;
+    fullName: string; 
     email: string;
     language: Language;
     role: Role | null;
-    setUser: (data: Omit<UserStore, "setUser" | "reset">) => void;
+    setUser: (data: User) => void;
     setLanguage: (language: Language) => void;
     reset: () => void;
 }
@@ -32,6 +40,9 @@ export const useUserStore = create<UserStore>()((set) => {
         ...INITIAL_STATE,
         reset,
         setUser: (data) => set(data),
-        setLanguage: (language: Language) => set({ language }),
+        setLanguage: (language: Language) => {
+            localStorage.setItem("language", language);
+            set({ language })
+        },
     };
 });

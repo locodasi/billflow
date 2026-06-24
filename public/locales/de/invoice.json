@@ -1,0 +1,30 @@
+{
+  "invoice_one": "Rechnung",
+  "invoice_other": "Rechnungen",
+
+  "all": "Alle",
+
+  "status": {
+    "unpaid_one": "Nicht bezahlt",
+    "unpaid_other": "Nicht bezahlt",
+
+    "paid_one": "Bezahlt",
+    "paid_other": "Bezahlt",
+
+    "processing_one": "In Bearbeitung",
+    "processing_other": "In Bearbeitung",
+
+    "pending_one": "Ausstehend",
+    "pending_other": "Ausstehend",
+
+    "rejected_one": "Abgelehnt",
+    "rejected_other": "Abgelehnt",
+
+    "approved_one": "Genehmigt",
+    "approved_other": "Genehmigt"
+  },
+
+  "search_placeholder": "Nach Rechnungsnummer oder Währung suchen",
+  "download_unpaid_invoices": "Unbezahlte Rechnungen herunterladen",
+  "new_invoice": "Neue Rechnung"
+}

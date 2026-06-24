@@ -1,0 +1,30 @@
+{
+  "invoice_one": "Invoice",
+  "invoice_other": "Invoices",
+
+  "all": "All",
+
+  "status": {
+    "unpaid_one": "Unpaid",
+    "unpaid_other": "Unpaid",
+
+    "paid_one": "Paid",
+    "paid_other": "Paid",
+
+    "processing_one": "Processing",
+    "processing_other": "Processing",
+
+    "pending_one": "Pending",
+    "pending_other": "Pending",
+
+    "rejected_one": "Rejected",
+    "rejected_other": "Rejected",
+
+    "approved_one": "Approved",
+    "approved_other": "Approved"
+  },
+
+  "search_placeholder": "Search by invoice number or currency",
+  "download_unpaid_invoices": "Download unpaid invoices",
+  "new_invoice": "New invoice"
+}

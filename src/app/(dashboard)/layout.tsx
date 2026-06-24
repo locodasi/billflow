@@ -88,6 +88,7 @@ export default function DashboardLayout({
             <main style={{ display: "flex", flexDirection: "column", height: "100%", width: "100%", backgroundColor: "var(--Background-Colors-bg-primary)" }}>
                 {children}
             </main>
+            
         </div>
     );
 }

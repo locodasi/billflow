@@ -32,7 +32,7 @@ const InvoiceCard = ({ invoice, onClick }: { invoice: InvoiceSummary, onClick: (
         <Card cardStyles={{ boxShadow: `-3px 0px 0px var(--status-${invoice.computed_status.toLowerCase()}-solid)` }} onClick={onClick}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <Title>{invoice.invoice_number}</Title>
-                <StatusChip text={invoice.computed_status} status={invoice.computed_status.toLowerCase()} />
+                <StatusChip type="invoice" status={invoice.computed_status.toLowerCase()} />
             </div>
 
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>

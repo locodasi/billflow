@@ -1,5 +1,7 @@
 import styled from "styled-components";
 
+import {useTranslation} from "react-i18next"
+
 import SearchInput from "@/components/inputs/SearchInput";
 import Chips from "@/components/Chips";
 import Button from "@/components/Button";
@@ -10,6 +12,8 @@ import { ITEMS_PER_PAGE } from "../_utils/constant";
 import { InvoiceFilters } from "../_types/filters";
 
 const Filters = ({ filters, setFilters, count }: { filters: InvoiceFilters, setFilters: React.Dispatch<React.SetStateAction<InvoiceFilters>>, count: number }) => {
+
+    const { t } = useTranslation("invoice");
 
     const changeStatus = (status: string) => {
         const newFilters = { ...filters, page: 1 }
@@ -27,14 +31,14 @@ const Filters = ({ filters, setFilters, count }: { filters: InvoiceFilters, setF
 
     return (
         <Wrapper>
-            <SearchInput placeholder="Buscar por número de factura o moneda..." onSearch={v => setFilters({ ...filters, search: v, page: 1 })} width="50%" />
+            <SearchInput placeholder={t('search_placeholder')} onSearch={v => setFilters({ ...filters, search: v, page: 1 })} width="50%" />
 
             <Chips
                 items={[
-                    { text: 'Todas', value: 'all' },
-                    { text: 'Pagadas', value: 'paid' },
-                    { text: 'En proceso', value: 'processing' },
-                    { text: 'No pagadas', value: 'unpaid' },
+                    { text: t('all', { count: 2 }), value: 'all' },
+                    { text: t('status.paid', { count: 2 }), value: 'paid' },
+                    { text: t('status.processing', { count: 2 }), value: 'processing' },
+                    { text: t('status.unpaid', { count: 2 }), value: 'unpaid' },
                 ]}
                 selected={filters.status || 'all'}
                 onClick={changeStatus}

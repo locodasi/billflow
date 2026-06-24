@@ -56,11 +56,16 @@ const ChipWrapper = styled.div<{$selected: boolean}>`
     }
 `;
 
-export const StatusChip = ({text, status, style}: {text: string, status: string, style?: React.CSSProperties}) => {
+import { useTranslation } from "react-i18next"
+
+export const StatusChip = ({type, status, style}: {type: "invoice" | "payment", status: string, style?: React.CSSProperties}) => {
+
+    const { t } = useTranslation(type)
+
 
     return(
         <StatusChipWrapper $status={status} style={style}>
-            {text}
+            {t(`status.${status.toLowerCase()}`, {count: 1})}
         </StatusChipWrapper>
     )
 }

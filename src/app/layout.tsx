@@ -5,6 +5,7 @@ import "../styles/globals.css";
 import StyledComponentsRegistry from '@/lib/registry'
 
 import ThemeProvider from "./_components/ThemeProvider";
+import I18nSync from "./_components/I18nSync";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -60,6 +61,7 @@ export default function RootLayout({
             </head>
 
       <body className="min-h-full flex flex-col">
+        <I18nSync />
         <StyledComponentsRegistry>
           <ThemeProvider>
             {children}

@@ -1,0 +1,30 @@
+{
+  "invoice_one": "Factura",
+  "invoice_other": "Facturas",
+
+  "all": "Todas",
+
+  "status": {
+    "unpaid_one": "No pagada",
+    "unpaid_other": "No pagadas",
+
+    "paid_one": "Pagada",
+    "paid_other": "Pagadas",
+
+    "processing_one": "En proceso",
+    "processing_other": "En proceso",
+
+    "pending_one": "Pendiente",
+    "pending_other": "Pendientes",
+
+    "rejected_one": "Rechazada",
+    "rejected_other": "Rechazadas",
+
+    "approved_one": "Aprobada",
+    "approved_other": "Aprobadas"
+  },
+
+  "search_placeholder": "Buscar por número de factura o moneda",
+  "download_unpaid_invoices": "Descargar facturas impagas",
+  "new_invoice": "Nueva factura"
+}

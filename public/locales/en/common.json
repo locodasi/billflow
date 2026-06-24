@@ -1,0 +1,10 @@
+{
+    "status": {
+        "unpaid": "Unpaid",
+        "paid": "Paid",
+        "processing": "Processing",
+        "pending": "Pending",
+        "rejected": "Rejected",
+        "approved": "Approved"
+    }
+}

@@ -1,0 +1,10 @@
+{
+    "status": {
+        "unpaid": "Unbezahlt",
+        "paid": "Bezahlt",
+        "processing": "In Bearbeitung",
+        "pending": "Ausstehend",
+        "rejected": "Abgelehnt",
+        "approved": "Genehmigt"
+    }
+}
