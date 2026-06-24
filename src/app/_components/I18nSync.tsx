@@ -9,10 +9,10 @@ const I18nSync = () => {
         (s) => s.language
     )
 
-    // useEffect(() => {
-    //     i18n.changeLanguage(language)
-    //     localStorage.setItem("language", language)
-    // }, [language])
+    useEffect(() => {
+        i18n.changeLanguage(language)
+        localStorage.setItem("language", language)
+    }, [language])
 
     return null
 }
