@@ -52,7 +52,7 @@ const Invoices = () => {
             .range((filters.page - 1) * ITEMS_PER_PAGE, (filters.page * ITEMS_PER_PAGE) - 1)
 
         if (filters.status && filters.status !== 'all') {
-            query = query.eq('status', filters.status)
+            query = query.eq('computed_status', filters.status)
         }
 
         if (filters.search) {
