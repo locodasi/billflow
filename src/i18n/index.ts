@@ -5,9 +5,9 @@ import HttpBackend from "i18next-http-backend"
 
 export function getInitialLanguage(): string {
     // 1️⃣ idioma guardado por el usuario
-    const savedLang = localStorage.getItem("language");
-    if (savedLang) {
-        return savedLang;
+    if (typeof localStorage !== "undefined") {
+        const saved = localStorage.getItem("language");
+        if (saved) return saved;
     }
 
     // 2️⃣ idioma del navegador

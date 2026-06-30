@@ -1,6 +1,7 @@
 // src/stores/userStore.ts
 import { create } from "zustand";
 import { registerStoreReset } from "./storeResetter";
+import { getInitialLanguage } from "@/i18n";
 
 type Role = "admin" | "client";
 export type Language = "es" | "en" | "de";
@@ -28,7 +29,7 @@ const INITIAL_STATE = {
     userId: null,
     fullName: "",
     email: "",
-    language: "es" as Language,
+    language: getInitialLanguage() as Language,
     role: null,
 };
 
