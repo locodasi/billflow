@@ -2,12 +2,12 @@ import styled from "styled-components";
 
 import { StatusChip } from "../Chips";
 
-const Title = ({text, status}: {text: string, status: string}) => {
+const Title = ({text, status, type}: {text: string, status: string, type: "invoice" | "payment"}) => {
 
     return (
         <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
             <TitleStyle>{text}</TitleStyle>
-            <StatusChip text={status} status={status.toLowerCase()} />
+            <StatusChip type={type} status={status.toLowerCase()} />
         </div>
     )
 }

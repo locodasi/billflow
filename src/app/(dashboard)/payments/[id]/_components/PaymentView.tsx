@@ -28,7 +28,7 @@ const PaymentView = ({ payment }: { payment: Payment }) => {
             <HeaderWrapper>
                 <Path>
                     <RedirectPath path="/payments" label="Pagos" />
-                    <Title text={statePayment.payment_number} status={statePayment.status} />
+                    <Title text={statePayment.payment_number} status={statePayment.status} type="payment"/>
                 </Path>
 
                 <DownloadButton file_title={statePayment.payment_number} path={statePayment.receipt_pdf_path} />

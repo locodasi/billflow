@@ -24,7 +24,7 @@ const InvoiceDetailModal = ({ invoice, onClose }: { invoice: InvoiceSummary, onC
         <Modal onClose={onClose}>
             <WrapperModal styles={{ padding: '0', gap: '0' }}>
                 <HeaderWrapper style={{ borderBottom: '1px solid var(--Border-Colors-border-secondary)', padding: '1rem' }}>
-                    <Title text={invoice.invoice_number} status={invoice.computed_status} />
+                    <Title text={invoice.invoice_number} status={invoice.computed_status} type="invoice"/>
 
                     <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
                         <Button text="Ir a su pagina" size="small" onClick={goToInvoicePage} firstIcon={"link"} />

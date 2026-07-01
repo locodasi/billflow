@@ -105,6 +105,7 @@ const PaymentDetail = ({ payment, pdfWidth, pdfHeight, updatePaymentStatus }: Pa
                                 moneyText={`${relation.amount_applied} ${relation.invoices.currency} aplicado`}
                                 date={relation.invoices.created_at}
                                 url={`/invoices/${relation.invoice_id}`}
+                                elementType="invoice"
                             />
                         ))
                     }

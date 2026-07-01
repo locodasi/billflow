@@ -89,6 +89,7 @@ const InvoiceDetail = ({ invoice, pdfWidth, pdfHeight }: { invoice: InvoiceSumma
                                 moneyText={`${relation.amount_applied} ${invoice.currency} aplicado`}
                                 date={relation.payments.created_at}
                                 url={`/payments/${relation.payment_id}`}
+                                elementType="payment"
                             />
                         ))
                     }

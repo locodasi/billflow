@@ -21,7 +21,7 @@ export function getInitialLanguage(): string {
 }
 
 const initialLanguage = getInitialLanguage()
-console.log("initialLanguage", initialLanguage)
+// console.log("initialLanguage", initialLanguage)
 i18n
     .use(HttpBackend)
     .use(initReactI18next)

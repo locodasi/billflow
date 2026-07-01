@@ -32,7 +32,7 @@ const PaymentCard = ({ payment, onClick }: { payment: Payment, onClick: () => vo
         <Card cardStyles={{ boxShadow: `-3px 0px 0px var(--status-${payment.status.toLowerCase()}-solid)` }} onClick={onClick}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <Title>{payment.payment_number}</Title>
-                <StatusChip text={payment.status} status={payment.status.toLowerCase()} />
+                <StatusChip type="payment" status={payment.status.toLowerCase()} />
             </div>
 
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>

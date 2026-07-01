@@ -25,7 +25,7 @@ const PaymentDetailModal = ({ payment, onClose, updatePaymentStatus }: { payment
         <Modal onClose={onClose}>
             <WrapperModal styles={{ padding: '0', gap: '0' }}>
                 <HeaderWrapper style={{ borderBottom: '1px solid var(--Border-Colors-border-secondary)', padding: '1rem' }}>
-                    <Title text={payment.payment_number} status={payment.status} />
+                    <Title text={payment.payment_number} status={payment.status} type="payment" />
 
                     <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
                         <Button text="Ir a su pagina" size="small" onClick={goToPaymentPage} firstIcon={"link"} />

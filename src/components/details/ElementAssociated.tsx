@@ -12,9 +12,10 @@ interface ElementAssociatedProps {
     status: string;
     moneyText: string;
     date: string;
+    elementType: "invoice" | "payment";
 }
 
-const ElementAssociated = ({ url, title, status, moneyText, date }: ElementAssociatedProps) => {
+const ElementAssociated = ({ url, title, status, moneyText, date, elementType }: ElementAssociatedProps) => {
 
     const router = useRouter();
 
@@ -30,7 +31,7 @@ const ElementAssociated = ({ url, title, status, moneyText, date }: ElementAssoc
                 <DateText>Emitida {parseDateToLocaleFormat(date)}</DateText>
             </div>
 
-            <StatusChip status={status} text={status} />
+            <StatusChip type={elementType} status={status} />
         </Wrapper>
     )
 }

@@ -43,7 +43,7 @@ const InvoicesToPaid = ({ invoicesSelected, onSelectInvoice }: InvoicesToPaidPro
         <Wrapper>
             <Title>Facturas a cubrir</Title>
 
-            {invoices.map((invoice, index) => (
+            {invoices.map((invoice) => (
                 <InvoiceItem key={invoice.id} invoice={invoice} selected={invoicesSelected.includes(invoice.id)} onSelect={() => onSelectInvoice(invoice)} />
             ))}
         </Wrapper>
@@ -81,7 +81,7 @@ const InvoiceItem = ({ invoice, selected, onSelect }: { invoice: InvoiceSummary,
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                     <InvoiceTitle $selected={selected}>{invoice.invoice_number}</InvoiceTitle>
 
-                    <StatusChip status={invoice.computed_status} text={invoice.computed_status} style={{padding: "0.1rem 0.5rem"}}/>
+                    <StatusChip status={invoice.computed_status} type={"invoice"} style={{padding: "0.1rem 0.5rem"}}/>
                 </div>
 
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
