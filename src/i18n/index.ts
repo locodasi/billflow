@@ -21,11 +21,12 @@ export function getInitialLanguage(): string {
 }
 
 const initialLanguage = getInitialLanguage()
-// console.log("initialLanguage", initialLanguage)
+console.log("initialLanguage", initialLanguage)
 i18n
     .use(HttpBackend)
     .use(initReactI18next)
     .init({
+        debug: true,
         lng: initialLanguage,
         fallbackLng: "en",
 
@@ -35,7 +36,7 @@ i18n
         defaultNS: "common",
 
         backend: {
-            loadPath: "locales/{{lng}}/{{ns}}.json",
+            loadPath: "/locales/{{lng}}/{{ns}}.json",
         },
 
         interpolation: {
@@ -44,6 +45,7 @@ i18n
 
         react: {
             useSuspense: false,
+            bindI18nStore: "added"
         },
     })
 
