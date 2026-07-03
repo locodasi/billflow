@@ -25,7 +25,7 @@ const UserButton = ({ isExpanded }: { isExpanded: boolean }) => {
 
 export default UserButton;
 
-const Wrapper = styled.div<{ $isExpanded: boolean }>`
+export const Wrapper = styled.div<{ $isExpanded: boolean }>`
     display: flex;
     align-items: center;
     gap: 0.5rem;
@@ -57,14 +57,20 @@ export const UserImg = () => {
     return <Icon icon="user-circle" size={36} iconColor="transparent" fillColor="var(--Icons-icon-400)" grab />;
 }
 
-export const UserData = () => {
+interface UserDataProps {
+    showEmail?: boolean;
+    showRole?: boolean;
+}
 
-    const { fullName, role } = useUserStore();
+export const UserData = ({ showEmail = false, showRole = true }: UserDataProps) => {
+
+    const { fullName, role, email } = useUserStore();
 
     return (
         <div style={{ display: "flex", flexDirection: "column" }}>
             {role ? <Name>{fullName}</Name> : <Skeleton />}
-            {role ? <Role>{role.charAt(0).toUpperCase() + role.slice(1)}</Role> : <Skeleton />}
+            {!showRole ? null : role ? <Role>{role.charAt(0).toUpperCase() + role.slice(1)}</Role> : <Skeleton />}
+            {!showEmail ? null : email ? <Role>{email}</Role> : <Skeleton />}
         </div>
     )
 }

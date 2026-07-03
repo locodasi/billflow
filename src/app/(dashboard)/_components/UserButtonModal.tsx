@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-import {useRouter} from "next/navigation";
+import { useRouter } from "next/navigation";
 
 import { logout } from "@/lib/auth";
 
@@ -8,13 +8,32 @@ import { useUIStore } from "@/stores/uiStore";
 
 import Tabs, { Tab } from "@/components/Tab";
 import IconButton from "@/components/IconButton";
+import Button from "@/components/Button";
 
 import { UserImg, UserData } from "./UserButton";
 
 const UserButtonModal = () => {
 
-    const { theme, setTheme } = useUIStore();
+    return (
+        <Wrapper>
+            <UserWrapper>
+                <UserImg />
 
+                <UserData />
+
+                <LogoutButton styles={{ marginLeft: "auto" }} />
+            </UserWrapper>
+
+            <ModeWrapper>
+                <Modes />
+            </ModeWrapper>
+        </Wrapper>
+    )
+}
+
+export default UserButtonModal;
+
+export const LogoutButton = ({ text, styles }: { text?: string, styles?: React.CSSProperties }) => {
     const router = useRouter();
 
     const handleLogout = async () => {
@@ -25,29 +44,13 @@ const UserButtonModal = () => {
             console.error("Error al cerrar sesión:", error);
         }
     }
-    
+
+    if (text) return <Button text={text} onClick={handleLogout} cssStyles={styles} firstIcon={"log-out"} size="small" />;
+
     return (
-        <Wrapper>
-            <UserWrapper>
-                <UserImg />
-
-                <UserData />
-
-                <IconButton icon="log-in" size="extra-small" onClick={handleLogout} personalizeStyle={{marginLeft: "auto"}}/>
-            </UserWrapper>
-
-            <ModeWrapper>
-                <Tabs size="medium">
-                    <Tab text="Oscuro" onClick={() => setTheme("dark")} firstIcon="half-moon"  active={theme === "dark"} />
-                    <Tab text="Sistema" onClick={() => setTheme("system")} firstIcon="modern-tv" active={theme === "system"} />
-                    <Tab text="Claro" onClick={() => setTheme("light")} firstIcon="sun-light" active={theme === "light"} />
-                </Tabs>
-            </ModeWrapper>
-        </Wrapper>
+        <IconButton icon="log-out" size="extra-small" onClick={handleLogout} personalizeStyle={styles} />
     )
 }
-
-export default UserButtonModal;
 
 const Wrapper = styled.div`
     display: flex;
@@ -65,20 +68,20 @@ const UserWrapper = styled.div`
     padding: 0.5rem;
 `;
 
-const Name = styled.p`
-    color: var(--Text-text-primary);
-    font-size: 1rem;
-    font-weight: 500;
-`;
-
-const Role = styled.p`
-    color: var(--Text-text-tertiary);
-    font-size: 0.875rem;
-    font-weight: 400;
-`;
-
 const ModeWrapper = styled.div`
     padding: 0.5rem;
     border-top: 1px solid var(--Border-Colors-border-secondary);
     border-bottom: 1px solid var(--Border-Colors-border-secondary);
 `;
+
+export const Modes = () => {
+    const { theme, setTheme } = useUIStore();
+
+    return (
+        <Tabs size="medium">
+            <Tab text="Oscuro" onClick={() => setTheme("dark")} firstIcon="half-moon" active={theme === "dark"} />
+            <Tab text="Sistema" onClick={() => setTheme("system")} firstIcon="modern-tv" active={theme === "system"} />
+            <Tab text="Claro" onClick={() => setTheme("light")} firstIcon="sun-light" active={theme === "light"} />
+        </Tabs>
+    )
+}
