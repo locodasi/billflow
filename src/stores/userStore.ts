@@ -11,7 +11,7 @@ interface UserStore {
     email: string;
     language: Language;
     role: Role | null;
-    setUser: (data: Omit<UserStore, "setUser" | "reset">) => void;
+    setUser: (data: Omit<UserStore, "setUser" | "reset" | "setLanguage">) => void;
     setLanguage: (language: Language) => void;
     reset: () => void;
 }
