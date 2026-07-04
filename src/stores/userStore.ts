@@ -2,7 +2,7 @@
 import { create } from "zustand";
 import { registerStoreReset } from "./storeResetter";
 
-type Role = "admin" | "client";
+export type Role = "admin" | "client";
 export type Language = "es" | "en" | "de";
 
 interface UserStore {
