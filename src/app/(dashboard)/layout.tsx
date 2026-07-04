@@ -125,8 +125,6 @@ export default async function DashboardLayout({
             .order("created_at", { ascending: true }),
     ]);
 
-    console.log(profile, projects);
-
     return (
         <div style={{ display: "flex", height: "100vh" }}>
             <StoreHydrator session={session} profile={profile} projects={projects ?? []} />
