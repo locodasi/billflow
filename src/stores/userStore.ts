@@ -9,7 +9,7 @@ interface UserStore {
     userId: string | null;
     fullName: string;
     email: string;
-    language: Language;
+    language: Language | null;
     role: Role | null;
     setUser: (data: Omit<UserStore, "setUser" | "reset" | "setLanguage">) => void;
     setLanguage: (language: Language) => void;
@@ -20,7 +20,7 @@ const INITIAL_STATE = {
     userId: null,
     fullName: "",
     email: "",
-    language: "es" as Language,
+    language: null as Language | null,
     role: null,
 };
 

@@ -33,12 +33,17 @@ const UserButtonModal = () => {
 
 export default UserButtonModal;
 
+import { clearUserLocale } from '@/lib/locale';
+import { resetAllStores } from '@/stores/storeResetter';
+
 export const LogoutButton = ({ text, styles }: { text?: string, styles?: React.CSSProperties }) => {
     const router = useRouter();
 
     const handleLogout = async () => {
         try {
             await logout();
+            await clearUserLocale();
+            resetAllStores();
             router.push("/login");
         } catch (error) {
             console.error("Error al cerrar sesión:", error);

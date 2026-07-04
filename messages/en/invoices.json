@@ -1,0 +1,22 @@
+{
+  "invoice_singular": "Invoice",
+  "invoice_plural": "Invoices",
+  "all": "All",
+  "status": {
+    "unpaid_singular": "Unpaid",
+    "unpaid_plural": "Unpaid",
+    "paid_singular": "Paid",
+    "paid_plural": "Paid",
+    "processing_singular": "Processing",
+    "processing_plural": "Processing",
+    "pending_singular": "Pending",
+    "pending_plural": "Pending",
+    "rejected_singular": "Rejected",
+    "rejected_plural": "Rejected",
+    "approved_singular": "Approved",
+    "approved_plural": "Approved"
+  },
+  "search_placeholder": "Search by invoice number or currency",
+  "download_unpaid_invoices": "Download unpaid invoices",
+  "new_invoice": "New invoice"
+}
