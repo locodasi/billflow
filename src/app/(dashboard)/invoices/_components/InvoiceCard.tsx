@@ -2,16 +2,18 @@ import styled from "styled-components";
 
 import { supabase } from "@/lib/supabase";
 
+import {useFormattedDate} from "@/hooks/useFormattedDate";
+
 import Card from "@/components/card/Card";
 import Icon from "@/components/icons/Icon";
 import { StatusChip } from "@/components/Chips";
 import IconButton from "@/components/IconButton";
 
-import { formatDate } from "@/utils/timeFunctions";
-
 import { InvoiceSummary } from "@/types/Invoice";
 
 const InvoiceCard = ({ invoice, onClick }: { invoice: InvoiceSummary, onClick: () => void }) => {
+
+    const { formatDate } = useFormattedDate();
 
     const handleDownload = async () => {
         const { data, error } = await supabase.storage
@@ -32,7 +34,7 @@ const InvoiceCard = ({ invoice, onClick }: { invoice: InvoiceSummary, onClick: (
         <Card cardStyles={{ boxShadow: `-3px 0px 0px var(--status-${invoice.computed_status.toLowerCase()}-solid)` }} onClick={onClick}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <Title>{invoice.invoice_number}</Title>
-                <StatusChip text={invoice.computed_status} status={invoice.computed_status.toLowerCase()} />
+                <StatusChip type="invoices" status={invoice.computed_status.toLowerCase()} />
             </div>
 
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>

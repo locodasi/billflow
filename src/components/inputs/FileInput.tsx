@@ -4,6 +4,8 @@
 import { useRef, useState } from "react";
 import styled from "styled-components";
 
+import { useTranslations } from "next-intl";
+
 import Icon, { Icons } from "../icons/Icon";
 
 interface FileInputProps {
@@ -18,8 +20,8 @@ interface FileInputProps {
 
 const FileInput = ({ 
     icon = "cloud-upload", 
-    title = "Arrastra y suelta un archivo aquí", 
-    subtitle = "o haz clic para seleccionar", 
+    title, 
+    subtitle, 
     onFileSelect, 
     disabled, 
     multiple, 
@@ -27,6 +29,8 @@ const FileInput = ({
 }: FileInputProps) => {
     const inputRef = useRef<HTMLInputElement>(null);
     const [isDragOver, setIsDragOver] = useState(false);
+
+    const t = useTranslations("common.upload_file");
 
     const emitFiles = (files: FileList | null) => {
         if (!files || files.length === 0 || disabled) return;
@@ -86,8 +90,8 @@ const FileInput = ({
 
             <Icon icon={icon} size={26} iconColor="var(--Icons-icon-700)" />
             <TextGroup>
-                <Title>{title}</Title>
-                <Subtitle>{subtitle}</Subtitle>
+                <Title>{title || t("title")}</Title>
+                <Subtitle>{subtitle || t("subtitle")}</Subtitle>
             </TextGroup>
         </Dropzone>
     );

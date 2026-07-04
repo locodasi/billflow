@@ -18,5 +18,55 @@
   },
   "search_placeholder": "Buscar por número de factura o moneda",
   "download_unpaid_invoices": "Descargar facturas impagas",
-  "new_invoice": "Nueva factura"
+  "new_invoice": "Nueva factura",
+  "upload": {
+    "text": "Subir factura",
+    "pdf": {
+      "title": "Subir PDF",
+      "subtitle": "Detecta datos automaticamente",
+      "detected": "Datos detectados automaticamente. Revisa y corrige si es necesario"
+    },
+    "manual": {
+      "title": "Crear manualmente",
+      "subtitle": "Proximamente"
+    },
+    "values": {
+      "invoice_number": "Número de factura",
+      "invoice_number_placeholder": "EJ. 001-001-0000001",
+      "amount": "Monto",
+      "currency": "Moneda",
+      "notes": "Notas",
+      "notes_placeholder": "Notas adicionales",
+      "from_pdf": "Detectado desde PDF"
+    },
+    "buttons": {
+      "save": "Guardar",
+      "cancel": "Cancelar"
+    }
+  },
+  "detail": {
+    "resume": {
+      "title": "Resumen de pago",
+      "total": "Total facturado",
+      "paid": "Cobrado",
+      "pending": "Pendiente",
+      "unpaid": "Adeudado",
+      "percent": "{percent, number, ::percent} cobrado"
+    },
+    "details": {
+      "title": "Detalles",
+      "date": "Fecha de emisión",
+      "currency": "Moneda",
+      "project": "Proyecto"
+    },
+    "notes": {
+      "title": "Notas"
+    },
+    "element_associated": {
+      "title": "Recibos asociados",
+      "no_payments": "No hay recibos asociados a esta factura",
+      "moneyApplied": "{amount} {currency} aplicado",
+      "issuedOn": "Emitida {date}"
+    }
+  } 
 }

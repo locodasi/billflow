@@ -1,8 +1,10 @@
 import styled from "styled-components";
 
+import { useTranslations } from "next-intl";
+
 import { useRouter } from "next/navigation"
 
-import { parseDateToLocaleFormat } from "@/utils/timeFunctions";
+import { useFormattedDate } from "@/hooks/useFormattedDate";
 
 import { StatusChip } from "../Chips";
 
@@ -12,9 +14,14 @@ interface ElementAssociatedProps {
     status: string;
     moneyText: string;
     date: string;
+    type?: "invoices" | "payments";
 }
 
-const ElementAssociated = ({ url, title, status, moneyText, date }: ElementAssociatedProps) => {
+const ElementAssociated = ({ url, title, status, moneyText, date, type = "invoices" }: ElementAssociatedProps) => {
+
+    const {parseDateToLocaleFormat} = useFormattedDate();
+
+    const t = useTranslations(`${type}.detail.element_associated`);
 
     const router = useRouter();
 
@@ -27,10 +34,10 @@ const ElementAssociated = ({ url, title, status, moneyText, date }: ElementAssoc
             <div style={{display: "flex", flexDirection: "column"}}>
                 <Title>{title}</Title>
                 <MoneyText>{moneyText}</MoneyText>
-                <DateText>Emitida {parseDateToLocaleFormat(date)}</DateText>
+                <DateText>{t('issuedOn', { date: parseDateToLocaleFormat(date) })}</DateText>
             </div>
 
-            <StatusChip status={status} text={status} />
+            <StatusChip status={status} type={type} />
         </Wrapper>
     )
 }

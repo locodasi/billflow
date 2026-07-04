@@ -2,6 +2,8 @@
 
 import styled from "styled-components";
 
+import { useTranslations } from "next-intl";
+
 import { InvoiceSummary } from "@/types/Invoice";
 
 import {HeaderWrapper} from "@/components/Header";
@@ -13,12 +15,14 @@ import InvoiceDetail from "@/components/details/InvoiceDetail";
 
 const InvoiceView = ({ invoice }: { invoice: InvoiceSummary }) => {
 
+    const t = useTranslations('invoices');
+
     return (
         <>
             <HeaderWrapper>
                 <Path>
-                    <RedirectPath path="/invoices" label="Facturas" />
-                    <Title text={invoice.invoice_number} status={invoice.computed_status} />
+                    <RedirectPath path="/invoices" label={t('invoice_plural')} />
+                    <Title text={invoice.invoice_number} status={invoice.computed_status} type="invoices"/>
                 </Path>
 
                 <DownloadButton file_title={invoice.invoice_number} path={invoice.pdf_path} />

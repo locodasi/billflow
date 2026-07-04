@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import styled from "styled-components";
 
 interface ChipsProps {
@@ -56,11 +57,12 @@ const ChipWrapper = styled.div<{$selected: boolean}>`
     }
 `;
 
-export const StatusChip = ({text, status, style}: {text: string, status: string, style?: React.CSSProperties}) => {
+export const StatusChip = ({type, status, style}: {type: "invoices" | "payments", status: string, style?: React.CSSProperties}) => {
 
+    const t = useTranslations(`${type}`);
     return(
         <StatusChipWrapper $status={status} style={style}>
-            {text}
+            {t(`status.${status}_singular`)}
         </StatusChipWrapper>
     )
 }

@@ -6,7 +6,7 @@
     "unpaid_singular": "Unpaid",
     "unpaid_plural": "Unpaid",
     "paid_singular": "Paid",
-    "paid_plural": "Paid",
+    "paid_plural": "Paid", 
     "processing_singular": "Processing",
     "processing_plural": "Processing",
     "pending_singular": "Pending",
@@ -18,5 +18,55 @@
   },
   "search_placeholder": "Search by invoice number or currency",
   "download_unpaid_invoices": "Download unpaid invoices",
-  "new_invoice": "New invoice"
+  "new_invoice": "New invoice",
+  "upload": {
+    "text": "Upload invoice",
+    "pdf": {
+      "title": "Upload PDF",
+      "subtitle": "Automatically detects data",
+      "detected": "Data detected automatically. Review and correct if necessary"
+    },
+    "manual": {
+      "title": "Create manually",
+      "subtitle": "Coming soon"
+    },
+    "values": {
+      "invoice_number": "Invoice number",
+      "invoice_number_placeholder": "E.g. 001-001-0000001",
+      "amount": "Amount",
+      "currency": "Currency",
+      "notes": "Notes",
+      "notes_placeholder": "Additional notes",
+      "from_pdf": "Detected from PDF"
+    },
+    "buttons": {
+      "save": "Save",
+      "cancel": "Cancel"
+    }
+  },
+  "detail": {
+    "resume": {
+      "title": "Payment Summary",
+      "total": "Total Invoiced",
+      "paid": "Paid",
+      "pending": "Pending",
+      "unpaid": "Unpaid",
+      "percent": "{percent, number, ::percent} paid"
+    },
+    "details": {
+      "title": "Details",
+      "date": "Issue Date",
+      "currency": "Currency",
+      "project": "Project"
+    },
+    "notes": {
+      "title": "Notes"
+    },
+    "element_associated": {
+      "title": "Associated Payments",
+      "no_payments": "No payments associated with this invoice",
+      "moneyApplied": "{amount} {currency} applied",
+      "issuedOn": "Issued {date}"
+    }
+  } 
 }

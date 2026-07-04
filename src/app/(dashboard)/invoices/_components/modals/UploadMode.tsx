@@ -1,6 +1,8 @@
 
 import { useState } from "react";
 
+import {useTranslations} from "next-intl";  
+
 import { parseInvoice, createInvoice } from "../../actions";
 
 import {useProjectsStore} from "@/stores/projectStore";
@@ -15,17 +17,6 @@ import NormalSelect from "@/components/Select";
 import Button from "@/components/Button";
 
 import { InvoiceSummary } from "@/types/Invoice";
-
-const CURRENCIES = [
-    { value: "USD", label: "Dólar estadounidense (USD)" },
-    { value: "EUR", label: "Euro (EUR)" },
-    { value: "GBP", label: "Libra esterlina (GBP)" },
-    { value: "JPY", label: "Yen japonés (JPY)" },
-    { value: "ARS", label: "Peso argentino (ARS)" },
-    { value: "BRL", label: "Real brasileño (BRL)" },
-    { value: "CAD", label: "Dólar canadiense (CAD)" },
-    { value: "CHF", label: "Franco suizo (CHF)" },
-];
 
 export interface UploadInvoice {
     invoiceNumber: {
@@ -63,14 +54,18 @@ const InitialState: UploadInvoice = {
     metadata: {},
 }
 
+import { useCurrencyOptions } from "@/hooks/useCurrencyOptions";
 const UploadMode = ({close, addInvoice}: {close: () => void, addInvoice: (invoice: InvoiceSummary) => void}) => {
 
+    const CURRENCIES = useCurrencyOptions();
     const [invoiceData, setInvoiceData] = useState<UploadInvoice>(InitialState);
 
     const [error, setError] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
 
     const projectId = useProjectsStore(s => s.project?.id);
+
+    const t = useTranslations("invoices.upload");
 
     const getAutoStyle = (automatic: boolean): InputStylesConfig | undefined => {
         if (automatic) {
@@ -137,7 +132,7 @@ const UploadMode = ({close, addInvoice}: {close: () => void, addInvoice: (invoic
             { invoiceData.file ? (
                 <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
                     <FileItem file={invoiceData.file} remove={() => setInvoiceData({ ...invoiceData, file: null })} />
-                    <DetectedCard text="Datos detectados automaticamente. Revisa y corrige si es necesario." />
+                    <DetectedCard text={t("pdf.detected")} />
                 </div>
             ) : (
                 <FileInput onFileSelect={hanldeFileSelect} accept=".pdf" />
@@ -145,41 +140,41 @@ const UploadMode = ({close, addInvoice}: {close: () => void, addInvoice: (invoic
 
             <div style={{ display: "flex", gap: "0.5rem" }}>
                 <TextInput
-                    label="Número de factura"
-                    placeholder="Ej. 001-001-0000001"
+                    label={t("values.invoice_number")}
+                    placeholder={t("values.invoice_number_placeholder")}
                     value={invoiceData.invoiceNumber.value}
                     onChange={(v) => setInvoiceData({ ...invoiceData, invoiceNumber: { automatic: false, value: v } })}
                     styles={getAutoStyle(invoiceData.invoiceNumber.automatic)}
-                    underText={invoiceData.invoiceNumber.automatic ? "Detectado del PDF" : ""}
+                    underText={invoiceData.invoiceNumber.automatic ? t("values.from_pdf") : ""}
                 />
                 <NumberInput
-                    label="Monto"
-                    placeholder="Ej. 1000"
+                    label={t("values.amount")}
+                    placeholder={t("values.amount_placeholder")}
                     value={invoiceData.amount.value}
                     onChange={(v) => setInvoiceData({ ...invoiceData, amount: { automatic: false, value: v } })}
                     styles={getAutoStyle(invoiceData.amount.automatic)}
-                    underText={invoiceData.amount.automatic ? "Detectado del PDF" : ""}
+                    underText={invoiceData.amount.automatic ? t("values.from_pdf") : ""}
                 />
             </div>
 
             <NormalSelect
-                title="Moneda"
-                placeholder="Selecciona un proveedor"
+                title={t("values.currency")}
+                placeholder={t("values.currency_placeholder")}
                 options={CURRENCIES}
                 value={CURRENCIES.find(currency => currency.value === invoiceData.currency.value) || null}
                 onChange={(v) => setInvoiceData({ ...invoiceData, currency: { automatic: false, value: v.value } })}
-                underText={invoiceData.currency.automatic ? "Detectado del PDF" : ""}
+                underText={invoiceData.currency.automatic ? t("values.from_pdf") : ""}
                 styles={getAutoStyle(invoiceData.currency.automatic)}
 
             />
 
-            <TextArea value={invoiceData.notes} onChange={(v) => setInvoiceData({ ...invoiceData, notes: v })} label="Notas" placeholder="Opcional" minLines={5} />
+            <TextArea value={invoiceData.notes} onChange={(v) => setInvoiceData({ ...invoiceData, notes: v })} label={t("values.notes")} placeholder={t("values.notes_placeholder")} minLines={5} />
 
             {error && <p style={{ color: "red" }}>{error}</p>}
 
             <div style={{ display: "flex", gap: "0.5rem", alignSelf: "flex-end" }}>
-                <Button text="Cancelar" onClick={close} size="small"/>
-                <Button text="Guardar" onClick={saveInvoice} type="primary" style="filled" size="small" disabled={!invoiceData.file || isLoading}/>
+                <Button text={t("buttons.cancel")} onClick={close} size="small"/>
+                <Button text={t("buttons.save")} onClick={saveInvoice} type="primary" style="filled" size="small" disabled={!invoiceData.file || isLoading}/>
             </div>
         </div>
     )

@@ -1,9 +1,10 @@
-
+import {useTranslations} from "next-intl";
 import { supabase } from "@/lib/supabase";
 
 import Button from "@/components/Button";
 
 const DownloadButton = ({ path, file_title }: { path: string, file_title: string }) => {
+    const t = useTranslations('common');
 
     const handleDownload = async () => {
         const { data, error } = await supabase.storage
@@ -21,7 +22,7 @@ const DownloadButton = ({ path, file_title }: { path: string, file_title: string
     }
 
     return (
-        <Button text="Descargar" size="small" onClick={handleDownload} firstIcon={"download"} />
+        <Button text={t('download')} size="small" onClick={handleDownload} firstIcon={"download"} />
     )
 }
 

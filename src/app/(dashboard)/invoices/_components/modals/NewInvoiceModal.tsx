@@ -1,5 +1,7 @@
 import styled from "styled-components";
 
+import { useTranslations } from "next-intl";
+
 import {useState} from "react";
 
 import Modal, { HeaderModal, WrapperModal } from "@/components/modals/Modal";
@@ -13,25 +15,26 @@ const NewInvoiceModal = ({ onClose, addInvoice }: { onClose: () => void, addInvo
 
     const [mode, setMode] = useState<"upload" | "manual">("upload");
 
+    const t = useTranslations("invoices.upload");
 
     return (
         <Modal onClose={onClose}>
             <WrapperModal>
-                <HeaderModal title="Nueva factura" onClose={onClose} />
+                <HeaderModal title={t("text")} onClose={onClose} />
 
                 <div style={{ display: "flex", alignItems: "stretch", gap: "1rem" }}>
                     <ModeOption $active={mode === "upload"} onClick={() => setMode("upload")}>
                         <Icon icon="upload" size={30} />
                         <div style={{ display: "flex", flexDirection: "column", gap: "0.25rem" }}>
-                            <p className="title">Subir PDF</p>
-                            <p className="subtitle">Detecta datos automaticamente</p>
+                            <p className="title">{t("pdf.title")}</p>
+                            <p className="subtitle">{t("pdf.subtitle")}</p>
                         </div>
                     </ModeOption>
                     <ModeOption $active={mode === "manual"} $disabled={true} onClick={() => setMode("manual")}>
                         <Icon icon="edit-pencil" size={30} />
                         <div style={{ display: "flex", flexDirection: "column", gap: "0.25rem" }}>
-                            <p className="title">Crear manual</p>
-                            <p className="subtitle">Proximamente</p>
+                            <p className="title">{t("manual.title")}</p>
+                            <p className="subtitle">{t("manual.subtitle")}</p>
                         </div>
                     </ModeOption>
                 </div>
