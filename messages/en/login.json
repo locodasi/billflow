@@ -1,6 +1,42 @@
 {
-    "text": "Log in",
-    "email": "Email",
-    "password": "Password",
-    "button": "Log in"
+  "text": "Sign in",
+  "email": "Email",
+  "password": "Password",
+  "button": "Sign in",
+  "set-password": {
+    "new": {
+      "title": "Set your password",
+      "subtitle": "Hi, {name}. Choose a password to activate your account.",
+      "button": "Activate account"
+    },
+    "reset": {
+      "title": "Reset your password",
+      "subtitle": "Hi, {name}. Choose a new password for your account.",
+      "button": "Save password"
+    },
+    "errors": {
+      "length": "Password must be at least 8 characters long",
+      "mismatch": "Passwords do not match"
+    },
+    "new_password": "New password",
+    "new_password_placeholder": "Minimum 8 characters",
+    "confirm_password": "Confirm password",
+    "confirm_password_placeholder": "Repeat your password",
+    "loading": "Loading...",
+    "validations": {
+      "length": "At least 8 characters",
+      "mismatch": "Passwords match"
+    },
+    "comment": "This link can only be used once and expires for security reasons."
+  },
+  "link-invalid": {
+    "title": "This link is no longer valid",
+    "subtitle": "It may have expired or has already been used. Request a new one to continue.",
+    "send_button": "Send new link",
+    "go_back": "Back to sign in",
+    "sent": {
+      "title": "Done!",
+      "subtitle": "A new link has been sent to your email address."
+    }
+  }
 }

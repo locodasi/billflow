@@ -4,6 +4,9 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import styled from "styled-components";
+
+import {useTranslations} from "next-intl";
+
 import { sendSetPasswordEmail_action } from "@/actions/auth";
 
 
@@ -16,6 +19,8 @@ export default function LinkInvalidPage() {
     const [sent, setSent] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+
+    const t = useTranslations("login.link-invalid");
 
     const handleResend = async () => {
         if (!email.trim()) return;
@@ -39,8 +44,8 @@ export default function LinkInvalidPage() {
                     <Icon icon="check" size={24} />
                 </div>
                 <div style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center" }}>
-                    <Title>¡Listo!</Title>
-                    <Subtitle>Se ha enviado un nuevo link a tu correo electrónico.</Subtitle>
+                    <Title>{t("sent.title")}</Title>
+                    <Subtitle>{t("sent.subtitle")}</Subtitle>
                 </div>
             </Modal>
         )
@@ -51,8 +56,8 @@ export default function LinkInvalidPage() {
             <ChainIcon />
 
             <div style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center" }}>
-                <Title>Este link ya no es válido</Title>
-                <Subtitle>Puede haber expirado o ya fue utilizado antes. Pedí uno nuevo para continuar.</Subtitle>
+                <Title>{t("title")}</Title>
+                <Subtitle>{t("subtitle")}</Subtitle>
             </div>
 
             <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "0.5rem", width: "100%" }}>
@@ -60,14 +65,14 @@ export default function LinkInvalidPage() {
                 <Button
                     onClick={handleResend}
                     disabled={loading || !email.trim()}
-                    text="Enviar nuevo link"
+                    text={t("send_button")}
                     type="primary"
                     style="filled"
                     size="medium"
                     cssStyles={{ width: "100%" }}
                 />
 
-                <Button style="text" text="Volver al inicio" onClick={() => router.push("/login")} firstIcon={"arrow-left"} />
+                <Button style="text" text={t("go_back")} onClick={() => router.push("/login")} firstIcon={"arrow-left"} />
             </div>
 
             {error && <Text style={{ color: "var(--Error-500)" }}>{error}</Text>}

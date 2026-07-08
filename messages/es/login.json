@@ -2,5 +2,41 @@
     "text": "Iniciar sesión",
     "email": "Correo electrónico",
     "password": "Contraseña",
-    "button": "Iniciar sesión"
+    "button": "Iniciar sesión",
+    "set-password": {
+        "new": {
+            "title": "Configurá tu contraseña",
+            "subtitle": "Hola, {name}. Elegí una contraseña para activar tu cuenta.",
+            "button": "Activar cuenta"
+        },
+        "reset": {
+            "title": "Restablecé tu contraseña",
+            "subtitle": "Hola, {name}. Elegí una nueva contraseña para tu cuenta.",
+            "button": "Guardar contraseña"
+        },
+        "errors": {
+            "length": "La contraseña debe tener al menos 8 caracteres",
+            "mismatch": "Las contraseñas no coinciden"
+        },
+        "new_password": "Nueva contraseña",
+        "new_password_placeholder": "Minimo 8 caracteres",
+        "confirm_password": "Confirmar contraseña",
+        "confirm_password_placeholder": "Repite tu contraseña",
+        "loading": "Cargando...",
+        "validations": {
+            "length": "Al menos 8 caracteres",
+            "mismatch": "Las contraseñas coinciden"
+        },
+        "comment": "Este link es de un solo uso y expira por seguridad."
+    },
+    "link-invalid": {
+        "title": "Este link ya no es válido",
+        "subtitle": "Puede haber expirado o ya fue utilizado antes. Pedí uno nuevo para continuar.",
+        "send_button": "Enviar nuevo link",
+        "go_back": "Volver al inicio",
+        "sent": {
+            "title": "¡Listo!",
+            "subtitle": "Se ha enviado un nuevo link a tu correo electrónico."
+        }
+    }
 }
