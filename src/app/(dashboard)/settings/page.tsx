@@ -2,6 +2,8 @@
 
 import styled from "styled-components";
 
+import { useTranslations } from "next-intl";
+
 import { Language, useUserStore } from "@/stores/userStore";
 
 import Header from "@/components/Header";
@@ -18,6 +20,8 @@ const SettingsPage = () => {
     const language = useUserStore(s => s.language);
     const setLanguage = useUserStore(s => s.setLanguage);
 
+    const t = useTranslations("settings");
+
     const handleLanguageChange = async (value: string) => {
         setLanguage(value as Language);
         await updateUserLanguage(value as Language);
@@ -26,59 +30,58 @@ const SettingsPage = () => {
 
     return (
         <>
-            <Header title="Configuracion" />
+            <Header title={t("header")} />
 
             <SectionWrapper >
                 <div style={{ display: "flex", alignItems: "center", gap: "1rem", justifyContent: "space-between" }}>
                     <UserImg />
                     <UserData showEmail showRole={false} />
-                    <LogoutButton text="Cerrar sesión" styles={{ marginLeft: "auto" }} />
+                    <LogoutButton text={t("log-out")} styles={{ marginLeft: "auto" }} />
                 </div>
             </SectionWrapper>
 
-            <Section title="Apariencia" description="Elegí cómo se ve la aplicación">
+            <Section title={t("appearance.header")} description={t("appearance.text")}>
                 <div>
                     <Modes />
                 </div>
             </Section>
 
-            <Section title="Idioma" description="Idioma de la interfaz">
+            <Section title={t("language.header")} description={t("language.text")}>
                 <NormalSelect
                     options={LANGUAGE_OPTIONS}
                     value={LANGUAGE_OPTIONS.find(option => option.value === language) || null}
                     onChange={(selectedOption) => handleLanguageChange(selectedOption.value)}
-                    placeholder="Selecciona un idioma"
                 />
             </Section>
 
-            <Section title="Notificaciones por email" description="Elegí cuándo querés recibir un correo" last>
+            <Section title={t("notifications.header")} description={t("notifications.text")} last>
                 <Switch type="primary" isOn disabled handleToggle={() => { }} right={false} styles={{justifyContent: "space-between"}}>
                     <TextWrapper>
                         <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
-                            <Title>Nueva factura cargada</Title>
+                            <Title>{t("notifications.new-invoice.header")}</Title>
                             <Soon />
                         </div>
-                        <Subtitle>Te avisamos cuando se carga una factura nueva</Subtitle>
+                        <Subtitle>{t("notifications.new-invoice.text")}</Subtitle>
                     </TextWrapper>
                 </Switch>
 
                 <Switch type="primary" isOn disabled handleToggle={() => { }} right={false} styles={{justifyContent: "space-between"}}>
                     <TextWrapper>
                         <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
-                            <Title>Recibo aprobado</Title>
+                            <Title>{t("notifications.payload-approved.header")}</Title>
                             <Soon />
                         </div>
-                        <Subtitle>Te avisamos cuando se aprueba tu pago</Subtitle>
+                        <Subtitle>{t("notifications.payload-approved.text")}</Subtitle>
                     </TextWrapper>
                 </Switch>
 
                 <Switch type="primary" isOn disabled handleToggle={() => { }} right={false} styles={{justifyContent: "space-between"}}>
                     <TextWrapper>
                         <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
-                            <Title>Recibo rechazado</Title>
+                            <Title>{t("notifications.payload-rejected.header")}</Title>
                             <Soon />
                         </div>
-                        <Subtitle>Te avisamos cuando se rechaza tu pago</Subtitle>
+                        <Subtitle>{t("notifications.payload-rejected.text")}</Subtitle>
                     </TextWrapper>
                 </Switch>
             </Section>
@@ -89,9 +92,12 @@ const SettingsPage = () => {
 export default SettingsPage;
 
 const Soon = () => {
+
+    const t = useTranslations("settings");
+
     return(
         <div style={{padding: "0 0.25rem", display: "flex", justifyContent: "center", alignItems: "center", borderRadius: "0.5rem", backgroundColor: "var(--Background-Colors-bg-secondary)"}}>
-            <p style={{fontSize: "0.875rem", color: "var(--Text-text-tertiary)"}}>Próximamente</p>
+            <p style={{fontSize: "0.875rem", color: "var(--Text-text-tertiary)"}}>{t("notifications.soon")}</p>
         </div>
     )
 }
@@ -100,7 +106,7 @@ const Section = ({ title, description, last = false, children }: { title: string
 
     return (
         <SectionWrapper $last={last}>
-            <div style={{ display: "flex", flexDirection: "column" }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.1rem" }}>
                 <SectionTitle>{title}</SectionTitle>
                 <SectionDescription>{description}</SectionDescription>
             </div>
