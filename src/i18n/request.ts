@@ -1,7 +1,7 @@
 import { getRequestConfig } from 'next-intl/server';
 import { getUserLocale } from '@/lib/locale';
 
-const namespaces = ['login', 'invoices', "common", "settings"] as const;
+const namespaces = ['login', 'invoices', "common", "settings", "clients"] as const;
 
 export default getRequestConfig(async () => {
     const locale = await getUserLocale();

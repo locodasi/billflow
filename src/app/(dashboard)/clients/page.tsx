@@ -2,6 +2,8 @@
 
 import styled from "styled-components";
 
+import {useTranslations} from "next-intl";
+
 import { useState, useEffect } from "react";
 
 import { supabase } from "@/lib/supabase";
@@ -18,6 +20,8 @@ const ClientsPage = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [clients, setClients] = useState<Client[]>([]);
     const [search, setSearch] = useState("");
+
+    const t = useTranslations("clients");
 
     useEffect(() => {
         const fetchClients = async () => {
@@ -42,10 +46,10 @@ const ClientsPage = () => {
         <>
             {isModalOpen && <NewClientModal onClose={() => setIsModalOpen(false)} addClient={(client) => setClients([...clients, client])} />}
 
-            <Header title="Clientes" showButton={true} buttontext="Nuevo cliente" buttonIcon="plus" onButtonClick={() => setIsModalOpen(true)} />
+            <Header title={t("header")} showButton={true} buttontext={t("new-client-button")} buttonIcon="plus" onButtonClick={() => setIsModalOpen(true)} />
 
             <Wrapper>
-                <SearchInput onSearch={setSearch} placeholder="Buscar clientes..." />
+                <SearchInput onSearch={setSearch} placeholder={t("search-placeholder")} />
 
                 <ClientsContainer>
                     {

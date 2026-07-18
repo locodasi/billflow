@@ -6,13 +6,14 @@ import { useTranslations } from "next-intl";
 
 import { Language, useUserStore } from "@/stores/userStore";
 
+import { useLanguageOptions } from "@/hooks/useLanguagesOptions";
+
 import Header from "@/components/Header";
 import NormalSelect from "@/components/Select";
 import Switch, {Subtitle, TextWrapper, Title} from "@/components/Switch";
 
 import { UserData, UserImg } from "../_components/UserButton";
 import { LogoutButton, Modes } from "../_components/UserButtonModal";
-import { LANGUAGE_OPTIONS } from "../clients/_components/NewClientModal";
 import { updateUserLanguage } from "./actions";
 
 const SettingsPage = () => {
@@ -20,6 +21,8 @@ const SettingsPage = () => {
     const language = useUserStore(s => s.language);
     const setLanguage = useUserStore(s => s.setLanguage);
 
+    const LANGUAGE_OPTIONS = useLanguageOptions();
+    
     const t = useTranslations("settings");
 
     const handleLanguageChange = async (value: string) => {

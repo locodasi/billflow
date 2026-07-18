@@ -3,6 +3,8 @@
 
 import styled from "styled-components";
 
+import {useTranslations} from "next-intl";
+
 import { useState } from "react";
 
 import {useProjectsStore} from "@/stores/projectStore";
@@ -12,6 +14,7 @@ import TextInput from "@/components/inputs/TextInput";
 import NormalSelect, { Option } from "@/components/Select";
 import Button from "@/components/Button";
 import TextArea from "@/components/inputs/Textarea";
+import { useCurrencyOptions } from "@/hooks/useCurrencyOptions";
 
 import { Project } from "../../_types/types";
 import { updateProjectAction } from "../actions";
@@ -26,21 +29,15 @@ type EditProjectModalProps = {
     onUpdate: (project_id: string, projectUpdated: Partial<Project>) => void;
 }
 
-const CURRENCIES: Option[] = [
-    { value: "USD", label: "Dólar estadounidense (USD)" },
-    { value: "EUR", label: "Euro (EUR)" },
-    { value: "ARS", label: "Peso argentino (ARS)" },
-    { value: "GBP", label: "Libra esterlina (GBP)" },
-    { value: "BRL", label: "Real brasileño (BRL)" },
-    { value: "UYU", label: "Peso uruguayo (UYU)" },
-];
-
 const EditProjectModal = ({ project_id, name, currency, bill_address, onClose, onUpdate }: EditProjectModalProps) => {
     const [nameState, setName] = useState(name);
     const [currencyState, setCurrency] = useState(currency);
     const [billAddress, setBillAddress] = useState(bill_address || "");
     const [loading, setLoading] = useState(false);
     const [errors, setErrors] = useState<Record<string, string>>({});
+    const t = useTranslations("clients");
+
+    const CURRENCIES = useCurrencyOptions();
 
     const updateProject = useProjectsStore(state => state.updateProject);
 
@@ -66,36 +63,36 @@ const EditProjectModal = ({ project_id, name, currency, bill_address, onClose, o
     return (
         <Modal onClose={onClose}>
             <WrapperModal>
-                <HeaderModal title="Editar proyecto" onClose={onClose} />
+                <HeaderModal title={t("project-modal.edit.title")} onClose={onClose} />
 
                 <form onSubmit={handleSubmit}>
                     <Fields>
                         <TextInput
-                            label="Nombre"
+                            label={t("project-modal.name-label")}
                             value={nameState}
                             onChange={setName}
-                            placeholder="Plataforma web"
+                            placeholder={t("project-modal.name-placeholder")}
                             error={errors.name}
                         />
 
                         <NormalSelect
-                            title="Moneda"
+                            title={t("project-modal.currency-label")}
                             options={CURRENCIES}
                             value={CURRENCIES.find(c => c.value === currencyState) || null}
                             onChange={(option) => setCurrency(option.value)}
                         />
 
                         <TextArea
-                            label="Dirección de facturación"
+                            label={t("project-modal.address-label")}
                             value={billAddress}
                             onChange={setBillAddress}
-                            placeholder="Av. Corrientes 1234, CABA, Argentina"
+                            placeholder={t("project-modal.address-placeholder")}
                             error={errors.bill_address}
                         />
 
                         <div style={{ display: "flex", gap: "0.5rem", justifyContent: "flex-end" }}>
-                            <Button text="Cancelar" onClick={onClose} />
-                            <Button text="Editar proyecto" buttonType="submit" disabled={loading} onClick={handleSubmit} />
+                            <Button text={t("project-modal.cancel-button")} onClick={onClose} />
+                            <Button text={t("project-modal.edit.button")} buttonType="submit" disabled={loading} onClick={handleSubmit} />
                         </div>
                         {/* {error && <p style={{ color: "red" }}>{error}</p>} */}
                     </Fields>

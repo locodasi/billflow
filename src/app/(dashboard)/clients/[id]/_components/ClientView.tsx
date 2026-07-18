@@ -5,6 +5,8 @@ import styled from "styled-components";
 
 import { useRouter } from "next/navigation";
 
+import {useTranslations} from "next-intl";
+
 import { useState } from "react";
 
 import { sendSetPasswordEmail_action } from "@/actions/auth";
@@ -29,6 +31,8 @@ const ClientView = ({ client, projects }: { client: Client, projects: Project[] 
     const [projectsList, setProjectsList] = useState<Project[]>(projects);
     const [selectedProject, setSelectedProject] = useState<Project | null>(null);
 
+    const t = useTranslations("clients");
+
     const updateProjectStore = useProjectsStore(state => state.updateProject);
 
     const [modal, setModal] = useState<ModalState>(null);
@@ -47,11 +51,11 @@ const ClientView = ({ client, projects }: { client: Client, projects: Project[] 
 
     return (
         <>
-            <Header title="Clientes" showButton={false} />
+            <Header title={t("header")} showButton={false} />
 
             <Wrapper>
                 <Path>
-                    <p onClick={() => router.push("/clients")} style={{ cursor: "pointer" }}>Clientes</p> &gt; <span>{clientState.name}</span>
+                    <p onClick={() => router.push("/clients")} style={{ cursor: "pointer" }}>{t("header")}</p> &gt; <span>{clientState.name}</span>
                 </Path>
 
                 <Card direction="row" cardStyles={{ justifyContent: "space-between" }} pointer={false}>
@@ -61,16 +65,16 @@ const ClientView = ({ client, projects }: { client: Client, projects: Project[] 
                     </div>
 
                     <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
-                        <TwoRowData boldText={clientState.project_count.toString()} normalText={"Proyectos"} reverse />
-                        <TwoRowData boldText={clientState.total_invoiced_usd.toString()} normalText={"Total Facturado (USD)"} reverse />
-                        <Button text="Editar" onClick={() => setModal("edit_client")} firstIcon={"edit-pencil"} style="outline" />
-                        <Button text="Reenviar link" onClick={() => sendSetPasswordEmail_action({ email: clientState.email, isNewAccount: false })} firstIcon={"link"} style="outline" />
+                        <TwoRowData boldText={clientState.project_count.toString()} normalText={t("projects")} reverse />
+                        <TwoRowData boldText={clientState.total_invoiced_usd.toString()} normalText={t("total-amount")} reverse />
+                        <Button text={t("edit-button")} onClick={() => setModal("edit_client")} firstIcon={"edit-pencil"} style="outline" />
+                        <Button text={t("resend-invite-button")} onClick={() => sendSetPasswordEmail_action({ email: clientState.email, isNewAccount: false })} firstIcon={"link"} style="outline" />
                     </div>
                 </Card>
 
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                    <ProjectTitle>Proyectos</ProjectTitle>
-                    <Button text="Nuevo proyecto" onClick={() => setModal("new_project")} firstIcon={"plus"} style="outline" size="small" />
+                    <ProjectTitle>{t("projects")}</ProjectTitle>
+                    <Button text={t("new-project-button")} onClick={() => setModal("new_project")} firstIcon={"plus"} style="outline" size="small" />
                 </div>
 
                 <ProjectContainer>
@@ -80,9 +84,9 @@ const ClientView = ({ client, projects }: { client: Client, projects: Project[] 
                                 <TwoRowData boldText={project.name} normalText={project.currency} />
 
                                 <div style={{ display: "flex", gap: "0.5rem" }}>
-                                    <TwoRowData boldText={project.total_invoiced} normalText={"Facturado"} reverse background />
-                                    <TwoRowData boldText={project.total_collected} normalText={"Cobrado"} reverse background />
-                                    <TwoRowData boldText={project.total_pending} normalText={"Pendiente"} reverse background />
+                                    <TwoRowData boldText={project.total_invoiced} normalText={t("invoiced")} reverse background />
+                                    <TwoRowData boldText={project.total_collected} normalText={t("paid")} reverse background />
+                                    <TwoRowData boldText={project.total_pending} normalText={t("pending")} reverse background />
                                 </div>
                             </Card>
                         ))
