@@ -1,5 +1,7 @@
 import styled from "styled-components";
 
+import { useTranslations } from "next-intl";
+
 import { useUserStore } from "@/stores/userStore";
 
 import Icon from "@/components/icons/Icon";
@@ -63,13 +65,15 @@ interface UserDataProps {
 }
 
 export const UserData = ({ showEmail = false, showRole = true }: UserDataProps) => {
-
+    
+    const t = useTranslations("common.roles");
+    
     const { fullName, role, email } = useUserStore();
 
     return (
         <div style={{ display: "flex", flexDirection: "column" }}>
             {role ? <Name>{fullName}</Name> : <Skeleton />}
-            {!showRole ? null : role ? <Role>{role.charAt(0).toUpperCase() + role.slice(1)}</Role> : <Skeleton />}
+            {!showRole ? null : role ? <Role>{t(role)}</Role> : <Skeleton />}
             {!showEmail ? null : email ? <Role>{email}</Role> : <Skeleton />}
         </div>
     )

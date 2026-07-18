@@ -4,5 +4,14 @@
         "subtitle": "o haz clic para seleccionar un archivo"
     },
     "go_to_page": "Ir a su pagina",
-    "download": "Descargar"
+    "download": "Descargar",
+    "theme": {
+        "dark": "Oscuro",
+        "light": "Claro",
+        "system": "Sistema"
+    },
+    "roles": {
+        "admin": "Administrador",
+        "client": "Cliente"
+    }
 }
