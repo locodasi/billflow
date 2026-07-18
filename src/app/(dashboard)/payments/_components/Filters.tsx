@@ -1,5 +1,7 @@
 import styled from "styled-components";
 
+import {useTranslations} from "next-intl";
+
 import SearchInput from "@/components/inputs/SearchInput";
 import Chips from "@/components/Chips";
 import Button from "@/components/Button";
@@ -10,6 +12,8 @@ import { ITEMS_PER_PAGE } from "../_utils/constant";
 import { PaymentFilters } from "../_types/filters";
 
 const Filters = ({ filters, setFilters, count }: { filters: PaymentFilters, setFilters: React.Dispatch<React.SetStateAction<PaymentFilters>>, count: number }) => {
+
+    const t = useTranslations('payments');
 
     const changeStatus = (status: string) => {
         const newFilters = { ...filters, page: 1 }
@@ -27,14 +31,14 @@ const Filters = ({ filters, setFilters, count }: { filters: PaymentFilters, setF
 
     return (
         <Wrapper>
-            <SearchInput placeholder="Buscar por número de recibo o moneda..." onSearch={v => setFilters({ ...filters, search: v, page: 1 })} width="50%" />
+            <SearchInput placeholder={t('search_placeholder')} onSearch={v => setFilters({ ...filters, search: v, page: 1 })} width="50%" />
 
             <Chips
                 items={[
-                    { text: 'Todas', value: 'all' },
-                    { text: 'Aceptadas', value: 'approved' },
-                    { text: 'Pendientes', value: 'pending' },
-                    { text: 'Rechazadas', value: 'rejected' },
+                    { text: t('all'), value: 'all' },
+                    { text: t('status.approved_plural'), value: 'approved' },
+                    { text: t('status.pending_plural'), value: 'pending' },
+                    { text: t('status.rejected_plural'), value: 'rejected' },
                 ]}
                 selected={filters.status || 'all'}
                 onClick={changeStatus}

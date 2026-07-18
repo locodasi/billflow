@@ -1,0 +1,81 @@
+{
+  "payment_singular": "Recibo",
+  "payment_plural": "Recibos",
+  "all": "Todos",
+  "status": {
+    "unpaid_singular": "No pagada",
+    "unpaid_plural": "No pagadas",
+    "paid_singular": "Pagada",
+    "paid_plural": "Pagadas",
+    "processing_singular": "En proceso",
+    "processing_plural": "En proceso",
+    "pending_singular": "Pendiente",
+    "pending_plural": "Pendientes",
+    "rejected_singular": "Rechazada",
+    "rejected_plural": "Rechazadas",
+    "approved_singular": "Aprobada",
+    "approved_plural": "Aprobadas"
+  },
+  "search_placeholder": "Buscar por número de recibo o moneda",
+  "new_payment": "Nuevo recibo",
+  "upload": {
+    "text": "Subir recibo",
+    "pdf": {
+      "title": "Subir PDF",
+      "subtitle": "Detecta datos automaticamente",
+      "detected": "Datos detectados automaticamente. Revisa y corrige si es necesario"
+    },
+    "manual": {
+      "title": "Crear manualmente",
+      "subtitle": "Proximamente"
+    },
+    "values": {
+      "payment_number": "Número de recibo",
+      "payment_number_placeholder": "EJ. PAY_0001",
+      "amount": "Monto",
+      "currency": "Moneda",
+      "notes": "Notas",
+      "notes_placeholder": "Notas adicionales",
+      "from_pdf": "Detectado desde PDF"
+    },
+    "buttons": {
+      "save": "Guardar",
+      "cancel": "Cancelar"
+    },
+    "invoices": {
+      "title": "Facturas a cubrir",
+      "total": "Total",
+      "owe": "Debe",
+      "distribution_note": "El monto se distribuirá automáticamente de la factura más vieja a la más nueva.",
+      "payment_amount": "Monto del recibo",
+      "invoices-selected": "Facturas seleccionadas",
+      "difference": "Diferencia"
+    },
+    "errors": {
+      "project-id-enabled": "Project ID no disponible",
+      "unknown-error": "Error desconocido"
+    }
+  },
+  "detail": {
+    "details": {
+      "title": "Detalles",
+      "amount": "Monto",
+      "date": "Fecha de emisión",
+      "currency": "Moneda",
+      "project": "Proyecto",
+      "method": "Método de pago",
+      "approve": "Aprobar",
+      "reject": "Rechazar"
+    },
+    "notes": {
+      "title": "Notas",
+      "no_notes": "No hay notas para este recibo"
+    },
+    "element_associated": {
+      "title": "Facturas asociadas",
+      "no_invoices": "No hay facturas asociadas a este recibo",
+      "moneyApplied": "{amount} {currency} aplicado",
+      "issuedOn": "Emitida {date}"
+    }
+  } 
+}

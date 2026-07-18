@@ -1,8 +1,8 @@
-import styled from "styled-components";
+import {useTranslations} from "next-intl";
 
 import {useState} from "react";
 
-import Modal, { HeaderModal, WrapperModal, HeaderWrapper, HeaderTitle } from "@/components/modals/Modal";
+import Modal, { WrapperModal, HeaderWrapper, HeaderTitle } from "@/components/modals/Modal";
 import Icon from "@/components/icons/Icon";
 
 import { Payment } from "@/types/payment";
@@ -15,12 +15,13 @@ const NewPaymentModal = ({ onClose, addPayment }: { onClose: () => void, addPaym
 
     const [mode, setMode] = useState<NewPaymentMode>("upload");
 
+    const t = useTranslations('payments');
 
     return (
         <Modal onClose={onClose}>
             <WrapperModal styles={{padding: "0", gap: "0"}}>
                 <HeaderWrapper style={{padding: "1rem", borderBottom: "1px solid var(--Border-Colors-border-primary)"}}>
-                    <HeaderTitle>Nuevo pago</HeaderTitle>
+                    <HeaderTitle>{t('new_payment')}</HeaderTitle>
 
                     <Icon icon={"delete-circle"} size={24} onClick={onClose} />
                 </HeaderWrapper>

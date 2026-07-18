@@ -2,6 +2,8 @@
 
 import styled from "styled-components";
 
+import {useTranslations} from "next-intl";
+
 import {useState} from "react";
 
 import { Payment } from "@/types/payment";
@@ -16,6 +18,7 @@ import PaymentDetail from "@/components/details/PaymentDetail";
 import { updatePaymentStatus } from "../../actions";
 
 const PaymentView = ({ payment }: { payment: Payment }) => {
+    const t = useTranslations('payments');
     const [statePayment, setStatePayment] = useState(payment);
 
     const handleUpdatePaymentStatus = async (paymentId: string, newStatus: "approved" | "rejected") => {
@@ -27,8 +30,8 @@ const PaymentView = ({ payment }: { payment: Payment }) => {
         <>
             <HeaderWrapper>
                 <Path>
-                    <RedirectPath path="/payments" label="Pagos" />
-                    <Title text={statePayment.payment_number} status={statePayment.status} />
+                    <RedirectPath path="/payments" label={t('payment_plural')} />
+                    <Title text={statePayment.payment_number} type="payments" status={statePayment.status} />
                 </Path>
 
                 <DownloadButton file_title={statePayment.payment_number} path={statePayment.receipt_pdf_path} />
