@@ -41,7 +41,7 @@ export async function parsePayment(formData: FormData): Promise<PaymentData> {
 import { createServerClient } from "@/lib/supabase.server";
 import { convertToUSD } from "@/lib/exchange-rate";
 import { notificationService } from '@/lib/notifications/notification-service'
-import { paymentsUploadedEmailTemplate } from '@/lib/notifications/templates/email/helper'
+import { paymentsUploadedEmailTemplate, paymentStatusEmailTemplate } from '@/lib/notifications/templates/email/helper'
 import serverEnv from '@/lib/env.server'
 
 import { UploadPayload } from './_components/modals/UploadMode'
@@ -105,13 +105,21 @@ export async function createPayload(data: UploadPayload, projectId: string) {
     for (const invoice of invoicesToPay) {
         if (totalPayed <= 0) break;
 
+        // outstanding_amount viene de invoice_summary como GREATEST(..., 0) + COALESCE,
+        // por lo que en runtime siempre es un número — Postgres solo no puede
+        // garantizarlo a nivel de tipos porque es una columna calculada de una view.
+        if (invoice.outstanding_amount == null) {
+            console.error(`invoice_summary devolvió outstanding_amount null para ${invoice.id}, se omite`);
+            continue;
+        }
+
         const amountToPay = Math.min(invoice.outstanding_amount, totalPayed);
 
         const { error: paymentInvoiceError } = await supabase
             .from('payment_invoices')
             .insert({
                 payment_id: payment.id,
-                invoice_id: invoice.id,
+                invoice_id: invoice.id!,
                 amount_applied: amountToPay,
                 amount_applied_usd: amountToPay * exchangeRate, // revisá la dirección
             })
@@ -131,7 +139,7 @@ export async function createPayload(data: UploadPayload, projectId: string) {
 
     // Enviar notificación de nuevo pago
     const result = await notificationService.send(
-        await paymentsUploadedEmailTemplate({ recipient: { name: "Lucas", email: serverEnv.PERSONAL_EMAIL }, amount: data.amount.value, currency: data.currency.value, paymentNumber: data.paymentNumber.value, paymentId: payment.id, projectName: project?.name ?? "Tu proyecto" })
+        await paymentsUploadedEmailTemplate({ recipient: { name: "Lucas", email: serverEnv.PERSONAL_EMAIL }, locale: "es", amount: data.amount.value, currency: data.currency.value, paymentNumber: data.paymentNumber.value, paymentId: payment.id, projectName: project?.name ?? "Tu proyecto" })
     );
 
     if (!result.success) {
@@ -141,14 +149,65 @@ export async function createPayload(data: UploadPayload, projectId: string) {
     return payment;
 }
 
-export async function updatePaymentStatus(paymentId: string, newStatus: string) {
+export async function updatePaymentStatus(paymentId: string, newStatus: string, rejectionReason?: string) {
     const supabase = await createServerClient();
 
-    const { error } = await supabase
+    const { data: payment, error } = await supabase
         .from('payments')
         .update({ status: newStatus })
-        .eq('id', paymentId);
+        .eq('id', paymentId)
+        .select(`
+            id,
+            payment_number,
+            amount,
+            currency,
+            status,
+            project:projects (
+                id,
+                name,
+                client:clients (
+                    id,
+                    profile:profiles (
+                        id,
+                        full_name,
+                        email,
+                        language
+                    )
+                )
+            )
+        `)
+        .single();
 
-    if (error) throw new Error(`Error al actualizar estado: ${error.message}`)
+    if (error) throw new Error(`Error al actualizar estado: ${error.message}`);
+    if (!payment) throw new Error("No se encontró el recibo actualizado");
+
+    console.log("Datos del pago actualizado:", payment);
+
+    const project = payment.project;
+    const owner = project?.client?.profile;
+
+    if (!owner?.email) {
+        // decidí si esto debe frenar todo o solo loguearse y seguir
+        console.warn(`Recibo ${paymentId} actualizado sin owner/email para notificar`);
+        return;
+    }
+
+    const isApproved = newStatus === "approved";
+
+    await notificationService.send(
+        await paymentStatusEmailTemplate({
+            recipient: { name: owner.full_name ?? "Usuario", email: owner.email },
+            locale: owner.language ?? "es",
+            amount: payment.amount,
+            currency: payment.currency,
+            paymentNumber: payment.payment_number,
+            paymentId: payment.id,
+            projectName: project?.name ?? "Tu proyecto",
+            ...(isApproved
+                ? { status: "approved" }
+                : { status: "rejected", rejectionReason: rejectionReason ?? "" }),
+        })
+    );
+
 }
 

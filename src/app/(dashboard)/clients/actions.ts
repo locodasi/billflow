@@ -97,6 +97,7 @@ export const createClient_action = async (
         const result = await notificationService.send(
             await setPasswordEmailTemplate({
                 recipient: { name, email },
+                locale: language,
                 link: linkData.properties.action_link,
                 isNewAccount: true,
             })

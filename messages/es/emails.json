@@ -1,0 +1,57 @@
+{
+    "common": {
+        "footer": "© 2025 Billflow. Todos los derechos reservados."
+    },
+    "invoiceUploaded": {
+        "subject": "Nueva factura cargada",
+        "preview": "Nueva factura #{number} cargada",
+        "heading": "Nueva factura cargada",
+        "greeting": "Hola {name}, se cargó una nueva factura con los siguientes datos:",
+        "number": "Número",
+        "amount": "Monto",
+        "currency": "Moneda",
+        "project": "Proyecto",
+        "viewInvoice": "Ver factura"
+    },
+    "paymentUploaded": {
+        "subject": "Nuevo recibo cargado",
+        "preview": "Nuevo recibo #{number} cargado",
+        "heading": "Nuevo recibo cargado",
+        "greeting": "Hola {name}, se cargó un nuevo recibo con los siguientes datos:",
+        "number": "Número",
+        "amount": "Monto",
+        "currency": "Moneda",
+        "project": "Proyecto",
+        "viewPayment": "Ver recibo"
+    },
+    "setPassword": {
+        "subjectNewAccount": "Configura tu contraseña",
+        "subjectReset": "Restablece tu contraseña",
+        "previewNewAccount": "Bienvenido a Billflow, configura tu contraseña",
+        "previewReset": "Restablece tu contraseña en Billflow",
+        "headingNewAccount": "Bienvenido a Billflow",
+        "headingReset": "Restablece tu contraseña",
+        "greetingNewAccount": "Hola {name}, configura tu contraseña para comenzar a usar Billflow:",
+        "greetingReset": "Hola {name}, puedes restablecer tu contraseña usando el siguiente enlace:",
+        "bodyNewAccount": "Tu cuenta fue creada. Hacé click en el botón para configurar tu contraseña y empezar a usar la plataforma.",
+        "bodyReset": "Recibimos una solicitud para restablecer tu contraseña. Hacé click en el botón para crear una nueva.",
+        "buttonNewAccount": "Configurar contraseña",
+        "buttonReset": "Restablecer contraseña"
+    },
+    "paymentStatus": {
+        "subjectApproved": "Recibo aprobado",
+        "subjectRejected": "Recibo rechazado",
+        "previewApproved": "Tu recibo #{number} fue aprobado",
+        "previewRejected": "Tu recibo #{number} fue rechazado",
+        "headingApproved": "Recibo aprobado",
+        "headingRejected": "Recibo rechazado",
+        "greetingApproved": "Hola {name}, tu recibo fue aprobado con los siguientes datos:",
+        "greetingRejected": "Hola {name}, tu recibo fue rechazado con los siguientes datos:",
+        "number": "Número",
+        "amount": "Monto",
+        "currency": "Moneda",
+        "project": "Proyecto",
+        "rejectionReason": "Motivo del rechazo",
+        "viewPayment": "Ver recibo"
+    }
+}

@@ -1,0 +1,57 @@
+{
+    "common": {
+        "footer": "© 2025 Billflow. All rights reserved."
+    },
+    "invoiceUploaded": {
+        "subject": "New invoice uploaded",
+        "preview": "New invoice #{number} uploaded",
+        "heading": "New invoice uploaded",
+        "greeting": "Hi {name}, a new invoice was uploaded with the following details:",
+        "number": "Number",
+        "amount": "Amount",
+        "currency": "Currency",
+        "project": "Project",
+        "viewInvoice": "View invoice"
+    },
+    "paymentUploaded": {
+        "subject": "New payment uploaded",
+        "preview": "New payment #{number} uploaded",
+        "heading": "New payment uploaded",
+        "greeting": "Hi {name}, a new payment was uploaded with the following details:",
+        "number": "Number",
+        "amount": "Amount",
+        "currency": "Currency",
+        "project": "Project",
+        "viewPayment": "View payment"
+    },
+    "setPassword": {
+        "subjectNewAccount": "Set your password",
+        "subjectReset": "Reset your password",
+        "previewNewAccount": "Welcome to Billflow, set your password",
+        "previewReset": "Reset your password on Billflow",
+        "headingNewAccount": "Welcome to Billflow",
+        "headingReset": "Reset your password",
+        "greetingNewAccount": "Hi {name}, set your password to start using Billflow:",
+        "greetingReset": "Hi {name}, you can reset your password using the link below:",
+        "bodyNewAccount": "Your account was created. Click the button below to set your password and start using the platform.",
+        "bodyReset": "We received a request to reset your password. Click the button below to create a new one.",
+        "buttonNewAccount": "Set password",
+        "buttonReset": "Reset password"
+    },
+    "paymentStatus": {
+        "subjectApproved": "Payment approved",
+        "subjectRejected": "Payment rejected",
+        "previewApproved": "Your payment #{number} was approved",
+        "previewRejected": "Your payment #{number} was rejected",
+        "headingApproved": "Payment approved",
+        "headingRejected": "Payment rejected",
+        "greetingApproved": "Hi {name}, your payment was approved with the following details:",
+        "greetingRejected": "Hi {name}, your payment was rejected with the following details:",
+        "number": "Number",
+        "amount": "Amount",
+        "currency": "Currency",
+        "project": "Project",
+        "rejectionReason": "Rejection reason",
+        "viewPayment": "View payment"
+    }
+}
