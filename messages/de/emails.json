@@ -1,0 +1,57 @@
+{
+    "common": {
+        "footer": "© 2025 Billflow. Alle Rechte vorbehalten."
+    },
+    "invoiceUploaded": {
+        "subject": "Neue Rechnung hochgeladen",
+        "preview": "Neue Rechnung #{number} hochgeladen",
+        "heading": "Neue Rechnung hochgeladen",
+        "greeting": "Hallo {name}, eine neue Rechnung wurde mit folgenden Details hochgeladen:",
+        "number": "Nummer",
+        "amount": "Betrag",
+        "currency": "Währung",
+        "project": "Projekt",
+        "viewInvoice": "Rechnung ansehen"
+    },
+    "paymentUploaded": {
+        "subject": "Neuer Zahlungsbeleg hochgeladen",
+        "preview": "Neuer Zahlungsbeleg #{number} hochgeladen",
+        "heading": "Neuer Zahlungsbeleg hochgeladen",
+        "greeting": "Hallo {name}, ein neuer Zahlungsbeleg wurde mit folgenden Details hochgeladen:",
+        "number": "Nummer",
+        "amount": "Betrag",
+        "currency": "Währung",
+        "project": "Projekt",
+        "viewPayment": "Zahlungsbeleg ansehen"
+    },
+    "setPassword": {
+        "subjectNewAccount": "Passwort festlegen",
+        "subjectReset": "Passwort zurücksetzen",
+        "previewNewAccount": "Willkommen bei Billflow, legen Sie Ihr Passwort fest",
+        "previewReset": "Setzen Sie Ihr Passwort bei Billflow zurück",
+        "headingNewAccount": "Willkommen bei Billflow",
+        "headingReset": "Passwort zurücksetzen",
+        "greetingNewAccount": "Hallo {name}, legen Sie Ihr Passwort fest, um Billflow zu nutzen:",
+        "greetingReset": "Hallo {name}, Sie können Ihr Passwort über den untenstehenden Link zurücksetzen:",
+        "bodyNewAccount": "Ihr Konto wurde erstellt. Klicken Sie auf die Schaltfläche unten, um Ihr Passwort festzulegen und die Plattform zu nutzen.",
+        "bodyReset": "Wir haben eine Anfrage zum Zurücksetzen Ihres Passworts erhalten. Klicken Sie auf die Schaltfläche unten, um ein neues Passwort zu erstellen.",
+        "buttonNewAccount": "Passwort festlegen",
+        "buttonReset": "Passwort zurücksetzen"
+    },
+    "paymentStatus": {
+        "subjectApproved": "Zahlung genehmigt",
+        "subjectRejected": "Zahlung abgelehnt",
+        "previewApproved": "Ihr Zahlungsbeleg #{number} wurde genehmigt",
+        "previewRejected": "Ihr Zahlungsbeleg #{number} wurde abgelehnt",
+        "headingApproved": "Zahlung genehmigt",
+        "headingRejected": "Zahlung abgelehnt",
+        "greetingApproved": "Hallo {name}, Ihr Zahlungsbeleg wurde mit folgenden Details genehmigt:",
+        "greetingRejected": "Hallo {name}, Ihr Zahlungsbeleg wurde mit folgenden Details abgelehnt:",
+        "number": "Nummer",
+        "amount": "Betrag",
+        "currency": "Währung",
+        "project": "Projekt",
+        "rejectionReason": "Ablehnungsgrund",
+        "viewPayment": "Zahlungsbeleg ansehen"
+    }
+}

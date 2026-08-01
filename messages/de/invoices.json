@@ -1,0 +1,72 @@
+{
+  "invoice_singular": "Rechnung",
+  "invoice_plural": "Rechnungen",
+  "all": "Alle",
+  "status": {
+    "unpaid_singular": "Unbezahlt",
+    "unpaid_plural": "Unbezahlt",
+    "paid_singular": "Bezahlt",
+    "paid_plural": "Bezahlt",
+    "processing_singular": "In Bearbeitung",
+    "processing_plural": "In Bearbeitung",
+    "pending_singular": "Ausstehend",
+    "pending_plural": "Ausstehend",
+    "rejected_singular": "Abgelehnt",
+    "rejected_plural": "Abgelehnt",
+    "approved_singular": "Genehmigt",
+    "approved_plural": "Genehmigt"
+  },
+  "search_placeholder": "Nach Rechnungsnummer oder Währung suchen",
+  "download_unpaid_invoices": "Unbezahlte Rechnungen herunterladen",
+  "new_invoice": "Neue Rechnung",
+  "upload": {
+    "text": "Rechnung hochladen",
+    "pdf": {
+      "title": "PDF hochladen",
+      "subtitle": "Erkennt Daten automatisch",
+      "detected": "Daten wurden automatisch erkannt. Bitte überprüfen und bei Bedarf korrigieren"
+    },
+    "manual": {
+      "title": "Manuell erstellen",
+      "subtitle": "Demnächst verfügbar"
+    },
+    "values": {
+      "invoice_number": "Rechnungsnummer",
+      "invoice_number_placeholder": "Z. B. 001-001-0000001",
+      "amount": "Betrag",
+      "currency": "Währung",
+      "notes": "Notizen",
+      "notes_placeholder": "Zusätzliche Notizen",
+      "from_pdf": "Aus PDF erkannt"
+    },
+    "buttons": {
+      "save": "Speichern",
+      "cancel": "Abbrechen"
+    }
+  },
+  "detail": {
+    "resume": {
+      "title": "Zahlungsübersicht",
+      "total": "Gesamtbetrag in Rechnung gestellt",
+      "paid": "Bezahlt",
+      "pending": "Ausstehend",
+      "unpaid": "Unbezahlt",
+      "percent": "{percent, number, ::percent} bezahlt"
+    },
+    "details": {
+      "title": "Details",
+      "date": "Ausstellungsdatum",
+      "currency": "Währung",
+      "project": "Projekt"
+    },
+    "notes": {
+      "title": "Notizen"
+    },
+    "element_associated": {
+      "title": "Zugehörige Zahlungen",
+      "no_payments": "Keine Zahlungen mit dieser Rechnung verknüpft",
+      "moneyApplied": "{amount} {currency} angewendet",
+      "issuedOn": "Ausgestellt am {date}"
+    }
+  }
+}

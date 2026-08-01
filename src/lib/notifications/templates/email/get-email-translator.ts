@@ -4,6 +4,7 @@ import { createTranslator } from "next-intl";
 const loaders = {
   en: () => import("@messages/en/emails.json"),
   es: () => import("@messages/es/emails.json"),
+  de: () => import("@messages/de/emails.json"),
 } as const;
 
 export type Locale = keyof typeof loaders;

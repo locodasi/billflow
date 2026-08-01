@@ -1,0 +1,29 @@
+{
+  "header": "Einstellungen",
+  "log-out": "Abmelden",
+  "appearance": {
+    "header": "Erscheinungsbild",
+    "text": "Wählen Sie aus, wie die Anwendung aussieht"
+  },
+  "language": {
+    "header": "Sprache",
+    "text": "Wählen Sie die Sprache der Anwendung"
+  },
+  "notifications": {
+    "header": "E-Mail-Benachrichtigungen",
+    "text": "Wählen Sie aus, wann Sie eine E-Mail erhalten möchten",
+    "soon": "Demnächst verfügbar",
+    "new-invoice": {
+      "header": "Neue Rechnung hochgeladen",
+      "text": "Wir benachrichtigen Sie, wenn eine neue Rechnung hochgeladen wird"
+    },
+    "payload-approved": {
+      "header": "Beleg genehmigt",
+      "text": "Wir benachrichtigen Sie, wenn Ihre Zahlung genehmigt wird"
+    },
+    "payload-rejected": {
+      "header": "Beleg abgelehnt",
+      "text": "Wir benachrichtigen Sie, wenn Ihre Zahlung abgelehnt wird"
+    }
+  }
+}
