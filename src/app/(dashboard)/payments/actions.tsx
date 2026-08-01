@@ -45,6 +45,8 @@ import { paymentsUploadedEmailTemplate, paymentStatusEmailTemplate } from '@/lib
 import serverEnv from '@/lib/env.server'
 
 import { UploadPayload } from './_components/modals/UploadMode'
+import { DEFAULT_SETTINGS, UserSettingsInput } from '@/stores/userStore'
+import { deepMerge } from '@/lib/deep-merge'
 
 export async function createPayload(data: UploadPayload, projectId: string) {
     // Validación
@@ -171,7 +173,8 @@ export async function updatePaymentStatus(paymentId: string, newStatus: string, 
                         id,
                         full_name,
                         email,
-                        language
+                        language,
+                        settings
                     )
                 )
             )
@@ -185,6 +188,7 @@ export async function updatePaymentStatus(paymentId: string, newStatus: string, 
 
     const project = payment.project;
     const owner = project?.client?.profile;
+    const settings = deepMerge(DEFAULT_SETTINGS, (owner?.settings as UserSettingsInput | null) ?? {});
 
     if (!owner?.email) {
         // decidí si esto debe frenar todo o solo loguearse y seguir
@@ -194,20 +198,21 @@ export async function updatePaymentStatus(paymentId: string, newStatus: string, 
 
     const isApproved = newStatus === "approved";
 
-    await notificationService.send(
-        await paymentStatusEmailTemplate({
-            recipient: { name: owner.full_name ?? "Usuario", email: owner.email },
-            locale: owner.language ?? "es",
-            amount: payment.amount,
-            currency: payment.currency,
-            paymentNumber: payment.payment_number,
-            paymentId: payment.id,
-            projectName: project?.name ?? "Tu proyecto",
-            ...(isApproved
-                ? { status: "approved" }
-                : { status: "rejected", rejectionReason: rejectionReason ?? "" }),
-        })
-    );
-
+    if ((settings.notifications.email.invoiceRejected && !isApproved) || (settings.notifications.email.invoiceApproved && isApproved)) {
+        await notificationService.send(
+            await paymentStatusEmailTemplate({
+                recipient: { name: owner.full_name ?? "Usuario", email: owner.email },
+                locale: owner.language ?? "es",
+                amount: payment.amount,
+                currency: payment.currency,
+                paymentNumber: payment.payment_number,
+                paymentId: payment.id,
+                projectName: project?.name ?? "Tu proyecto",
+                ...(isApproved
+                    ? { status: "approved" }
+                    : { status: "rejected", rejectionReason: rejectionReason ?? "" }),
+            })
+        );
+    }
 }
 

@@ -10,24 +10,38 @@ import { useLanguageOptions } from "@/hooks/useLanguagesOptions";
 
 import Header from "@/components/Header";
 import NormalSelect from "@/components/Select";
-import Switch, {Subtitle, TextWrapper, Title} from "@/components/Switch";
+import Switch, { Subtitle, TextWrapper, Title } from "@/components/Switch";
 
 import { UserData, UserImg } from "../_components/UserButton";
 import { LogoutButton, Modes } from "../_components/UserButtonModal";
-import { updateUserLanguage } from "./actions";
+import { updateUserLanguage, updateUserSettings } from "./actions";
 
 const SettingsPage = () => {
 
     const language = useUserStore(s => s.language);
+    const settings = useUserStore(s => s.settings);
     const setLanguage = useUserStore(s => s.setLanguage);
+    const setSettings = useUserStore(s => s.setSettings);
 
     const LANGUAGE_OPTIONS = useLanguageOptions();
-    
+
     const t = useTranslations("settings");
 
     const handleLanguageChange = async (value: string) => {
         setLanguage(value as Language);
         await updateUserLanguage(value as Language);
+    }
+
+    const handleNotificationsEmailSettingsChange = (email: "invoiceUploaded" | "invoiceApproved" | "invoiceRejected", value: boolean) => {
+        setSettings({
+            notifications: {
+                email: {
+                    [email]: value,
+                },
+            },
+        });
+
+        updateUserSettings(["notifications", "email", email], value);
     }
 
 
@@ -58,31 +72,29 @@ const SettingsPage = () => {
             </Section>
 
             <Section title={t("notifications.header")} description={t("notifications.text")} last>
-                <Switch type="primary" isOn disabled handleToggle={() => { }} right={false} styles={{justifyContent: "space-between"}}>
+                <Switch type="primary" isOn={settings.notifications.email.invoiceUploaded || false} handleToggle={() => handleNotificationsEmailSettingsChange("invoiceUploaded", !settings.notifications.email.invoiceUploaded)} right={false} styles={{ justifyContent: "space-between" }}>
                     <TextWrapper>
                         <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
                             <Title>{t("notifications.new-invoice.header")}</Title>
-                            <Soon />
+                            {/* <Soon /> */}
                         </div>
                         <Subtitle>{t("notifications.new-invoice.text")}</Subtitle>
                     </TextWrapper>
                 </Switch>
 
-                <Switch type="primary" isOn disabled handleToggle={() => { }} right={false} styles={{justifyContent: "space-between"}}>
+                <Switch type="primary" isOn={settings.notifications.email.invoiceApproved || false} handleToggle={() => handleNotificationsEmailSettingsChange("invoiceApproved", !settings.notifications.email.invoiceApproved)} right={false} styles={{ justifyContent: "space-between" }}>
                     <TextWrapper>
                         <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
                             <Title>{t("notifications.payload-approved.header")}</Title>
-                            <Soon />
                         </div>
                         <Subtitle>{t("notifications.payload-approved.text")}</Subtitle>
                     </TextWrapper>
                 </Switch>
 
-                <Switch type="primary" isOn disabled handleToggle={() => { }} right={false} styles={{justifyContent: "space-between"}}>
+                <Switch type="primary" isOn={settings.notifications.email.invoiceRejected || false} handleToggle={() => handleNotificationsEmailSettingsChange("invoiceRejected", !settings.notifications.email.invoiceRejected)} right={false} styles={{ justifyContent: "space-between" }}>
                     <TextWrapper>
                         <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
                             <Title>{t("notifications.payload-rejected.header")}</Title>
-                            <Soon />
                         </div>
                         <Subtitle>{t("notifications.payload-rejected.text")}</Subtitle>
                     </TextWrapper>
@@ -98,9 +110,9 @@ const Soon = () => {
 
     const t = useTranslations("settings");
 
-    return(
-        <div style={{padding: "0 0.25rem", display: "flex", justifyContent: "center", alignItems: "center", borderRadius: "0.5rem", backgroundColor: "var(--Background-Colors-bg-secondary)"}}>
-            <p style={{fontSize: "0.875rem", color: "var(--Text-text-tertiary)"}}>{t("notifications.soon")}</p>
+    return (
+        <div style={{ padding: "0 0.25rem", display: "flex", justifyContent: "center", alignItems: "center", borderRadius: "0.5rem", backgroundColor: "var(--Background-Colors-bg-secondary)" }}>
+            <p style={{ fontSize: "0.875rem", color: "var(--Text-text-tertiary)" }}>{t("notifications.soon")}</p>
         </div>
     )
 }

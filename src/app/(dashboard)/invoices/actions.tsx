@@ -98,13 +98,15 @@ export async function createInvoice(data: UploadInvoice, projectId: string): Pro
         .eq('id', projectId)
         .single()
 
-    // Enviar notificación de nueva factura
-    const result = await notificationService.send(
-        await invoiceUploadedEmailTemplate({ recipient: { name: user.fullName, email: user.email }, locale: user.language, amount: data.amount.value, currency: data.currency.value, invoiceNumber: data.invoiceNumber.value, invoiceId: invoice.id, projectName: project?.name ?? "Tu proyecto" })
-    );
+    if (user.settings.notifications.email.invoiceUploaded) {
+        // Enviar notificación de nueva factura
+        const result = await notificationService.send(
+            await invoiceUploadedEmailTemplate({ recipient: { name: user.fullName, email: user.email }, locale: user.language, amount: data.amount.value, currency: data.currency.value, invoiceNumber: data.invoiceNumber.value, invoiceId: invoice.id, projectName: project?.name ?? "Tu proyecto" })
+        );
 
-    if (!result.success) {
-        console.error("[sendWelcomeNotification]", result.error);
+        if (!result.success) {
+            console.error("[sendWelcomeNotification]", result.error);
+        }
     }
 
     return {

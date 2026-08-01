@@ -1,5 +1,8 @@
 // src/lib/notifications/utils/get-notification-user.ts
 
+import { deepMerge } from "@/lib/deep-merge";
+import { UserSettings, UserSettingsInput, DEFAULT_SETTINGS } from "@/stores/userStore";
+
 import { supabaseAdmin } from "./supabaseAdmin";
 
 export interface NotificationUser {
@@ -7,13 +10,14 @@ export interface NotificationUser {
     fullName: string;
     email: string;
     language: string;
+    settings: UserSettings;
 }
 
 // Caso 1 — por profile id directo
 export async function getUserById(profileId: string): Promise<NotificationUser> {
     const { data, error } = await supabaseAdmin
         .from("profiles")
-        .select("id, full_name, email, language")
+        .select("id, full_name, email, language, settings")
         .eq("id", profileId)
         .single();
 
@@ -26,6 +30,7 @@ export async function getUserById(profileId: string): Promise<NotificationUser> 
         fullName: data.full_name ?? "",
         email: data.email ?? "",
         language: data.language,
+        settings: deepMerge(DEFAULT_SETTINGS, data.settings ?? {}),
     };
 }
 
@@ -39,7 +44,8 @@ export async function getUserByProjectId(projectId: string): Promise<Notificatio
           id,
           full_name,
           email,
-          language
+          language,
+          settings
         )
       )
     `)
@@ -58,5 +64,6 @@ export async function getUserByProjectId(projectId: string): Promise<Notificatio
         fullName: profile.full_name ?? "",
         email: profile.email ?? "",
         language: profile.language,
+        settings: deepMerge(DEFAULT_SETTINGS, (profile.settings as UserSettingsInput | null) ?? {}),
     };
 }
