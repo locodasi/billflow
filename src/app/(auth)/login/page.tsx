@@ -2,6 +2,8 @@
 
 import styled from "styled-components";
 
+import { useTranslations } from 'next-intl';
+
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -12,6 +14,8 @@ import PasswordInput from "@/components/inputs/PasswordInput";
 import Button from "@/components/Button";
 
 const Login = () => {
+
+    const t = useTranslations("login");
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -35,23 +39,23 @@ const Login = () => {
     return (
         <form onSubmit={handleSubmit} >
             <Container>
-                <Title>Iniciar Sesion</Title>
+                <Title>{t("text")}</Title>
                 <TextInput
                     onChange={(value) => setEmail(value)}
                     value={email}
                     placeholder="jhondoe@gamil.com"
-                    label="Email"
+                    label={t("email")}
                     error={error}
                 />
                 <PasswordInput
                     onChange={(value) => setPassword(value)}
                     value={password}
                     placeholder="********"
-                    label="Password"
+                    label={t("password")}
                     showToggle={true}
                 />
                 <Button
-                    text="Iniciar Sesion"
+                    text={t("button")}
                     onClick={handleLogin}
                     style="filled"
                     size="medium"

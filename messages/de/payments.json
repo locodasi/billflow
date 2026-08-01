@@ -1,0 +1,81 @@
+{
+  "payment_singular": "Zahlung",
+  "payment_plural": "Zahlungen",
+  "all": "Alle",
+  "status": {
+    "unpaid_singular": "Unbezahlt",
+    "unpaid_plural": "Unbezahlt",
+    "paid_singular": "Bezahlt",
+    "paid_plural": "Bezahlt",
+    "processing_singular": "In Bearbeitung",
+    "processing_plural": "In Bearbeitung",
+    "pending_singular": "Ausstehend",
+    "pending_plural": "Ausstehend",
+    "rejected_singular": "Abgelehnt",
+    "rejected_plural": "Abgelehnt",
+    "approved_singular": "Genehmigt",
+    "approved_plural": "Genehmigt"
+  },
+  "search_placeholder": "Nach Zahlungsnummer oder Währung suchen",
+  "new_payment": "Neue Zahlung",
+  "upload": {
+    "text": "Zahlung hochladen",
+    "pdf": {
+      "title": "PDF hochladen",
+      "subtitle": "Erkennt Daten automatisch",
+      "detected": "Die Daten wurden automatisch erkannt. Bitte überprüfen und bei Bedarf korrigieren."
+    },
+    "manual": {
+      "title": "Manuell erstellen",
+      "subtitle": "Demnächst verfügbar"
+    },
+    "values": {
+      "payment_number": "Zahlungsnummer",
+      "payment_number_placeholder": "z. B. PAY_0001",
+      "amount": "Betrag",
+      "currency": "Währung",
+      "notes": "Notizen",
+      "notes_placeholder": "Zusätzliche Notizen",
+      "from_pdf": "Aus PDF erkannt"
+    },
+    "buttons": {
+      "save": "Speichern",
+      "cancel": "Abbrechen"
+    },
+    "invoices": {
+      "title": "Zu deckende Rechnungen",
+      "total": "Gesamt",
+      "owe": "Fälliger Betrag",
+      "distribution_note": "Der Betrag wird automatisch von der ältesten bis zur neuesten Rechnung verteilt.",
+      "payment_amount": "Zahlungsbetrag",
+      "invoices-selected": "Ausgewählte Rechnungen",
+      "difference": "Differenz"
+    },
+    "errors": {
+      "project-id-enabled": "Projekt-ID ist nicht verfügbar",
+      "unknown-error": "Unbekannter Fehler"
+    }
+  },
+  "detail": {
+    "details": {
+      "title": "Details",
+      "amount": "Betrag",
+      "date": "Ausstellungsdatum",
+      "currency": "Währung",
+      "project": "Projekt",
+      "method": "Zahlungsmethode",
+      "approve": "Genehmigen",
+      "reject": "Ablehnen"
+    },
+    "notes": {
+      "title": "Notizen",
+      "no_notes": "Es gibt keine Notizen zu dieser Zahlung"
+    },
+    "element_associated": {
+      "title": "Zugehörige Rechnungen",
+      "no_invoices": "Es sind keine Rechnungen mit dieser Zahlung verknüpft",
+      "moneyApplied": "{amount} {currency} angewendet",
+      "issuedOn": "Ausgestellt am {date}"
+    }
+  }
+}

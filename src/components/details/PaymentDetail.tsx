@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 
+import {useTranslations} from "next-intl";
+
 import { supabase } from "@/lib/supabase";
 
 import { Payment } from "@/types/payment";
@@ -38,6 +40,8 @@ interface PaymentDetailProps {
 
 const PaymentDetail = ({ payment, pdfWidth, pdfHeight, updatePaymentStatus }: PaymentDetailProps) => {
 
+    const t = useTranslations('payments.detail');
+
     const [invoicesRelation, setInvoicesRelation] = useState<InvoiceRelation[]>([]);
     const projectName = useProjectsStore(s => s.project?.name);
     const role = useUserStore(s => s.role);
@@ -74,36 +78,36 @@ const PaymentDetail = ({ payment, pdfWidth, pdfHeight, updatePaymentStatus }: Pa
             <PDF path={payment.receipt_pdf_path} width={pdfWidth} height={pdfHeight} />
 
             <div style={{ display: 'flex', flexDirection: 'column', width: '50%', minHeight: 0 }}>
-                <InfoSection title="DETALLES">
-                    <TwoRowData leftText="Monto" rightText={payment.amount.toString()} />
-                    <TwoRowData leftText="Moneda" rightText={payment.currency} />
-                    <TwoRowData leftText="Fecha de emision" rightText={parseDateToLocaleFormat(payment.created_at)} />
-                    <TwoRowData leftText="Metodo de pago" rightText={payment.payment_method} />
-                    <TwoRowData leftText="Proyecto" rightText={projectName || "N/A"} />
+                <InfoSection title={t('details.title').toUpperCase()}>
+                    <TwoRowData leftText={t('details.amount')} rightText={payment.amount.toString()} />
+                    <TwoRowData leftText={t('details.currency')} rightText={payment.currency} />
+                    <TwoRowData leftText={t('details.date')} rightText={parseDateToLocaleFormat(payment.created_at)} />
+                    <TwoRowData leftText={t('details.method')} rightText={payment.payment_method} />
+                    <TwoRowData leftText={t('details.project')} rightText={projectName || "N/A"} />
 
                     {
                         role === "admin" && payment.status === "pending" && (
                             <div style={{display: "flex", justifyContent: "space-between"}}>
-                                <Button text="Aprobar" onClick={() => updatePaymentStatus(payment.id, "approved")} type="primary"/>
-                                <Button text="Rechazar" onClick={() => updatePaymentStatus(payment.id, "rejected")} type="error"/>
+                                <Button text={t('details.approve')} onClick={() => updatePaymentStatus(payment.id, "approved")} type="primary"/>
+                                <Button text={t('details.reject')} onClick={() => updatePaymentStatus(payment.id, "rejected")} type="error"/>
                             </div>
                         )
                     }
                 </InfoSection>
 
-                <InfoSection title="NOTAS">
-                    <p style={{ fontSize: '0.875rem', color: 'var(--Text-text-tertiary)' }}>{payment.notes || "No hay notas para esta factura"}</p>
+                <InfoSection title={t('notes.title').toUpperCase()}>
+                    <p style={{ fontSize: '0.875rem', color: 'var(--Text-text-tertiary)' }}>{payment.notes || t('notes.no_notes')}</p>
                 </InfoSection>
 
-                <InfoSection title="FACTURAS ASOCIADAS" useBorder={false} >
+                <InfoSection title={t('element_associated.title').toUpperCase()} useBorder={false} >
                     {
                         invoicesRelation.map((relation) => (
                             <ElementAssociated
                                 key={relation.invoice_id}
                                 title={relation.invoices.invoice_number}
                                 status={relation.invoice_summary.computed_status}
-                                moneyText={`${relation.amount_applied} ${relation.invoices.currency} aplicado`}
-                                date={relation.invoices.created_at}
+                                moneyText={t('element_associated.moneyApplied', { amount: relation.amount_applied, currency: relation.invoices.currency })}
+                                date={t('element_associated.issuedOn', { date: parseDateToLocaleFormat(relation.invoices.created_at) })}
                                 url={`/invoices/${relation.invoice_id}`}
                             />
                         ))

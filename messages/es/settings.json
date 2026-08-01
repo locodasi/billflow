@@ -1,0 +1,29 @@
+{
+    "header": "Configuracion",
+    "log-out": "Cerrar sesión",
+    "appearance": {
+        "header": "Apariencia",
+        "text": "Elegi como se ve la aplicacion"
+    },
+    "language": {
+        "header": "Idioma",
+        "text": "Elegi el idioma de la aplicacion"
+    },
+    "notifications": {
+        "header": "Notificaciones por email",
+        "text": "Elegí cuándo querés recibir un correo",
+        "soon": "Próximamente",
+        "new-invoice": {
+            "header": "Nueva factura cargada",
+            "text": "Te avisamos cuando se carga una factura nueva"
+        },
+        "payload-approved": {
+            "header": "Recibo aprobado",
+            "text": "Te avisamos cuando se aprueba tu pago"
+        },
+        "payload-rejected": {
+            "header": "Recibo rechazado",
+            "text": "Te avisamos cuando se rechaza tu pago"
+        }
+    }
+}

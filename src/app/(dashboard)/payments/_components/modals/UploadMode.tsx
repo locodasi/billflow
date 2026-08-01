@@ -1,4 +1,4 @@
-
+import {useTranslations} from "next-intl";
 import { useState, useEffect } from "react";
 
 import { supabase } from "@/lib/supabase";
@@ -18,6 +18,8 @@ import Icon from "@/components/icons/Icon";
 
 import { Payment } from "@/types/payment";
 
+import { useCurrencyOptions } from "@/hooks/useCurrencyOptions";
+
 import { NewPaymentMode } from "./NewPaymentModal";
 
 import Footer from "./components/Footer";
@@ -25,16 +27,7 @@ import MiddleArea from "./components/MiddleArea";
 import SelectMode from "./components/SelectMode";
 import InvoicesToPaid from "./components/InvoicesToPaid";
 
-const CURRENCIES = [
-    { value: "USD", label: "Dólar estadounidense (USD)" },
-    { value: "EUR", label: "Euro (EUR)" },
-    { value: "GBP", label: "Libra esterlina (GBP)" },
-    { value: "JPY", label: "Yen japonés (JPY)" },
-    { value: "ARS", label: "Peso argentino (ARS)" },
-    { value: "BRL", label: "Real brasileño (BRL)" },
-    { value: "CAD", label: "Dólar canadiense (CAD)" },
-    { value: "CHF", label: "Franco suizo (CHF)" },
-];
+
 
 export interface UploadPayload {
     paymentNumber: {
@@ -85,6 +78,9 @@ export interface UploadModeProps {
     setMode: (mode: NewPaymentMode) => void;
 }
 const UploadMode = ({ close, addPayment, mode, setMode }: UploadModeProps) => {
+
+    const CURRENCIES = useCurrencyOptions();
+    const t = useTranslations('payments.upload');
 
     const [paymentData, setPaymentData] = useState<UploadPayload>(InitialState);
 
@@ -168,16 +164,16 @@ const UploadMode = ({ close, addPayment, mode, setMode }: UploadModeProps) => {
 
     const savePayment = async () => {
         try {
-            if (!projectId) throw new Error("Project ID no disponible");
+            if (!projectId) throw new Error(t('errors.project-id-enabled'));
 
             setIsLoading(true);
             setError(null);
             const payment = await createPayload(paymentData, projectId);
-            addPayment(payment);
+            addPayment(payment as Payment);
             close();
         } catch (error) {
             console.error("Error al crear el pago:", error);
-            setError(error instanceof Error ? error.message : "Error desconocido");
+            setError(error instanceof Error ? error.message : t('errors.unknown-error'));
         } finally {
             setIsLoading(false);
         }
@@ -209,7 +205,7 @@ const UploadMode = ({ close, addPayment, mode, setMode }: UploadModeProps) => {
                     {paymentData.file ? (
                         <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
                             <FileItem file={paymentData.file} remove={() => setPaymentData({ ...paymentData, file: null })} />
-                            <DetectedCard text="Datos detectados automaticamente. Revisa y corrige si es necesario." />
+                            <DetectedCard text={t('pdf.detected')} />
                         </div>
                     ) : (
                         <FileInput onFileSelect={hanldeFileSelect} accept=".pdf" />
@@ -217,35 +213,34 @@ const UploadMode = ({ close, addPayment, mode, setMode }: UploadModeProps) => {
 
                     <div style={{ display: "flex", gap: "0.5rem" }}>
                         <TextInput
-                            label="Número de pago"
-                            placeholder="Ej. PAY_001-001-0000001"
+                            label={t('values.payment_number')}
+                            placeholder={t('values.payment_number_placeholder')}
                             value={paymentData.paymentNumber.value}
                             onChange={(v) => setPaymentData({ ...paymentData, paymentNumber: { automatic: false, value: v } })}
                             styles={getAutoStyle(paymentData.paymentNumber.automatic)}
-                            underText={paymentData.paymentNumber.automatic ? "Detectado del PDF" : ""}
+                            underText={paymentData.paymentNumber.automatic ? t('values.from_pdf') : ""}
                         />
                         <NumberInput
-                            label="Monto"
-                            placeholder="Ej. 1000"
+                            label={t('values.amount')}
                             value={paymentData.amount.value}
                             onChange={(v) => setPaymentData({ ...paymentData, amount: { automatic: false, value: v } })}
                             styles={getAutoStyle(paymentData.amount.automatic)}
-                            underText={paymentData.amount.automatic ? "Detectado del PDF" : ""}
+                            underText={paymentData.amount.automatic ? t('values.from_pdf') : ""}
                         />
                     </div>
 
                     <NormalSelect
-                        title="Moneda"
-                        placeholder="Selecciona un proveedor"
+                        title={t('values.currency')}
+                        placeholder={t('values.currency_placeholder')}
                         options={CURRENCIES}
                         value={CURRENCIES.find(currency => currency.value === paymentData.currency.value) || null}
                         onChange={(v) => setPaymentData({ ...paymentData, currency: { automatic: false, value: v.value } })}
-                        underText={paymentData.currency.automatic ? "Detectado del PDF" : ""}
+                        underText={paymentData.currency.automatic ? t('values.from_pdf') : ""}
                         styles={getAutoStyle(paymentData.currency.automatic)}
 
                     />
 
-                    <TextArea value={paymentData.notes} onChange={(v) => setPaymentData({ ...paymentData, notes: v })} label="Notas" placeholder="Opcional" minLines={5} maxLines={10} />
+                    <TextArea value={paymentData.notes} onChange={(v) => setPaymentData({ ...paymentData, notes: v })} label={t('values.notes')} placeholder={t('values.notes_placeholder')} minLines={5} maxLines={10} />
 
                     {error && <p style={{ color: "red" }}>{error}</p>}
                 </>
@@ -257,12 +252,12 @@ const UploadMode = ({ close, addPayment, mode, setMode }: UploadModeProps) => {
 
                     <Area>
                         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                            <Info>Monto del recibo</Info>
+                            <Info>{t('invoices.payment_amount')}</Info>
                             <Info style={{ fontWeight: "bold", color: "var(--Text-text-primary)" }}>{paymentData.amount.value} {paymentData.currency.value}</Info>
                         </div>
 
                         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                            <Info>Facturas seleccionadas </Info>
+                            <Info>{t('invoices.invoices-selected')}</Info>
                             <Info style={{ fontWeight: "bold", color: "var(--Text-text-primary)" }}>
                                 {paymentData.invoicesToPay.length} - {InvoicesTotal(paymentData.invoicesToPay)} {paymentData.invoicesToPay[0]?.currency || paymentData.currency.value}
                             </Info>
@@ -271,7 +266,7 @@ const UploadMode = ({ close, addPayment, mode, setMode }: UploadModeProps) => {
                         <Line />
 
                         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                            <Info>Diferencia</Info>
+                            <Info>{t('invoices.difference')}</Info>
                             <Info style={{ fontWeight: "bold", color: InvoicesTotal(paymentData.invoicesToPay) > paymentData.amount.value ? "var(--Error-700)" : "var(--Success-700)" }}>
                                 {paymentData.amount.value - InvoicesTotal(paymentData.invoicesToPay)} {paymentData.currency.value}
                             </Info>
@@ -304,11 +299,14 @@ const Area = styled.div`
 `;
 
 const InfoText = () => {
+    
+    const t = useTranslations('payments.upload.invoices');
+
     return (
         <Area>
             <div style={{ display: "flex", gap: "0.25rem" }}>
                 <Icon icon="warning-circle" size={24} iconColor="var(--Icons-icon-300)" />
-                <Info>El monto se distribuirá automáticamente de la factura más vieja a la más nueva.</Info>
+                <Info>{t('distribution_note')}</Info>
             </div>
         </Area>
     );

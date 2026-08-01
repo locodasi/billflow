@@ -1,61 +1,61 @@
-import {
-    Button,
-    Heading,
-    Row,
-    Column,
-    Section,
-    Text,
-} from "@react-email/components";
+import { Button, Heading, Text } from "@react-email/components";
 import { EmailLayout } from "./layout";
 import { normalStyles } from "./styles";
+import { getEmailTranslator, type EmailTranslator } from "@/lib/notifications/templates/email/get-email-translator";
 
 export interface SetPasswordEmailProps {
+    t: EmailTranslator;
+    locale: string;
     userName: string;
-    isNewAccount: boolean; 
+    isNewAccount: boolean;
     link: string;
 }
 
-// Valores por defecto para el preview
-export const SetPasswordEmailDefaultProps: SetPasswordEmailProps = {
-    userName: "Lucas",
-    isNewAccount: false,
-    link: "https://tuapp.com/set-password",
-};
-
 export function SetPasswordEmail({
+    t,
+    locale,
     userName,
     isNewAccount,
     link,
 }: SetPasswordEmailProps) {
+    const preview = isNewAccount
+        ? t("setPassword.previewNewAccount")
+        : t("setPassword.previewReset");
+
+    const heading = isNewAccount
+        ? t("setPassword.headingNewAccount")
+        : t("setPassword.headingReset");
+
+    const greeting = isNewAccount
+        ? t("setPassword.greetingNewAccount", { name: userName })
+        : t("setPassword.greetingReset", { name: userName });
 
     const body = isNewAccount
-        ? "Tu cuenta fue creada. Hacé click en el botón para configurar tu contraseña y empezar a usar la plataforma."
-        : "Recibimos una solicitud para restablecer tu contraseña. Hacé click en el botón para crear una nueva.";
+        ? t("setPassword.bodyNewAccount")
+        : t("setPassword.bodyReset");
+
+    const buttonLabel = isNewAccount
+        ? t("setPassword.buttonNewAccount")
+        : t("setPassword.buttonReset");
 
     return (
-        <EmailLayout preview={isNewAccount ? "Bienvenido a Billflow, configura tu contraseña" : "Restablece tu contraseña en Billflow"}>
-
-            <Heading style={normalStyles.heading}>
-                {isNewAccount ? "Bienvenido a Billflow" : "Restablece tu contraseña"}
-            </Heading>
-
-            <Text style={normalStyles.greeting}>
-                Hola {userName}, {isNewAccount ? "configura tu contraseña para comenzar a usar Billflow" : "puedes restablecer tu contraseña usando el siguiente enlace"}:
-            </Text>
-
-            <Text>
-                {body}
-            </Text> 
-
+        <EmailLayout preview={preview} locale={locale} t={t}>
+            <Heading style={normalStyles.heading}>{heading}</Heading>
+            <Text style={normalStyles.greeting}>{greeting}</Text>
+            <Text>{body}</Text>
             <Button href={link} style={normalStyles.button}>
-                {isNewAccount ? "Configurar contraseña" : "Restablecer contraseña"}
+                {buttonLabel}
             </Button>
-
         </EmailLayout>
     );
 }
 
-// Necesario para el preview server
 export default SetPasswordEmail;
-SetPasswordEmail.defaultProps = SetPasswordEmailDefaultProps;
 
+SetPasswordEmail.defaultProps = {
+    t: await getEmailTranslator("es"),
+    locale: "es",
+    userName: "Lucas",
+    isNewAccount: false,
+    link: "https://tuapp.com/set-password",
+} satisfies SetPasswordEmailProps;

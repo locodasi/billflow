@@ -3,6 +3,7 @@
 
 import { createServerClient } from "@/lib/supabase.server";
 import ClientView from "./_components/ClientView";
+import { Client, Project } from "../_types/types";
 
 const ClientPage = async ({ params }: { params: { id: string } }) => {
 
@@ -23,7 +24,7 @@ const ClientPage = async ({ params }: { params: { id: string } }) => {
 
     if (!client) return <p>Cliente no encontrado</p>;
 
-    return <ClientView client={client} projects={projects ?? []} />;
+    return <ClientView client={client as Client} projects={projects as Project[] ?? []} />;
 }
 
 export default ClientPage;

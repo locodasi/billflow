@@ -1,5 +1,7 @@
 import styled from "styled-components";
 
+import { useTranslations } from "next-intl";
+
 import { useState, useEffect } from "react";
 
 import { supabase } from "@/lib/supabase";
@@ -26,6 +28,7 @@ interface PaymentRelation {
     }
 }
 const InvoiceDetail = ({ invoice, pdfWidth, pdfHeight }: { invoice: InvoiceSummary, pdfWidth: string, pdfHeight: string }) => {
+    const t = useTranslations('invoices.detail');
 
     const [paymentsRelation, setPaymentsRelation] = useState<PaymentRelation[]>([]);
     const projectName = useProjectsStore(s => s.project?.name);
@@ -60,33 +63,36 @@ const InvoiceDetail = ({ invoice, pdfWidth, pdfHeight }: { invoice: InvoiceSumma
             <PDF path={invoice.pdf_path} width={pdfWidth} height={pdfHeight} />
 
             <div style={{ display: 'flex', flexDirection: 'column', width: '50%', minHeight: 0 }}>
-                <InfoSection title="RESUMEN DE PAGO">
-                    <TwoRowData leftText="Total facturado" rightText={`${invoice.amount} ${invoice.currency}`} />
-                    <TwoRowData leftText="Cobrado" rightText={`${invoice.paid_amount} ${invoice.currency}`} rightTextColor="var(--Success-600)" />
-                    <TwoRowData leftText="Pendiente" rightText={`${invoice.pending_amount} ${invoice.currency}`} rightTextColor="var(--Warning-600)" />
-                    <TwoRowData leftText="Adeudado" rightText={`${invoice.outstanding_amount} ${invoice.currency}`} rightTextColor="var(--Error-600)" />
+                <InfoSection title={t('resume.title').toUpperCase()}>
+                    <TwoRowData leftText={t('resume.total')} rightText={`${invoice.amount} ${invoice.currency}`} />
+                    <TwoRowData leftText={t('resume.paid')} rightText={`${invoice.paid_amount} ${invoice.currency}`} rightTextColor="var(--Success-600)" />
+                    <TwoRowData leftText={t('resume.pending')} rightText={`${invoice.pending_amount} ${invoice.currency}`} rightTextColor="var(--Warning-600)" />
+                    <TwoRowData leftText={t('resume.unpaid')} rightText={`${invoice.outstanding_amount} ${invoice.currency}`} rightTextColor="var(--Error-600)" />
                     <ProgressBar progress={(invoice.paid_amount / invoice.amount) * 100} color="success" />
-                    <PercentText>{((invoice.paid_amount / invoice.amount) * 100).toFixed(0)}% cobrado</PercentText>
+                    <PercentText>{t('resume.percent', { percent: invoice.paid_amount / invoice.amount })}</PercentText>
                 </InfoSection>
 
-                <InfoSection title="DETALLES">
-                    <TwoRowData leftText="Fecha de emision" rightText={parseDateToLocaleFormat(invoice.created_at)} />
-                    <TwoRowData leftText="Moneda" rightText={invoice.currency} />
-                    <TwoRowData leftText="Proyecto" rightText={projectName || "N/A"} />
+                <InfoSection title={t("details.title").toUpperCase()}>
+                    <TwoRowData leftText={t("details.date")} rightText={parseDateToLocaleFormat(invoice.created_at)} />
+                    <TwoRowData leftText={t("details.currency")} rightText={invoice.currency} />
+                    <TwoRowData leftText={t("details.project")} rightText={projectName || "N/A"} />
                 </InfoSection>
 
-                <InfoSection title="NOTAS">
-                    <p style={{ fontSize: '0.875rem', color: 'var(--Text-text-tertiary)' }}>{invoice.notes || "No hay notas para esta factura"}</p>
+                <InfoSection title={t("notes.title").toUpperCase()}>
+                    <p style={{ fontSize: '0.875rem', color: 'var(--Text-text-tertiary)' }}>{invoice.notes || ""}</p>
                 </InfoSection>
 
-                <InfoSection title="RECIBOS ASOCIADOS" useBorder={false} >
+                <InfoSection title={t("element_associated.title").toUpperCase()} useBorder={false} >
                     {
                         paymentsRelation.map((relation) => (
                             <ElementAssociated
                                 key={relation.payment_id}
                                 title={relation.payments.payment_number}
                                 status={relation.payments.status}
-                                moneyText={`${relation.amount_applied} ${invoice.currency} aplicado`}
+                                moneyText={t('element_associated.moneyApplied', {
+                                    amount: relation.amount_applied,
+                                    currency: invoice.currency,
+                                })}
                                 date={relation.payments.created_at}
                                 url={`/payments/${relation.payment_id}`}
                             />

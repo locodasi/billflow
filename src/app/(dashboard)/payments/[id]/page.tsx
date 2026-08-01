@@ -3,6 +3,7 @@
 import { createServerClient } from "@/lib/supabase.server";
 
 import PaymentView from "./_components/PaymentView";
+import { Payment } from "@/types/payment";
 
 const PaymentPage = async ({ params }: { params: { id: string } }) => {
     const { id } = await params;
@@ -16,7 +17,7 @@ const PaymentPage = async ({ params }: { params: { id: string } }) => {
 
     if (!payment) return <p>Pago no encontrado</p>;
 
-    return <PaymentView payment={payment} />;
+    return <PaymentView payment={payment as Payment} />;
 }
 
 export default PaymentPage;

@@ -45,13 +45,17 @@ export const sendSetPasswordEmail_action = async ({
         return { success: true, data: null };
     }
 
+    const {data: user} = await supabaseAdmin.from("profiles").select("full_name, language").eq("email", email).single();
+    
     // 2. Obtener el nombre del usuario para personalizar el email
-    const name = linkData.user?.user_metadata?.full_name ?? "Usuario";
+    const name = user?.full_name ?? "Usuario";
+    const language = user?.language ?? "es";
 
     // 3. Enviar el email
     const result = await notificationService.send(
         await setPasswordEmailTemplate({
             recipient: { name, email },
+            locale: language,
             link: linkData.properties.action_link,
             isNewAccount,
         })

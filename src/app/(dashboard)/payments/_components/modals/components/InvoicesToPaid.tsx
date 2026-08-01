@@ -2,6 +2,8 @@ import styled from "styled-components";
 
 import {useState, useEffect} from "react";
 
+import {useTranslations} from "next-intl";
+
 import { supabase } from "@/lib/supabase";
 
 import { InvoiceSummary } from "@/types/Invoice";
@@ -17,6 +19,8 @@ const InvoicesToPaid = ({ invoicesSelected, onSelectInvoice }: InvoicesToPaidPro
     const [invoices, setInvoices] = useState<InvoiceSummary[]>([]);
 
     const projectId = useProjectsStore(state => state.project?.id);
+
+    const t = useTranslations('payments.upload.invoices');
 
     useEffect(() => {
         if(!projectId) return;
@@ -41,9 +45,9 @@ const InvoicesToPaid = ({ invoicesSelected, onSelectInvoice }: InvoicesToPaidPro
 
     return(
         <Wrapper>
-            <Title>Facturas a cubrir</Title>
+            <Title>{t('title')}</Title>
 
-            {invoices.map((invoice, index) => (
+            {invoices.map((invoice) => (
                 <InvoiceItem key={invoice.id} invoice={invoice} selected={invoicesSelected.includes(invoice.id)} onSelect={() => onSelectInvoice(invoice)} />
             ))}
         </Wrapper>
@@ -73,6 +77,8 @@ import CheckBox from "@/components/CheckButton";
 
 const InvoiceItem = ({ invoice, selected, onSelect }: { invoice: InvoiceSummary, selected?: boolean, onSelect: () => void }) => {
 
+    const t = useTranslations('payments');
+
     return(
         <WrapperInvoice $selected={selected} onClick={onSelect}>
             <CheckBox checked={selected} onChange={onSelect} size="medium" color="primary"/>
@@ -81,14 +87,14 @@ const InvoiceItem = ({ invoice, selected, onSelect }: { invoice: InvoiceSummary,
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                     <InvoiceTitle $selected={selected}>{invoice.invoice_number}</InvoiceTitle>
 
-                    <StatusChip status={invoice.computed_status} text={invoice.computed_status} style={{padding: "0.1rem 0.5rem"}}/>
+                    <StatusChip status={invoice.computed_status} type="invoices" style={{padding: "0.1rem 0.5rem"}}/>
                 </div>
 
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                    <InvoiceAmount>Total: {invoice.amount} {invoice.currency}</InvoiceAmount>
+                    <InvoiceAmount>{t('upload.invoices.total')}: {invoice.amount} {invoice.currency}</InvoiceAmount>
 
                     <InvoiceAmount style={{color: selected ? "var(--Components-Buttons-button-brand-secondary-content)" : "var(--status-processing-text)"}}>
-                        Debe: {invoice.outstanding_amount} {invoice.currency}
+                        {t('upload.invoices.owe')}: {invoice.outstanding_amount} {invoice.currency}
                     </InvoiceAmount>
                 </div>
 

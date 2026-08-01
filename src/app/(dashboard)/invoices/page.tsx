@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from "react";
 
+import { useTranslations } from "next-intl";
+
 import { supabase } from "@/lib/supabase";
 
 import { useProjectsStore } from "@/stores/projectStore";
@@ -24,6 +26,8 @@ import { downloadUnpaidInvoicesPDF } from "./actions";
 import { useUserStore } from "@/stores/userStore";
 
 const Invoices = () => {
+
+    const t = useTranslations('invoices');
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [invoices, setInvoices] = useState<InvoiceSummary[]>([]);
@@ -107,11 +111,11 @@ const Invoices = () => {
             {isModalOpen && <NewInvoiceModal onClose={() => setIsModalOpen(false)} addInvoice={addInvoice} />}
 
             <HeaderWrapper>
-                <HeaderTitle>{`Facturas -- ${projectName}`}</HeaderTitle>
+                <HeaderTitle>{`${t('invoice_plural')} -- ${projectName}`}</HeaderTitle>
 
                 <div style={{ display: 'flex', gap: '0.5rem' }}>
-                    <Button size="small" text="Descargar facturas impagas" firstIcon="download" onClick={handleDownloadUnpaidInvoices} />
-                    {role === "admin" && <Button size="small" text="Nueva factura" firstIcon="plus" onClick={() => setIsModalOpen(true)} />}
+                    <Button size="small" text={t('download_unpaid_invoices')} firstIcon="download" onClick={handleDownloadUnpaidInvoices} />
+                    {role === "admin" && <Button size="small" text={t('new_invoice')} firstIcon="plus" onClick={() => setIsModalOpen(true)} />}
                 </div>
             </HeaderWrapper>
 

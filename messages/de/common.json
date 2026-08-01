@@ -1,0 +1,17 @@
+{
+    "upload_file": {
+        "title": "Datei hierher ziehen und ablegen",
+        "subtitle": "oder klicken, um eine Datei auszuwählen"
+    },
+    "go_to_page": "Zur Seite gehen",
+    "download": "Herunterladen",
+    "theme": {
+        "dark": "Dunkel",
+        "light": "Hell",
+        "system": "System"
+    },
+    "roles": {
+        "admin": "Admin",
+        "client": "Kunde"
+    }
+}

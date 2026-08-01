@@ -3,7 +3,7 @@ drop extension if exists "pg_net";
 
   create policy "Users can update their own profile"
   on "public"."profiles"
-  as permissi
+  as permissive
   for update
   to authenticated
 using ((auth.uid() = id))

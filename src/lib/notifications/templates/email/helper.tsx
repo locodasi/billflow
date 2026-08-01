@@ -1,14 +1,19 @@
 import serverEnv from "@/lib/env.server";
 
+import { getEmailTranslator, type EmailTranslator } from "@/lib/notifications/templates/email/get-email-translator";
+
 import { EmailPayload } from "../../types";
 import { renderEmail } from "./renderer";
 import InvoiceUploadedEmail from "./invoice-uploaded.email";
 
+interface EmailRecipient {
+    name: string;
+    email: string;
+}
+
 interface InvoiceUploadedParams {
-    recipient: {
-        name: string;
-        email: string;
-    };
+    locale: string;
+    recipient: EmailRecipient
     invoiceNumber: string;
     amount: number;
     currency: string;
@@ -19,11 +24,15 @@ interface InvoiceUploadedParams {
 export async function invoiceUploadedEmailTemplate(
     params: InvoiceUploadedParams
 ): Promise<EmailPayload> {
+    const t = await getEmailTranslator(params.locale);
+
     return renderEmail({
         recipient: params.recipient,
-        subject: `Nueva factura cargada`,
+        subject: t("invoiceUploaded.subject"),
         component: (
             <InvoiceUploadedEmail
+                t={t}
+                locale={params.locale}
                 userName={params.recipient.name}
                 invoiceNumber={params.invoiceNumber}
                 amount={params.amount}
@@ -38,10 +47,8 @@ export async function invoiceUploadedEmailTemplate(
 import PaymentUploadedEmail from "./payment-uploaded.email";
 
 interface PaymentUploadedParams {
-    recipient: {
-        name: string;
-        email: string;
-    };
+    locale: string;
+    recipient: EmailRecipient
     paymentNumber: string;
     amount: number;
     currency: string;
@@ -52,11 +59,15 @@ interface PaymentUploadedParams {
 export async function paymentsUploadedEmailTemplate(
     params: PaymentUploadedParams
 ): Promise<EmailPayload> {
+    const t = await getEmailTranslator(params.locale);
+
     return renderEmail({
         recipient: params.recipient,
-        subject: `Nuevo recibo cargado`,
+        subject: t("paymentUploaded.subject"),
         component: (
             <PaymentUploadedEmail
+                t={t}
+                locale={params.locale}
                 userName={params.recipient.name}
                 paymentNumber={params.paymentNumber}
                 amount={params.amount}
@@ -71,10 +82,8 @@ export async function paymentsUploadedEmailTemplate(
 import SetPasswordEmail from "./set-password.email";
 
 interface SetPasswordParams {
-    recipient: {
-        name: string;
-        email: string;
-    };
+    locale: string;
+    recipient: EmailRecipient
     isNewAccount: boolean;
     link: string;
 }
@@ -82,14 +91,60 @@ interface SetPasswordParams {
 export async function setPasswordEmailTemplate(
     params: SetPasswordParams
 ): Promise<EmailPayload> {
+    const t = await getEmailTranslator(params.locale);
+
     return renderEmail({
         recipient: params.recipient,
-        subject: params.isNewAccount ? "Configura tu contraseña" : "Restablece tu contraseña",
+        subject: params.isNewAccount
+            ? t("setPassword.subjectNewAccount")
+            : t("setPassword.subjectReset"),
         component: (
             <SetPasswordEmail
+                t={t}
+                locale={params.locale}
                 userName={params.recipient.name}
                 isNewAccount={params.isNewAccount}
                 link={params.link}
+            />
+        ),
+    });
+}
+
+import PaymentStatusEmail from "./payment-status-email";
+
+type PaymentStatusParams = {
+    recipient: EmailRecipient;
+    locale: string;
+    paymentNumber: string;
+    amount: number;
+    currency: string;
+    projectName: string;
+    paymentId: string;
+} & (
+        | { status: "approved" }
+        | { status: "rejected"; rejectionReason?: string }
+    );
+
+export async function paymentStatusEmailTemplate(
+    params: PaymentStatusParams
+): Promise<EmailPayload> {
+    const t = await getEmailTranslator(params.locale);
+    const isApproved = params.status === "approved";
+
+    return renderEmail({
+        recipient: params.recipient,
+        subject: t(isApproved ? "paymentStatus.subjectApproved" : "paymentStatus.subjectRejected"),
+        component: (
+            <PaymentStatusEmail
+                t={t}
+                locale={params.locale}
+                userName={params.recipient.name}
+                paymentNumber={params.paymentNumber}
+                amount={params.amount}
+                currency={params.currency}
+                projectName={params.projectName}
+                paymentUrl={`${serverEnv.APP_URL}/payments/${params.paymentId}`}
+                {...(isApproved ? { status: "approved" } : { status: "rejected", rejectionReason: params.rejectionReason })}
             />
         ),
     });

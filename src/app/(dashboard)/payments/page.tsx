@@ -1,5 +1,7 @@
 "use client";
 
+import {useTranslations} from "next-intl";
+
 import { useState, useEffect } from "react";
 
 import { supabase } from "@/lib/supabase";
@@ -22,6 +24,8 @@ import PaymentDetailModal from "./_components/modals/PaymentDetailModal";
 import { updatePaymentStatus } from "./actions";
 
 const PaymentsPage = () => {
+
+    const t = useTranslations('payments');
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [payments, setPayments] = useState<Payment[]>([]);
@@ -92,7 +96,7 @@ const PaymentsPage = () => {
         <>
             {isModalOpen && <NewPaymentModal onClose={() => setIsModalOpen(false)} addPayment={addPayment} />}
 
-            <Header title={`Recibos -- ${projectName}`} showButton={true} buttontext="Nuevo recibo" buttonIcon="plus" onButtonClick={() => setIsModalOpen(true)} />
+            <Header title={`${t('payment_plural')} -- ${projectName}`} showButton={true} buttontext={t('new_payment')} buttonIcon="plus" onButtonClick={() => setIsModalOpen(true)} />
 
             <div style={{ padding: '1rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                 <Filters filters={filters} setFilters={setFilters} count={totalCount} />

@@ -92,19 +92,21 @@ export async function createInvoice(data: UploadInvoice, projectId: string): Pro
 
     const user = await getUserByProjectId(projectId);
 
-    const {data: project} = await supabase
+    const { data: project } = await supabase
         .from('projects')
         .select('name')
         .eq('id', projectId)
         .single()
 
-    // Enviar notificación de nueva factura
-    const result = await notificationService.send(
-        await invoiceUploadedEmailTemplate({ recipient: { name: user.fullName, email: user.email }, amount: data.amount.value, currency: data.currency.value, invoiceNumber: data.invoiceNumber.value, invoiceId: invoice.id, projectName: project?.name ?? "Tu proyecto" })
-    );
+    if (user.settings.notifications.email.invoiceUploaded) {
+        // Enviar notificación de nueva factura
+        const result = await notificationService.send(
+            await invoiceUploadedEmailTemplate({ recipient: { name: user.fullName, email: user.email }, locale: user.language, amount: data.amount.value, currency: data.currency.value, invoiceNumber: data.invoiceNumber.value, invoiceId: invoice.id, projectName: project?.name ?? "Tu proyecto" })
+        );
 
-    if (!result.success) {
-        console.error("[sendWelcomeNotification]", result.error);
+        if (!result.success) {
+            console.error("[sendWelcomeNotification]", result.error);
+        }
     }
 
     return {
@@ -113,7 +115,7 @@ export async function createInvoice(data: UploadInvoice, projectId: string): Pro
         pending_amount: 0,
         outstanding_amount: invoice.amount,
         computed_status: "unpaid",
-    }
+    } as InvoiceSummary
 }
 
 import { notificationService } from "@/lib/notifications/notification-service";

@@ -1,0 +1,45 @@
+{
+    "header": "Clientes",
+    "search-placeholder": "Buscar clientes...",
+    "new-client-button": "Nuevo cliente",
+    "new-client-modal": {
+        "title": "Nuevo cliente",
+        "name-label": "Nombre",
+        "name-placeholder": "Nombre del cliente",
+        "email-label": "Correo electrónico",
+        "email-placeholder": "Correo electrónico del cliente",
+        "language-label": "Idioma",
+        "cancel-button": "Cancelar",
+        "create-button": "Crear cliente",
+        "errors": {
+            "required-all": "Todos los campos son obligatorios",
+            "error": "Error al crear cliente: {error}"
+        }
+    },
+    "projects": "Proyectos",
+    "total-amount": "Total facturado (USD)",
+    "edit-button": "Editar",
+    "resend-invite-button": "Reenviar link",
+    "invoiced": "Facturado",
+    "pending": "Pendiente",
+    "paid": "Cobrado",
+    "new-project-button": "Nuevo proyecto",
+    "not-found": "Cliente no encontrado",
+    "project-modal": {
+        "new": {
+            "title": "Nuevo proyecto",
+            "button": "Crear proyecto"
+        },
+        "edit": {
+            "title": "Editar proyecto",
+            "button": "Guardar cambios"
+        },
+        "name-label": "Nombre",
+        "name-placeholder": "Plataforma web",
+        "currency-label": "Moneda",
+        "address-label": "Dirección de facturación",
+        "address-placeholder": "Calle 123, Ciudad, País",
+        "cancel-button": "Cancelar",
+        "create-button": "Crear proyecto"
+    }
+}

@@ -3,6 +3,9 @@
 import styled from "styled-components";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+
+import { useTranslations } from "next-intl";
+
 import { supabase } from "@/lib/supabase";
 
 import PasswordInput from "@/components/inputs/PasswordInput";
@@ -18,24 +21,26 @@ export default function SetPasswordForm({ name, isNewAccount }: SetPasswordFormP
     const router = useRouter();
     const [password, setPassword] = useState("");
     const [confirm, setConfirm] = useState("");
-    const [error, setError] = useState<string | null>(null);
+    const [error, setError] = useState<string | null>(null); 
     const [loading, setLoading] = useState(false);
 
-    const title = isNewAccount ? "Configurá tu contraseña" : "Restablecé tu contraseña";
+    const t = useTranslations("login.set-password");
+
+    const title = isNewAccount ? t("new.title") : t("reset.title");
     const subtitle = isNewAccount
-        ? `Hola, ${name}. Elegí una contraseña para activar tu cuenta.`
-        : `Hola, ${name}. Elegí una nueva contraseña para tu cuenta.`;
-    const buttonText = isNewAccount ? "Activar cuenta" : "Guardar contraseña";
+        ? t("new.subtitle", { name })
+        : t("reset.subtitle", { name });
+    const buttonText = isNewAccount ? t("new.button") : t("reset.button");
 
     const handleSubmit = async () => {
         setError(null);
 
         if (password.length < 8) {
-            setError("La contraseña debe tener al menos 8 caracteres");
+            setError(t("errors.length"));
             return;
         }
         if (password !== confirm) {
-            setError("Las contraseñas no coinciden");
+            setError(t("errors.mismatch"));
             return;
         }
 
@@ -66,32 +71,32 @@ export default function SetPasswordForm({ name, isNewAccount }: SetPasswordFormP
                 handleSubmit();
             }}>
                 <PasswordInput
-                    label="Nueva contraseña"
+                    label={t("new_password")}
                     value={password}
                     onChange={(v) => setPassword(v)}
-                    placeholder="Minimo 8 caracteres"
+                    placeholder={t("new_password_placeholder")}
                     showToggle
                 />
                 <PasswordInput
-                    label="Confirmar contraseña"
+                    label={t("confirm_password")}
                     value={confirm}
                     onChange={(v) => setConfirm(v)}
-                    placeholder="Repite tu contraseña"
+                    placeholder={t("confirm_password_placeholder")}
                     showToggle
                 />
 
                 {error && <Text style={{ color: "var(--Error-500)" }}>{error}</Text>}
 
                 <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
-                    <Condition check={password.length >= 8} text="Al menos 8 caracteres" />
-                    <Condition check={password === confirm && password.length > 0} text="Las contraseñas coinciden" />
+                    <Condition check={password.length >= 8} text={t("validations.length")} />
+                    <Condition check={password === confirm && password.length > 0} text={t("validations.mismatch")} />
                 </div>
 
                 <div style={{ display: "flex", flexDirection: "column", gap: "1rem", alignItems: "center", width: "100%" }}>
                     <Button
                         onClick={handleSubmit}
                         disabled={loading || password !== confirm || password.length < 8}
-                        text={loading ? "Cargando..." : buttonText}
+                        text={loading ? t("loading") : buttonText}
                         size="medium"
                         type="primary"
                         buttonType="submit"
@@ -99,7 +104,7 @@ export default function SetPasswordForm({ name, isNewAccount }: SetPasswordFormP
                         cssStyles={{ width: "100%" }}
                     />
 
-                    <Text>Este link es de un solo uso y expira por seguridad.</Text>
+                    <Text>{t("comment")}</Text>
                 </div>
             </form>
         </Modal>

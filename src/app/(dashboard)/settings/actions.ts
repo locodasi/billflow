@@ -29,3 +29,20 @@ export async function updateUserLanguage(language: Language) {
 
     return data;
 }
+
+export async function updateUserSettings(path: string[], value: boolean) {
+    const supabase = await createServerClient();
+
+    const user = await getUserData(supabase);
+
+    const { error } = await supabase.rpc("update_profile_setting", {
+        p_profile_id: user.id,
+        p_path: path,
+        p_value: value,
+    });
+
+    if (error) {
+        console.error("Error updating settings:", error);
+        throw new Error(`Error al actualizar settings: ${error.message}`);
+    }
+}

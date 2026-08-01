@@ -1,0 +1,29 @@
+{
+  "header": "Settings",
+  "log-out": "Log out",
+  "appearance": {
+    "header": "Appearance",
+    "text": "Choose how the application looks"
+  },
+  "language": {
+    "header": "Language",
+    "text": "Choose the application language"
+  },
+  "notifications": {
+    "header": "Email notifications",
+    "text": "Choose when you'd like to receive an email",
+    "soon": "Coming soon",
+    "new-invoice": {
+      "header": "New invoice uploaded",
+      "text": "We'll notify you when a new invoice is uploaded"
+    },
+    "payload-approved": {
+      "header": "Receipt approved",
+      "text": "We'll notify you when your payment is approved"
+    },
+    "payload-rejected": {
+      "header": "Receipt rejected",
+      "text": "We'll notify you when your payment is rejected"
+    }
+  }
+}

@@ -1,11 +1,7 @@
 import styled from "styled-components";
 
-interface SwitchComponentsProps {
-    isOn: boolean
-}
 
-interface CircleProps extends SwitchComponentsProps {
-    isOn: boolean;
+interface CircleProps{
     size: "small" | "medium"
 }
 
@@ -76,8 +72,8 @@ const Switch: React.FC<SwitchProps> = ({
     return (
         <FullWrapper style={styles}>
             {!right && children}
-                <Wrapper on={isOn} onClick={handleToggle} bg={bg} style={{pointerEvents: disabled ? "none" : "auto"}}>
-                    <Circle isOn={isOn} size={size} className="circle"/>
+                <Wrapper $on={isOn} onClick={handleToggle} bg={bg} style={{pointerEvents: disabled ? "none" : "auto"}}>
+                    <Circle size={size} className="circle"/>
                 </Wrapper>
             {right && children}
         </FullWrapper>
@@ -93,17 +89,17 @@ const FullWrapper = styled.div`
     align-items: center;
 `;
 
-const Medium = styled.div<{on:boolean, bg:string}>`
+const Medium = styled.div<{ $on:boolean, bg:string}>`
     position: relative;
     cursor: pointer;
 
     display: flex;
     width: 2.75rem;
     height: 1.5rem;
-    ${props => props.on ? "padding: 0.125rem 0.125rem 0.125rem 0.5rem;" : "padding: 0.125rem 0.5rem 0.125rem 0.125rem;"}
+    ${props => props.$on ? "padding: 0.125rem 0.125rem 0.125rem 0.5rem;" : "padding: 0.125rem 0.5rem 0.125rem 0.125rem;"}
     
     .circle {
-        transform: translateX(${props => props.on ? "0.85rem" : "0"});
+        transform: translateX(${props => props.$on ? "0.85rem" : "0"});
         transition: transform 0.2s;
     }
 
@@ -115,7 +111,7 @@ const Medium = styled.div<{on:boolean, bg:string}>`
     transition: background-color 0.2s;
 `;
 
-const Small = styled.div<{on:boolean, bg:string}>`
+const Small = styled.div<{ $on:boolean, bg:string}>`
     position: relative;
     cursor: pointer;
     transition: background-color 0.2s;
@@ -127,13 +123,13 @@ const Small = styled.div<{on:boolean, bg:string}>`
     align-items: center;
     flex-shrink: 0;
 
-    ${props => props.on ? "padding: 0.125rem 0.125rem 0.125rem 0.5rem;" : "padding: 0.125rem 0.5rem 0.125rem 0.125rem;"}
+    ${props => props.$on ? "padding: 0.125rem 0.125rem 0.125rem 0.5rem;" : "padding: 0.125rem 0.5rem 0.125rem 0.125rem;"}
 
     border-radius: 31.25rem;
     background: ${(props) => props.bg};
 
     .circle {
-        transform: translateX(${props => props.on ? "0.60rem" : "0"});
+        transform: translateX(${props => props.$on ? "0.60rem" : "0"});
         transition: transform 0.2s;
     }
 `;

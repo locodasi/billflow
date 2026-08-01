@@ -1,0 +1,45 @@
+{
+  "header": "Clients",
+  "search-placeholder": "Search clients...",
+  "new-client-button": "New client",
+  "new-client-modal": {
+    "title": "New client",
+    "name-label": "Name",
+    "name-placeholder": "Client name",
+    "email-label": "Email",
+    "email-placeholder": "Client email",
+    "language-label": "Language",
+    "cancel-button": "Cancel",
+    "create-button": "Create client",
+    "errors": {
+      "required-all": "All fields are required",
+      "error": "Error creating client: {error}"
+    }
+  },
+  "projects": "Projects",
+  "total-amount": "Total invoiced (USD)",
+  "edit-button": "Edit",
+  "resend-invite-button": "Resend invite",
+  "invoiced": "Invoiced",
+  "pending": "Pending",
+  "paid": "Paid",
+  "new-project-button": "New project",
+  "not-found": "Client not found",
+  "project-modal": {
+    "new": {
+      "title": "New project",
+      "button": "Create project"
+    },
+    "edit": {
+      "title": "Edit project",
+      "button": "Save changes"
+    },
+    "name-label": "Name",
+    "name-placeholder": "Web platform",
+    "currency-label": "Currency",
+    "address-label": "Billing address",
+    "address-placeholder": "123 Main St, City, Country",
+    "cancel-button": "Cancel",
+    "create-button": "Create project"
+  }
+}

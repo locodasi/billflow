@@ -5,20 +5,24 @@ import {
     Container,
     Head,
     Html,
-    Img,
     Hr,
     Text,
     Preview,
 } from "@react-email/components";
 
+import type { EmailTranslator } from "@/lib/notifications/templates/email/get-email-translator";
+
+
 interface EmailLayoutProps {
     preview: string;       // Texto que aparece en el inbox antes de abrir el email
+    locale: string;      // Idioma del email (por ejemplo, "es" para español)
+    t: EmailTranslator;  // Traductor de textos para el email
     children: React.ReactNode;
 }
 
-export function EmailLayout({ preview, children }: EmailLayoutProps) {
+export function EmailLayout({ preview, locale = "es", t, children }: EmailLayoutProps) {
     return (
-        <Html lang="es">
+        <Html lang={locale}>
             <Head />
             <Preview>{preview}</Preview>
             <Body style={styles.body}>
@@ -41,7 +45,7 @@ export function EmailLayout({ preview, children }: EmailLayoutProps) {
                     {/* Footer */}
                     <Hr style={styles.divider} />
                     <Text style={styles.footer}>
-                        © 2025 Billflow. Todos los derechos reservados.
+                        {t("common.footer")}
                     </Text>
 
                 </Container>

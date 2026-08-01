@@ -2,6 +2,8 @@ import styled from "styled-components";
 
 import { useRouter } from "next/navigation";
 
+import {useTranslations} from "next-intl";
+
 import { logout } from "@/lib/auth";
 
 import { useUIStore } from "@/stores/uiStore";
@@ -77,11 +79,13 @@ const ModeWrapper = styled.div`
 export const Modes = () => {
     const { theme, setTheme } = useUIStore();
 
+    const t = useTranslations("common.theme");
+
     return (
         <Tabs size="medium">
-            <Tab text="Oscuro" onClick={() => setTheme("dark")} firstIcon="half-moon" active={theme === "dark"} />
-            <Tab text="Sistema" onClick={() => setTheme("system")} firstIcon="modern-tv" active={theme === "system"} />
-            <Tab text="Claro" onClick={() => setTheme("light")} firstIcon="sun-light" active={theme === "light"} />
+            <Tab text={t('dark')} onClick={() => setTheme("dark")} firstIcon="half-moon" active={theme === "dark"} />
+            <Tab text={t('system')} onClick={() => setTheme("system")} firstIcon="modern-tv" active={theme === "system"} />
+            <Tab text={t('light')} onClick={() => setTheme("light")} firstIcon="sun-light" active={theme === "light"} />
         </Tabs>
     )
 }

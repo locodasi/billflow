@@ -7,9 +7,6 @@ export default function AuthLayout({
 }: {
     children: React.ReactNode;
 }) {
-
-
-
     return (
         <Wrapper>
             {children}

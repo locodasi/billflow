@@ -6,6 +6,8 @@ import { useState } from "react";
 
 import { useRouter } from "next/navigation";
 
+import {useTranslations} from "next-intl";
+
 import { useUserStore } from "@/stores/userStore";
 
 import Icon from "@/components/icons/Icon";
@@ -17,6 +19,7 @@ import SelectProject from "./SelectProject";
 
 const Sidenav = () => {
 
+    const t = useTranslations("sidenav");
     const role = useUserStore(state => state.role);
 
     const [isExpanded, setIsExpanded] = useState(true);
@@ -35,12 +38,12 @@ const Sidenav = () => {
             </div>
 
             <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
-                <SidenavButton isExpanded={isExpanded} text="Facturas" icon="page" onClick={() => goTo("/invoices")} />
-                <SidenavButton isExpanded={isExpanded} text="Recibos" icon="journal" onClick={() => goTo("/payments")} />
-                {role === "admin" && <SidenavButton isExpanded={isExpanded} text="Clientes" icon="user" onClick={() => goTo("/clients")} />}
-                <SidenavButton isExpanded={isExpanded} text="Metricas" icon="reports" onClick={() => goTo("/metrics")} />
-                {role === "admin" && <SidenavButton isExpanded={isExpanded} text="Metricas globales" icon="reports" onClick={() => goTo("/global-metrics")} />}
-                <SidenavButton isExpanded={isExpanded} text="Configuracion" icon="settings" onClick={() => goTo("/settings")} />
+                <SidenavButton isExpanded={isExpanded} text={t("invoices")} icon="page" onClick={() => goTo("/invoices")} />
+                <SidenavButton isExpanded={isExpanded} text={t("payments")} icon="journal" onClick={() => goTo("/payments")} />
+                {role === "admin" && <SidenavButton isExpanded={isExpanded} text={t("clients")} icon="user" onClick={() => goTo("/clients")} />}
+                <SidenavButton isExpanded={isExpanded} text={t("metrics")} icon="reports" onClick={() => goTo("/metrics")} />
+                {role === "admin" && <SidenavButton isExpanded={isExpanded} text={t("global_metrics")} icon="reports" onClick={() => goTo("/global-metrics")} />}
+                <SidenavButton isExpanded={isExpanded} text={t("settings")} icon="settings" onClick={() => goTo("/settings")} />
             </div>
 
             <UserButton isExpanded={isExpanded} />

@@ -1,89 +1,139 @@
-"use client";
+// "use client";
 
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
+// import { useEffect } from "react";
+// import { useRouter } from "next/navigation";
 
-import { supabase } from "@/lib/supabase";
+// import { supabase } from "@/lib/supabase";
 
-import { useAuthStore } from "@/stores/authStore";
-import { useUserStore } from "@/stores/userStore";
-import { useProjectsStore } from "@/stores/projectStore";
+// import { useAuthStore } from "@/stores/authStore";
+// import { useUserStore } from "@/stores/userStore";
+// import { useProjectsStore } from "@/stores/projectStore";
 
+// import Sidenav from "./_components/Sidenav";
+
+// export default function DashboardLayout({
+//     children,
+// }: {
+//     children: React.ReactNode;
+// }) {
+
+//     const setSession = useAuthStore(state => state.setSession);
+//     const setUser = useUserStore(state => state.setUser);
+//     const setProjects = useProjectsStore(state => state.setProjects);
+
+//     const router = useRouter();
+
+//     useEffect(() => {
+//         const loadUser = async () => {
+//             const { data: { session } } = await supabase.auth.getSession();
+
+//             if (!session) {
+//                 router.push("/login");
+//                 return;
+//             }
+
+//             // Guardás la sesión
+//             setSession(session);
+
+//             // Fetch del profile y guardás el usuario
+//             const { data: profile } = await supabase
+//                 .from("profiles")
+//                 .select("full_name, email, language, role")
+//                 .eq("id", session.user.id)
+//                 .single();
+
+//             if (profile) {
+//                 setUser({
+//                     userId: session.user.id,
+//                     fullName: profile.full_name,
+//                     email: profile.email,
+//                     language: profile.language,
+//                     role: profile.role,
+//                 });
+//             }
+//         };
+
+//         const loadProjects = async () => {
+//             const { data: projects } = await supabase
+//                 .from("projects")
+//                 .select("*")
+//                 .order("created_at", { ascending: true });
+
+//             if (projects) {
+//                 setProjects(projects);
+//             }
+//         };
+
+//         loadUser();
+//         loadProjects();
+
+//         // Escuchás cambios de auth
+//         const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+//             console.log("Auth event:", event, session);
+//             if (event === "SIGNED_OUT") {
+//                 router.push("/login");
+//             }
+//             if (event === "TOKEN_REFRESHED" && session) {
+//                 setSession(session);
+//             }
+//         });
+
+//         return () => subscription.unsubscribe();
+//     }, [router, setSession, setUser, setProjects]);
+
+
+//     return (
+//         <div style={{ display: "flex", height: "100vh" }}>
+//             <Sidenav />
+//             <main style={{ display: "flex", flexDirection: "column", height: "100%", width: "100%", backgroundColor: "var(--Background-Colors-bg-primary)" }}>
+//                 {children}
+//             </main>
+//         </div>
+//     );
+// }
+
+// src/app/(protected)/layout.tsx
+import { redirect } from "next/navigation";
+import { createServerClient } from "@/lib/supabase.server";
+
+import { StoreHydrator } from "./_components/StoreHydrator";
+import { AuthListener } from "./_components/AuthListener";
 import Sidenav from "./_components/Sidenav";
+import { UserSettingsInput } from "@/stores/userStore";
 
-export default function DashboardLayout({
+export default async function DashboardLayout({
     children,
 }: {
     children: React.ReactNode;
 }) {
+    const supabase = await createServerClient();
 
-    const setSession = useAuthStore(state => state.setSession);
-    const setUser = useUserStore(state => state.setUser);
-    const setProjects = useProjectsStore(state => state.setProjects);
+    const { data: { session } } = await supabase.auth.getSession();
 
-    const router = useRouter();
+    if (!session) {
+        redirect("/login");
+    }
 
-    useEffect(() => {
-        const loadUser = async () => {
-            const { data: { session } } = await supabase.auth.getSession();
+    const [{ data: profile }, { data: projects }] = await Promise.all([
+        supabase
+            .from("profiles")
+            .select("full_name, email, language, role, settings")
+            .eq("id", session.user.id)
+            .single(),
+        supabase
+            .from("projects")
+            .select("*")
+            .order("created_at", { ascending: true }),
+    ]);
 
-            if (!session) {
-                router.push("/login");
-                return;
-            }
-
-            // Guardás la sesión
-            setSession(session);
-
-            // Fetch del profile y guardás el usuario
-            const { data: profile } = await supabase
-                .from("profiles")
-                .select("full_name, email, language, role")
-                .eq("id", session.user.id)
-                .single();
-
-            if (profile) {
-                setUser({
-                    userId: session.user.id,
-                    fullName: profile.full_name,
-                    email: profile.email,
-                    language: profile.language,
-                    role: profile.role,
-                });
-            }
-        };
-
-        const loadProjects = async () => {
-            const { data: projects } = await supabase
-                .from("projects")
-                .select("*")
-                .order("created_at", { ascending: true });
-
-            if (projects) {
-                setProjects(projects);
-            }
-        };
-
-        loadUser();
-        loadProjects();
-
-        // Escuchás cambios de auth
-        const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-            console.log("Auth event:", event, session);
-            if (event === "SIGNED_OUT") {
-                router.push("/login");
-            }
-            if (event === "TOKEN_REFRESHED" && session) {
-                setSession(session);
-            }
-        });
-
-        return () => subscription.unsubscribe();
-    }, [router, setSession, setUser, setProjects]);
-
+    const normalizedProfile = profile
+        ? { ...profile, settings: profile.settings as UserSettingsInput | null }
+        : null;
 
     return (
         <div style={{ display: "flex", height: "100vh" }}>
+            <StoreHydrator session={session} profile={normalizedProfile} projects={projects ?? []} />
+            <AuthListener />
             <Sidenav />
             <main style={{ display: "flex", flexDirection: "column", height: "100%", width: "100%", backgroundColor: "var(--Background-Colors-bg-primary)" }}>
                 {children}

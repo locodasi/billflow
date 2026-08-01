@@ -1,6 +1,8 @@
 
 import { useRouter } from "next/navigation"
 
+import {useTranslations} from "next-intl";
+
 import Modal, { HeaderWrapper, WrapperModal } from "@/components/modals/Modal";
 import Icon from "@/components/icons/Icon";
 
@@ -15,6 +17,8 @@ import PaymentDetail from "@/components/details/PaymentDetail";
 
 const PaymentDetailModal = ({ payment, onClose, updatePaymentStatus }: { payment: Payment, onClose: () => void, updatePaymentStatus: (paymentId: string, newStatus: "approved" | "rejected") => Promise<void> }) => {
 
+    const t = useTranslations('common');
+
     const router = useRouter();
 
     const goToPaymentPage = () => {
@@ -25,10 +29,10 @@ const PaymentDetailModal = ({ payment, onClose, updatePaymentStatus }: { payment
         <Modal onClose={onClose}>
             <WrapperModal styles={{ padding: '0', gap: '0' }}>
                 <HeaderWrapper style={{ borderBottom: '1px solid var(--Border-Colors-border-secondary)', padding: '1rem' }}>
-                    <Title text={payment.payment_number} status={payment.status} />
+                    <Title text={payment.payment_number} status={payment.status} type="payments"/>
 
                     <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-                        <Button text="Ir a su pagina" size="small" onClick={goToPaymentPage} firstIcon={"link"} />
+                        <Button text={t('go_to_page')} size="small" onClick={goToPaymentPage} firstIcon={"link"} />
                         <DownloadButton file_title={payment.payment_number} path={payment.receipt_pdf_path} />
                         <Icon icon="cancel" onClick={onClose} />
                     </div>

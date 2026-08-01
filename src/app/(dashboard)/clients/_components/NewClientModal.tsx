@@ -1,3 +1,6 @@
+
+import {useTranslations} from "next-intl";
+
 import { useState } from "react";
 
 import { createClient_action } from "@/app/(dashboard)/clients/actions";
@@ -8,13 +11,10 @@ import TextInput from "@/components/inputs/TextInput";
 import Button from "@/components/Button";
 import NormalSelect, {Option} from "@/components/Select";
 
+import { useLanguageOptions } from "@/hooks/useLanguagesOptions";
+
 import { Client } from "../_types/types";
 
-export const LANGUAGE_OPTIONS: Option[] = [
-    { value: "es", label: "Español" },
-    { value: "en", label: "Inglés" },
-    { value: "de", label: "Alemán" },
-];
 
 const NewClientModal = ({ onClose, addClient }: { onClose: () => void, addClient: (client: Client) => void }) => {
 
@@ -24,18 +24,22 @@ const NewClientModal = ({ onClose, addClient }: { onClose: () => void, addClient
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
 
+    const LANGUAGE_OPTIONS = useLanguageOptions();
+
+    const t = useTranslations("clients.new-client-modal");
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
         try {
             if (!name || !email || !language) {
-                setError("Todos los campos son obligatorios");
+                setError(t("errors.required-all"));
                 return;
             }
 
             const response = await createClient_action(name, email, language);
             if (!response.success) {
-                setError(response.error.message);
+                setError(t("errors.error", { error: response.error.message }));
                 return;
             }
             addClient({
@@ -49,7 +53,7 @@ const NewClientModal = ({ onClose, addClient }: { onClose: () => void, addClient
             
             onClose();
         } catch (err) {
-            setError(err instanceof Error ? err.message : "Error al crear cliente");
+            setError(err instanceof Error ? t("errors.error", { error: err.message }) : t("errors.error", { error: "Error al crear cliente" }));
         } finally {
             setLoading(false);
         }
@@ -58,25 +62,24 @@ const NewClientModal = ({ onClose, addClient }: { onClose: () => void, addClient
     return (
         <Modal onClose={onClose}>
             <WrapperModal>
-                <HeaderModal title="Nuevo cliente" onClose={onClose} />
+                <HeaderModal title={t("title")} onClose={onClose} />
 
                 <form onSubmit={handleSubmit} style={{display: "flex", flexDirection: "column", gap: "1rem"}}>
-                    <TextInput label="Nombre" value={name} onChange={setName} />
-                    <TextInput label="Email" value={email} onChange={setEmail} />
+                    <TextInput label={t("name-label")} value={name} onChange={setName} placeholder={t("name-placeholder")}/>
+                    <TextInput label={t("email-label")} value={email} onChange={setEmail} placeholder={t("email-placeholder")} />
                     {/* selector de idioma */}
 
                     <NormalSelect 
-                        title="Idioma"
+                        title={t("language-label")}
                         options={LANGUAGE_OPTIONS}
                         value={LANGUAGE_OPTIONS.find(option => option.value === language) || null}
                         onChange={(selectedOption) => setLanguage(selectedOption.value)}
-                        placeholder="Selecciona un idioma"
                     />
                     
 
                     <div style={{display: "flex", gap: "0.5rem", justifyContent: "flex-end"}}>
-                        <Button text="Cancelar" onClick={onClose}/>
-                        <Button text="Crear cliente" buttonType="submit" disabled={loading} onClick={handleSubmit}/>
+                        <Button text={t("cancel-button")} onClick={onClose}/>
+                        <Button text={t("create-button")} buttonType="submit" disabled={loading} onClick={handleSubmit}/>
                     </div>
                     {error && <p style={{ color: "red" }}>{error}</p>}
                 </form>

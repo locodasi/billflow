@@ -1,10 +1,14 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Inter } from "next/font/google";
+import { NextIntlClientProvider } from 'next-intl';
+import { getLocale, getMessages } from 'next-intl/server';
+
 import "../styles/globals.css";
 
 import StyledComponentsRegistry from '@/lib/registry'
 
 import ThemeProvider from "./_components/ThemeProvider";
+import { LanguageSync } from "./_components/LanguageSync";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -26,21 +30,25 @@ export const metadata: Metadata = {
   description: "Billflow",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
+  const locale = await getLocale();
+  const messages = await getMessages();
+
   return (
     <html
-      lang="en"
+      lang={locale}
       className={`${geistSans.variable} ${geistMono.variable} ${inter.variable} h-full antialiased`}
       suppressHydrationWarning
     >
 
       <head>
-                <script dangerouslySetInnerHTML={{
-                    __html: `
+        <script dangerouslySetInnerHTML={{
+          __html: `
                         (function() {
                             try {
                                 var stored = localStorage.getItem('ui-preferences');
@@ -56,15 +64,18 @@ export default function RootLayout({
                             }
                         })();
                     `
-                }} />
-            </head>
+        }} />
+      </head>
 
       <body className="min-h-full flex flex-col">
-        <StyledComponentsRegistry>
-          <ThemeProvider>
-            {children}
-          </ThemeProvider>
-        </StyledComponentsRegistry>
+        <NextIntlClientProvider locale={locale} messages={messages}>
+          <StyledComponentsRegistry>
+            <ThemeProvider>
+              <LanguageSync />
+              {children}
+            </ThemeProvider>
+          </StyledComponentsRegistry>
+        </NextIntlClientProvider>
       </body>
     </html>
   );

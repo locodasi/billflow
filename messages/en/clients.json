@@ -1,0 +1,45 @@
+{
+  "header": "Kunden",
+  "search-placeholder": "Kunden suchen...",
+  "new-client-button": "Neuer Kunde",
+  "new-client-modal": {
+    "title": "Neuer Kunde",
+    "name-label": "Name",
+    "name-placeholder": "Kundenname",
+    "email-label": "E-Mail",
+    "email-placeholder": "E-Mail des Kunden",
+    "language-label": "Sprache",
+    "cancel-button": "Abbrechen",
+    "create-button": "Kunde erstellen",
+    "errors": {
+      "required-all": "Alle Felder sind erforderlich",
+      "error": "Fehler beim Erstellen des Kunden: {error}"
+    }
+  },
+  "projects": "Projekte",
+  "total-amount": "Gesamtbetrag in Rechnung gestellt (USD)",
+  "edit-button": "Bearbeiten",
+  "resend-invite-button": "Einladung erneut senden",
+  "invoiced": "In Rechnung gestellt",
+  "pending": "Ausstehend",
+  "paid": "Bezahlt",
+  "new-project-button": "Neues Projekt",
+  "not-found": "Kunde nicht gefunden",
+  "project-modal": {
+    "new": {
+      "title": "Neues Projekt",
+      "button": "Projekt erstellen"
+    },
+    "edit": {
+      "title": "Projekt bearbeiten",
+      "button": "Änderungen speichern"
+    },
+    "name-label": "Name",
+    "name-placeholder": "Web-Plattform",
+    "currency-label": "Währung",
+    "address-label": "Rechnungsadresse",
+    "address-placeholder": "Musterstraße 123, Stadt, Land",
+    "cancel-button": "Abbrechen",
+    "create-button": "Projekt erstellen"
+  }
+}

@@ -1,10 +1,13 @@
 import { createServerClient as createSSRClient } from "@supabase/ssr";
+
+import type { Database } from "@/types/supabase";
+
 import { cookies } from "next/headers";
 import env from "./env";
 
 export const createServerClient = async () => {
     const cookieStore = await cookies();
-    return createSSRClient(
+    return createSSRClient<Database>(
         env.SUPABASE_URL,
         env.SUPABASE_PUBLISHABLE_KEY, // anon key, NO la secret
         {

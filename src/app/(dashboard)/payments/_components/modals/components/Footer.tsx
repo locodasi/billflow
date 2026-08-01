@@ -1,13 +1,17 @@
 import styled from "styled-components";
 
+import { useTranslations } from "next-intl";
+
 import Button from "@/components/Button";
 
 const Footer = ({ onClose, onSave, enableSave }: { onClose: () => void, onSave: () => void, enableSave: boolean }) => {
 
+    const t = useTranslations('payments.upload.buttons');
+
     return (
         <FooterWraper>
-            <Button text="Cancelar" onClick={onClose} size="small" />
-            <Button text="Guardar" onClick={onSave} type="primary" style="filled" size="small" disabled={!enableSave} />
+            <Button text={t('cancel')} onClick={onClose} size="small" />
+            <Button text={t('save')} onClick={onSave} type="primary" style="filled" size="small" disabled={!enableSave} />
         </FooterWraper>
     )
 }

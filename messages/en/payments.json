@@ -1,0 +1,81 @@
+{
+  "payment_singular": "Payment",
+  "payment_plural": "Payments",
+  "all": "All",
+  "status": {
+    "unpaid_singular": "Unpaid",
+    "unpaid_plural": "Unpaid",
+    "paid_singular": "Paid",
+    "paid_plural": "Paid",
+    "processing_singular": "Processing",
+    "processing_plural": "Processing",
+    "pending_singular": "Pending",
+    "pending_plural": "Pending",
+    "rejected_singular": "Rejected",
+    "rejected_plural": "Rejected",
+    "approved_singular": "Approved",
+    "approved_plural": "Approved"
+  },
+  "search_placeholder": "Search by payment number or currency",
+  "new_payment": "New payment",
+  "upload": {
+    "text": "Upload payment",
+    "pdf": {
+      "title": "Upload PDF",
+      "subtitle": "Automatically detects data",
+      "detected": "Data was automatically detected. Review and correct it if necessary."
+    },
+    "manual": {
+      "title": "Create manually",
+      "subtitle": "Coming soon"
+    },
+    "values": {
+      "payment_number": "Payment number",
+      "payment_number_placeholder": "e.g. PAY_0001",
+      "amount": "Amount",
+      "currency": "Currency",
+      "notes": "Notes",
+      "notes_placeholder": "Additional notes",
+      "from_pdf": "Detected from PDF"
+    },
+    "buttons": {
+      "save": "Save",
+      "cancel": "Cancel"
+    },
+    "invoices": {
+      "title": "Invoices to cover",
+      "total": "Total",
+      "owe": "Amount due",
+      "distribution_note": "The amount will be automatically distributed from the oldest invoice to the newest.",
+      "payment_amount": "Payment amount",
+      "invoices-selected": "Selected invoices",
+      "difference": "Difference"
+    },
+    "errors": {
+      "project-id-enabled": "Project ID is not available",
+      "unknown-error": "Unknown error"
+    }
+  },
+  "detail": {
+    "details": {
+      "title": "Details",
+      "amount": "Amount",
+      "date": "Issue date",
+      "currency": "Currency",
+      "project": "Project",
+      "method": "Payment method",
+      "approve": "Approve",
+      "reject": "Reject"
+    },
+    "notes": {
+      "title": "Notes",
+      "no_notes": "There are no notes for this payment"
+    },
+    "element_associated": {
+      "title": "Associated invoices",
+      "no_invoices": "There are no invoices associated with this payment",
+      "moneyApplied": "{amount} {currency} applied",
+      "issuedOn": "Issued on {date}"
+    }
+  }
+}

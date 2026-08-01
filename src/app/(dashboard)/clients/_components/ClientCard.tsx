@@ -2,12 +2,16 @@ import styled from "styled-components";
 
 import {useRouter} from "next/navigation";
 
+import {useTranslations} from "next-intl";
+
 import {Client} from "../_types/types";
 
 import Card, {TwoRowData} from "@/components/card/Card";
 
 
 const ClientCard = ({client}: {client: Client}) => {
+
+    const t = useTranslations("clients");
 
     const router = useRouter();
 
@@ -24,10 +28,10 @@ const ClientCard = ({client}: {client: Client}) => {
             
             <div style={{display: "flex"}}>
                 <div style={{display: "flex", flexDirection: "column", paddingRight: "0.5rem", borderRight: "1px solid var(--Border-Colors-border-secondary)"}}>
-                    <TwoRowData boldText={client.project_count.toString()} normalText="Proyectos" />
+                    <TwoRowData boldText={client.project_count.toString()} normalText={t("projects")} />
                 </div>
                 <div style={{display: "flex", flexDirection: "column", paddingLeft: "0.5rem"}}>
-                    <TwoRowData boldText={`$${client.total_invoiced_usd}`} normalText="Facturado (USD)" />
+                    <TwoRowData boldText={`$${client.total_invoiced_usd}`} normalText={t("total-amount")} />
                 </div>
             </div>
         </Card>

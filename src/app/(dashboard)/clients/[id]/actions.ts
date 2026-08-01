@@ -62,7 +62,7 @@ export const createProjectAction = async (
 
     return {
         success: true, data: {
-            project_id: data.project_id,
+            project_id: data.id,
             client_id: data.client_id,
             name: data.name,
             currency: data.currency,
@@ -108,7 +108,7 @@ export const updateProjectAction = async (
 
     return {
         success: true, data: {
-            project_id: data.project_id,
+            project_id: data.id,
             client_id: data.client_id,
             name: data.name,
             currency: data.currency,
