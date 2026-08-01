@@ -3,6 +3,8 @@
 
 import { createServerClient } from "@/lib/supabase.server";
 import InvoiceView from "./_components/InvoiceView";
+import { InvoiceSummary } from "@/types/Invoice";
+
 
 const InvoicePage = async ({ params }: { params: { id: string } }) => {
     const { id } = await params;
@@ -16,7 +18,7 @@ const InvoicePage = async ({ params }: { params: { id: string } }) => {
 
     if (!invoice) return <p>Factura no encontrada</p>;
 
-    return <InvoiceView invoice={invoice} />;
+    return <InvoiceView invoice={invoice as InvoiceSummary} />;
 }
 
 export default InvoicePage;

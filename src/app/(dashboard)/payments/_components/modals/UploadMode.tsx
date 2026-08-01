@@ -169,7 +169,7 @@ const UploadMode = ({ close, addPayment, mode, setMode }: UploadModeProps) => {
             setIsLoading(true);
             setError(null);
             const payment = await createPayload(paymentData, projectId);
-            addPayment(payment);
+            addPayment(payment as Payment);
             close();
         } catch (error) {
             console.error("Error al crear el pago:", error);
