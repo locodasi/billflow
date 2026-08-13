@@ -59,13 +59,13 @@ const TwoRowDataWrapper = styled.div<{$background: boolean}>`
     border-radius: 0.5rem;
 `;
 
-const BoldText = styled.p`
+export const BoldText = styled.p`
     color: var(--Text-text-primary);
     font-size: 0.875rem;
     font-weight: 500;
 `;
 
-const NormalText = styled.p`
+export const NormalText = styled.p`
     color: var(--Text-text-tertiary);
     font-size: 0.75rem;
     font-weight: 400;

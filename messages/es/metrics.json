@@ -1,0 +1,43 @@
+{
+    "header": "Métricas",
+    "temporal_chips": {
+        "month": "Mes",
+        "quarter": "Trimestre",
+        "year": "Año"
+    },
+    "data_cards": {
+        "invoiced": {
+            "title": "Facturado"
+        },
+        "paid": {
+            "title": "Pagado"
+        },
+        "pending": {
+            "title": "Pendiente"
+        },
+        "total_invoices": {
+            "title": "Total facturas"
+        },
+        "monthly_average": {
+            "title": "Promedio mensual facturado",
+            "month": "mes"
+        },
+        "clients": {
+            "title": "Clientes"
+        }
+    },
+    "diagrams": {
+        "time_of_pay": {
+            "title": "Tiempo de pago",
+            "clients": "Clientes",
+            "average": "Promedio",
+            "days": "días",
+            "status": {
+                "title": "Estado",
+                "fast": "Rápido",
+                "normal": "Normal",
+                "slow": "Lento"
+            }
+        }
+    }
+}
