@@ -27,6 +27,16 @@
         }
     },
     "diagrams": {
+        "invoices_per_state": {
+            "title": "Facturas por estado",
+            "paid": "Pagadas",
+            "pending": "Pendientes"
+        },
+        "invoices_vs_payments": {
+            "title": "Facturas vs Pagos",
+            "invoiced": "Facturado",
+            "payment": "Pagado"
+        },
         "time_of_pay": {
             "title": "Tiempo de pago",
             "clients": "Clientes",

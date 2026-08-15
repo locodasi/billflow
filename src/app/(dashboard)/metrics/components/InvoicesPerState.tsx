@@ -1,0 +1,78 @@
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+
+import { useTranslations } from "next-intl";
+
+import Card, { BoldText } from "@/components/card/Card";
+
+function CustomTooltip({ active, payload, label }: any) {
+    if (!active || !payload || !payload.length) return null;
+
+    const pagado = payload.find((p: any) => p.dataKey === "pagado")?.value ?? 0;
+    const adeudado = payload.find((p: any) => p.dataKey === "adeudado")?.value ?? 0;
+    const total = pagado + adeudado;
+
+    return (
+        <div
+            style={{
+                background: "#fff",
+                border: "1px solid #eee",
+                borderRadius: 8,
+                padding: "8px 12px",
+                boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
+                fontSize: 13,
+            }}
+        >
+            <p style={{ margin: 0, fontWeight: 600 }}>{label}</p>
+            <p style={{ margin: "4px 0 0", color: "var(--Success-500)" }}>Pagado: {pagado}</p>
+            <p style={{ margin: "2px 0 0", color: "var(--Error-500)" }}>Adeudado: {adeudado}</p>
+            <p style={{ margin: "4px 0 0", fontWeight: 600 }}>Total: {total}</p>
+        </div>
+    );
+}
+
+function InvoicesPerState({ data }: { data: { mes: string; pagado: number; adeudado: number }[] }) {
+    const t = useTranslations("metrics.diagrams.invoices_per_state");
+
+    return (
+        <Card pointer={false} cardStyles={{ flex: 1, minWidth: 0 }}>
+
+            <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
+                <BoldText style={{ marginBottom: 8, fontSize: 16 }}>{t('title')}</BoldText>
+
+                <div style={{display: "flex", gap: 8, alignItems: "center"}}>
+                    <div style={{display: "flex", alignItems: "center", gap: 4}}>
+                        <div style={{width: 14, height: 14, backgroundColor: "var(--Success-500)", borderRadius: 2}}></div>
+                        <span style={{fontSize: 14, color: "var(--Text-text-tertiary)" }}>{t('paid')}</span>
+                    </div>
+
+                    <div style={{display: "flex", alignItems: "center", gap: 4}}>
+                        <div style={{width: 14, height: 14, backgroundColor: "var(--Error-500)", borderRadius: 2}}></div>
+                        <span style={{fontSize: 14, color: "var(--Text-text-tertiary)" }}>{t('pending')}</span>
+                    </div>
+                </div>
+            </div>
+            
+            <ResponsiveContainer width="100%" height={300}>
+                <BarChart data={data} margin={{ top: 10, right: 20, left: 10, bottom: 10 }}>
+                    <CartesianGrid strokeDasharray="1 3" vertical={false} />
+                    <XAxis
+                        dataKey="mes"
+                        axisLine={false}
+                        tickLine={false}
+                        tick={{ fontSize: 12, fill: "var(--Text-text-tertiary)" }}
+                    />
+                    <YAxis
+                        axisLine={false}
+                        tickLine={false}
+                        tick={{ fontSize: 12, fill: "var(--Text-text-tertiary)" }}
+                    />
+                    <Tooltip content={<CustomTooltip />} cursor={{ fill: "#000", opacity: 0.1 }} />
+                    <Bar dataKey="pagado" stackId="total" fill="#82ca9d" radius={[0, 0, 0, 0]} />
+                    <Bar dataKey="adeudado" stackId="total" fill="#e57373" radius={[4, 4, 0, 0]} />
+                </BarChart>
+            </ResponsiveContainer>
+        </Card>
+    );
+}
+
+export default InvoicesPerState;
