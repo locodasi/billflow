@@ -9,6 +9,7 @@ import StyledComponentsRegistry from '@/lib/registry'
 
 import ThemeProvider from "./_components/ThemeProvider";
 import { LanguageSync } from "./_components/LanguageSync";
+import ProjectSync from "./_components/ProjectSync";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -72,6 +73,7 @@ export default async function RootLayout({
           <StyledComponentsRegistry>
             <ThemeProvider>
               <LanguageSync />
+              <ProjectSync />
               {children}
             </ThemeProvider>
           </StyledComponentsRegistry>

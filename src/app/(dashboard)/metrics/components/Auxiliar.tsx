@@ -1,42 +1,19 @@
 "use client";
 
-import { useTranslations } from "next-intl";
 
-// import Header from "./Header";
-
-import Card, { TwoRowData } from "@/components/card/Card";
 
 import InvoicesPerState from "./InvoicesPerState";
 import InvoicesVsPayments from "./InvoicesVsPayments";
 
 
-const FILL_ROW_CARD_STYLES: React.CSSProperties = { flex: 1, minWidth: 0 };
 
 const Auxiliar = () => {
-    const t = useTranslations('metrics');
 
     return (
         <>
-            {/* <Header /> */}
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', padding: '1rem' }}>
-                <div style={{ display: 'flex', gap: '1rem', flexWrap: 'nowrap' }}>
-                    <Card pointer={false} cardStyles={FILL_ROW_CARD_STYLES}>
-                        <TwoRowData normalText={t('data_cards.invoiced.title')} boldText={"USD 4800"} reverse />
-                    </Card>
-
-                    <Card pointer={false} cardStyles={FILL_ROW_CARD_STYLES}>
-                        <TwoRowData normalText={t('data_cards.paid.title')} boldText={"USD 4800"} reverse />
-                    </Card>
-
-                    <Card pointer={false} cardStyles={FILL_ROW_CARD_STYLES}>
-                        <TwoRowData normalText={t('data_cards.total_invoices.title')} boldText={"35"} reverse />
-                    </Card>
-
-                    <Card pointer={false} cardStyles={FILL_ROW_CARD_STYLES}>
-                        <TwoRowData normalText={t('data_cards.monthly_average.title')} boldText={`USD 300 / ${t('data_cards.monthly_average.month')}`} reverse />
-                    </Card>
-                </div>
+                
 
                 <div style={{ display: 'flex', gap: '1rem', width: '100%', flexWrap: 'nowrap' }}>
 

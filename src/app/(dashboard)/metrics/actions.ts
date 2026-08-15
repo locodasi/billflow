@@ -2,29 +2,35 @@
 
 import { createServerClient } from "@/lib/supabase.server";
 import { getPeriodRange, type Period } from "@/lib/period";
+import { getCurrentProjectId } from "@/lib/project-cookies";
 
+const roundToTwo = (value: number) => Number(value.toFixed(2));
 
 export async function getCardsValue(period: Period) {
-
     const { startUtc, endUtc } = getPeriodRange(period);
 
     const supabase = await createServerClient();
+    const projectId = await getCurrentProjectId();
 
+    if (!projectId) return { invoiced: 0, payed: 0, totalInvoices: 0, averagePerMonth: 0 };
 
     const { data, error } = await supabase
-        .from("invoice_summary")
-        .select("paid_amount, pending_amount, outstanding_amount")
-        .gte("created_at", startUtc)
-        .lt("created_at", endUtc);
+        .rpc("get_cards_metrics", {
+            p_project_id: projectId,
+            p_start: startUtc,
+            p_end: endUtc,
+        })
+        .single();
 
     if (error) throw new Error(`Error al obtener KPIs: ${error.message}`);
 
-    const invoiced = data.reduce((acc, row) => acc + row.paid_amount! + row.pending_amount! + row.outstanding_amount!, 0);
-    const payed = data.reduce((acc, row) => acc + row.paid_amount!, 0);
-    const totalInvoices = data.length;
+    const invoiced = Number(data.invoiced);
+    const payed = Number(data.payed);
+    const totalInvoices = data.total_invoices;
+
     const averagePerMonth = period === "month" ? invoiced : invoiced / (period === "quarter" ? 3 : 12);
 
-    return { invoiced, payed, totalInvoices, averagePerMonth };
+    return { invoiced, payed, totalInvoices, averagePerMonth: roundToTwo(averagePerMonth) };
 }
 
 // export async function updateUserSettings(path: string[], value: boolean) {
