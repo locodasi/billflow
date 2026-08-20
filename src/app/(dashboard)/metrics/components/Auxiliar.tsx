@@ -2,8 +2,8 @@
 
 
 
-import InvoicesPerState from "./InvoicesPerState";
-import InvoicesVsPayments from "./InvoicesVsPayments";
+import InvoicesPerState from "./charts/InvoicesPerState";
+import InvoicesVsPayments from "./charts/InvoicesVsPayments";
 
 
 

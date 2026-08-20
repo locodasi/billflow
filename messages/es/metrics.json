@@ -6,6 +6,10 @@
         "year": "Año"
     },
     "data_cards": {
+        "delta_badge": {
+            "equal": "sin cambios",
+            "diff": "vs periodo anterior"
+        },
         "invoiced": {
             "title": "Facturado"
         },

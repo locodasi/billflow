@@ -1,3 +1,5 @@
+"use client";
+
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 
 import { useTranslations } from "next-intl";
@@ -31,7 +33,7 @@ import Card, { BoldText } from "@/components/card/Card";
 // }
 
 
-function InvoicesVsPayments({ data }: { data: { mes: string; ventas2024: number; ventas2025: number }[] }) {
+function InvoicesVsPayments({ data }: { data: { month: string; invoiced: number; paid: number }[] }) {
     const t = useTranslations("metrics.diagrams.invoices_vs_payments");
     return (
         <Card pointer={false} cardStyles={{ flex: 1, minWidth: 0 }}>
@@ -56,7 +58,7 @@ function InvoicesVsPayments({ data }: { data: { mes: string; ventas2024: number;
                 <LineChart data={data}>
                     <CartesianGrid strokeDasharray="1 3" />
                     <XAxis
-                        dataKey="mes"
+                        dataKey="month"
                         padding={{ left: 20, right: 20 }}
                         axisLine={false}
                         tickLine={false}
@@ -69,8 +71,8 @@ function InvoicesVsPayments({ data }: { data: { mes: string; ventas2024: number;
                         tick={{ fontSize: 16, fill: "var(--Text-text-tertiary)", fontFamily: "inherit" }}
                     />
                     <Tooltip />
-                    <Line type="monotone" dataKey="ventas2024" stroke="var(--Primary-500)" strokeWidth={2} />
-                    <Line type="monotone" dataKey="ventas2025" stroke="var(--Violet-500)" strokeWidth={2} strokeDasharray="5 5" />
+                    <Line type="monotone" dataKey="invoiced" stroke="var(--Primary-500)" strokeWidth={2} />
+                    <Line type="monotone" dataKey="paid" stroke="var(--Violet-500)" strokeWidth={2} strokeDasharray="5 5" />
                 </LineChart>
             </ResponsiveContainer>
 

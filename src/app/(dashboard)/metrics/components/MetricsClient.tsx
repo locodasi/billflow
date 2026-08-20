@@ -10,6 +10,8 @@ import { useProjectsStore } from "@/stores/projectStore";
 
 import { HeaderTitle, HeaderWrapper } from "@/components/Header";
 import Chips from "@/components/Chips";
+import PeriodNavigator from "./PeriodNavigator";
+import { parsePeriod } from "@/lib/period";
 
 const TEMPORAL_CHIPS = ["month", "quarter", "year"] as const;
 
@@ -54,6 +56,8 @@ function MetricsClient({
                     />
                 </div>
             </HeaderWrapper>
+
+            <PeriodNavigator period={parsePeriod(currentPeriod)}/>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', padding: '1rem' }}>
                 {isPending ? skeleton : content}

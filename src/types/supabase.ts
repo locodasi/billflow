@@ -390,11 +390,37 @@ export type Database = {
     }
     Functions: {
       get_cards_metrics: {
-        Args: { p_end: string; p_project_id: string; p_start: string }
+        Args: {
+          p_end: string
+          p_prev_end: string
+          p_prev_start: string
+          p_project_id: string
+          p_start: string
+        }
         Returns: {
           invoiced: number
           payed: number
+          prev_invoiced: number
+          prev_payed: number
+          prev_total_invoices: number
           total_invoices: number
+        }[]
+      }
+      get_project_charts_metrics: {
+        Args: {
+          p_end: string
+          p_granularity: string
+          p_project_id: string
+          p_start: string
+        }
+        Returns: {
+          bucket: string
+          invoiced: number
+          invoiced_cumulative: number
+          outstanding: number
+          paid: number
+          paid_cumulative: number
+          pending: number
         }[]
       }
       get_user_role: { Args: { user_id: string }; Returns: string }

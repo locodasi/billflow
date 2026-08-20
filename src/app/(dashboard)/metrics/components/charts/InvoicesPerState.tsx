@@ -1,3 +1,5 @@
+"use client";
+
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 
 import { useTranslations } from "next-intl";
@@ -30,7 +32,7 @@ function CustomTooltip({ active, payload, label }: any) {
     );
 }
 
-function InvoicesPerState({ data }: { data: { mes: string; pagado: number; adeudado: number }[] }) {
+function InvoicesPerState({ data }: { data: { month: string; paid: number; owed: number }[] }) {
     const t = useTranslations("metrics.diagrams.invoices_per_state");
 
     return (
@@ -56,7 +58,7 @@ function InvoicesPerState({ data }: { data: { mes: string; pagado: number; adeud
                 <BarChart data={data} margin={{ top: 10, right: 20, left: 10, bottom: 10 }}>
                     <CartesianGrid strokeDasharray="1 3" vertical={false} />
                     <XAxis
-                        dataKey="mes"
+                        dataKey="month"
                         axisLine={false}
                         tickLine={false}
                         tick={{ fontSize: 12, fill: "var(--Text-text-tertiary)" }}
@@ -67,8 +69,8 @@ function InvoicesPerState({ data }: { data: { mes: string; pagado: number; adeud
                         tick={{ fontSize: 12, fill: "var(--Text-text-tertiary)" }}
                     />
                     <Tooltip content={<CustomTooltip />} cursor={{ fill: "#000", opacity: 0.1 }} />
-                    <Bar dataKey="pagado" stackId="total" fill="#82ca9d" radius={[0, 0, 0, 0]} />
-                    <Bar dataKey="adeudado" stackId="total" fill="#e57373" radius={[4, 4, 0, 0]} />
+                    <Bar dataKey="paid" stackId="total" fill="#82ca9d" radius={[0, 0, 0, 0]} />
+                    <Bar dataKey="owed" stackId="total" fill="#e57373" radius={[4, 4, 0, 0]} />
                 </BarChart>
             </ResponsiveContainer>
         </Card>

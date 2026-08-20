@@ -1,13 +1,18 @@
-// components/charts/ServerCharts.tsx
-async function sleep(ms: number) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-}
+import { Period } from "@/lib/period";
 
-const ServerCharts = async () => {
-    await sleep(10000); // simula latencia de red
+import { getChartsValue } from "../../actions";
+
+import InvoicesPerState from "./InvoicesPerState";
+import InvoicesVsPayments from "./InvoicesVsPayments";
+
+
+const ServerCharts = async ({ period, offset }: { period: Period; offset: number }) => {
+    const { barData, lineData } = await getChartsValue(period, offset);
+
     return (
-        <div style={{ display: 'flex', gap: '1rem', flexDirection: "column" }}>
-            <p>(cargado después de 10s)</p>
+        <div style={{ display: 'flex', gap: '1rem' }}>
+            <InvoicesPerState data={barData} />
+            <InvoicesVsPayments data={lineData} />
         </div>
     );
 };
