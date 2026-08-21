@@ -3,8 +3,8 @@ const VALID_PERIODS = ["month", "quarter", "year"] as const;
 type Period = (typeof VALID_PERIODS)[number];
 
 function getPeriodRange(period: Period, offset: number = 0, referenceDate: Date = new Date()) {
-    const year = referenceDate.getFullYear();
-    const month = referenceDate.getMonth();
+    const year = referenceDate.getUTCFullYear();
+    const month = referenceDate.getUTCMonth();
 
     let start: Date;
     let end: Date;
@@ -12,21 +12,21 @@ function getPeriodRange(period: Period, offset: number = 0, referenceDate: Date 
 
     switch (period) {
         case "month":
-            start = new Date(year, month - offset, 1);
-            end = new Date(year, month - offset + 1, 1);
+            start = new Date(Date.UTC(year, month - offset, 1));
+            end = new Date(Date.UTC(year, month - offset + 1, 1));
             granularity = "week";
             break;
         case "quarter": {
             const currentQuarterStartMonth = Math.floor(month / 3) * 3;
             const targetStartMonth = currentQuarterStartMonth - offset * 3;
-            start = new Date(year, targetStartMonth, 1);
-            end = new Date(year, targetStartMonth + 3, 1);
+            start = new Date(Date.UTC(year, targetStartMonth, 1));
+            end = new Date(Date.UTC(year, targetStartMonth + 3, 1));
             granularity = "month";
             break;
         }
         case "year":
-            start = new Date(year - offset, 0, 1);
-            end = new Date(year - offset + 1, 0, 1);
+            start = new Date(Date.UTC(year - offset, 0, 1));
+            end = new Date(Date.UTC(year - offset + 1, 0, 1));
             granularity = "month";
             break;
     }

@@ -34,12 +34,14 @@
         "invoices_per_state": {
             "title": "Estado de cobro por mes",
             "paid": "Pagadas",
-            "pending": "Pendientes"
+            "pending": "Pendientes",
+            "total": "Total"
         },
         "invoices_vs_payments": {
             "title": "Facturado vs. pagado (acumulado)",
             "invoiced": "Facturado",
-            "payment": "Pagado"
+            "payment": "Pagado",
+            "outstanding": "Adeudado"
         },
         "time_of_pay": {
             "title": "Tiempo de pago",

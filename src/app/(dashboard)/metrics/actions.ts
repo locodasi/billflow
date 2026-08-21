@@ -12,6 +12,8 @@ export async function getCardsValue(period: Period, offset: number = 0) {
     const { startUtc, endUtc } = getPeriodRange(period, offset);
     const { startUtc: prevStartUtc, endUtc: prevEndUtc } = getPeriodRange(period, offset + 1);
 
+    console.log(startUtc, endUtc)
+
     const supabase = await createServerClient();
     const projectId = await getCurrentProjectId();
 
@@ -56,8 +58,8 @@ export async function getCardsValue(period: Period, offset: number = 0) {
 function formatBucketLabel(bucketIso: string, granularity: "week" | "month", locale: Locale) {
     const date = new Date(bucketIso);
     return granularity === "week"
-        ? date.toLocaleDateString(locale, { day: "numeric", month: "short" })
-        : date.toLocaleDateString(locale, { month: "short" });
+        ? date.toLocaleDateString(locale, { day: "numeric", month: "short", timeZone: "UTC" })
+        : date.toLocaleDateString(locale, { month: "short", timeZone: "UTC" });
 }
 
 export type InvoiceMetricBucket = {
@@ -73,6 +75,7 @@ export type InvoiceMetricBucket = {
 export async function getChartsValue(period: Period, offset: number = 0) {
     const { startUtc, endUtc, granularity } = getPeriodRange(period, offset);
 
+    console.log(startUtc, endUtc, granularity);
     const supabase = await createServerClient();
     const projectId = await getCurrentProjectId();
     const locale = await getUserLocale();
@@ -88,6 +91,8 @@ export async function getChartsValue(period: Period, offset: number = 0) {
         })
 
     if (error) throw new Error(`Error al obtener KPIs: ${error.message}`);
+
+    console.log(data)
 
     const barData = data.map((row) => ({
         month: formatBucketLabel(row.bucket, granularity, locale),

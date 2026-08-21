@@ -6,28 +6,35 @@ import { useTranslations } from "next-intl";
 
 import Card, { BoldText } from "@/components/card/Card";
 
-function CustomTooltip({ active, payload, label }: any) {
+type ChartPayloadEntry = {
+    dataKey: string;
+    value: number;
+};
+
+
+function CustomTooltip({ active, payload, label }: { active?: boolean; payload?: ChartPayloadEntry[]; label?: string }) {
+    const t = useTranslations("metrics.diagrams.invoices_per_state");
     if (!active || !payload || !payload.length) return null;
 
-    const pagado = payload.find((p: any) => p.dataKey === "pagado")?.value ?? 0;
-    const adeudado = payload.find((p: any) => p.dataKey === "adeudado")?.value ?? 0;
-    const total = pagado + adeudado;
+    const paid = payload.find((p: ChartPayloadEntry) => p.dataKey === "paid")?.value ?? 0;
+    const owed = payload.find((p: ChartPayloadEntry) => p.dataKey === "owed")?.value ?? 0;
+    const total = paid + owed;
 
     return (
         <div
             style={{
-                background: "#fff",
-                border: "1px solid #eee",
+                background: "var(--Background-Colors-bg-tertiary)",
+                border: "1px solid var(--Border-Colors-border-tertiary)",
                 borderRadius: 8,
                 padding: "8px 12px",
                 boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
-                fontSize: 13,
+                fontSize: 14,
             }}
         >
-            <p style={{ margin: 0, fontWeight: 600 }}>{label}</p>
-            <p style={{ margin: "4px 0 0", color: "var(--Success-500)" }}>Pagado: {pagado}</p>
-            <p style={{ margin: "2px 0 0", color: "var(--Error-500)" }}>Adeudado: {adeudado}</p>
-            <p style={{ margin: "4px 0 0", fontWeight: 600 }}>Total: {total}</p>
+            <p style={{ margin: 0, fontWeight: 600, color: "var(--Text-text-primary)" }}>{label}</p>
+            <p style={{ margin: "4px 0 0", color: "var(--Success-500)" }}>{t("paid")}: {paid}</p>
+            <p style={{ margin: "2px 0 0", color: "var(--Error-500)" }}>{t("pending")}: {owed}</p>
+            <p style={{ margin: "4px 0 0", fontWeight: 600, color: "var(--Text-text-secondary)" }}>{t("total")}: {total}</p>
         </div>
     );
 }

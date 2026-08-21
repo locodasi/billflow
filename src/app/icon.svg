@@ -1,0 +1,57 @@
+<svg width="256" height="256" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6D5DF6"/>
+      <stop offset="100%" stop-color="#3D8BFF"/>
+    </linearGradient>
+    <linearGradient id="flow-gradient" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#7CF7C4"/>
+      <stop offset="100%" stop-color="#3EE6A0"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Fondo redondeado -->
+  <rect x="0" y="0" width="256" height="256" rx="56" fill="url(#bg-gradient)"/>
+
+  <!-- Monograma B, trazo geométrico simple para verse nítido en tamaños chicos -->
+  <path
+    d="M 88 62
+       H 138
+       C 160 62 176 76 176 96
+       C 176 110 168 120 156 124
+       C 170 128 180 140 180 156
+       C 180 178 162 194 138 194
+       H 88
+       Z
+       M 112 84
+       V 116
+       H 134
+       C 146 116 154 108 154 98
+       C 154 88 146 84 134 84
+       Z
+       M 112 138
+       V 172
+       H 136
+       C 150 172 158 164 158 155
+       C 158 145 150 138 136 138
+       Z"
+    fill="#FFFFFF"
+  />
+
+  <!-- Línea de flujo / cashflow, cruzando la esquina inferior derecha -->
+  <path
+    d="M 150 210 C 175 210 195 195 205 172"
+    stroke="url(#flow-gradient)"
+    stroke-width="10"
+    stroke-linecap="round"
+    fill="none"
+  />
+  <path
+    d="M 191 168 L 207 171 L 202 187"
+    stroke="url(#flow-gradient)"
+    stroke-width="10"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    fill="none"
+  />
+</svg>

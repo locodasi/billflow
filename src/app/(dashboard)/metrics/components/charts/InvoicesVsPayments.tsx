@@ -6,31 +6,38 @@ import { useTranslations } from "next-intl";
 
 import Card, { BoldText } from "@/components/card/Card";
 
-// function CustomTooltip({ active, payload, label }: any) {
-//     if (!active || !payload || !payload.length) return null;
+type ChartPayloadEntry = {
+    dataKey: string;
+    value: number;
+};
 
-//     const pagado = payload.find((p: any) => p.dataKey === "pagado")?.value ?? 0;
-//     const adeudado = payload.find((p: any) => p.dataKey === "adeudado")?.value ?? 0;
-//     const total = pagado + adeudado;
 
-//     return (
-//         <div
-//             style={{
-//                 background: "#fff",
-//                 border: "1px solid #eee",
-//                 borderRadius: 8,
-//                 padding: "8px 12px",
-//                 boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
-//                 fontSize: 13,
-//             }}
-//         >
-//             <p style={{ margin: 0, fontWeight: 600 }}>{label}</p>
-//             <p style={{ margin: "4px 0 0", color: "var(--Success-500)" }}>Pagado: {pagado}</p>
-//             <p style={{ margin: "2px 0 0", color: "var(--Error-500)" }}>Adeudado: {adeudado}</p>
-//             <p style={{ margin: "4px 0 0", fontWeight: 600 }}>Total: {total}</p>
-//         </div>
-//     );
-// }
+function CustomTooltip({ active, payload, label }: { active?: boolean; payload?: ChartPayloadEntry[]; label?: string }) {
+    const t = useTranslations("metrics.diagrams.invoices_vs_payments");
+    if (!active || !payload || !payload.length) return null;
+
+    const invoiced = payload.find((p: ChartPayloadEntry) => p.dataKey === "invoiced")?.value ?? 0;
+    const paid = payload.find((p: ChartPayloadEntry) => p.dataKey === "paid")?.value ?? 0;
+    const outstanding = invoiced - paid;
+
+    return (
+        <div
+            style={{
+                background: "var(--Background-Colors-bg-tertiary)",
+                border: "1px solid var(--Border-Colors-border-tertiary)",
+                borderRadius: 8,
+                padding: "8px 12px",
+                boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
+                fontSize: 14,
+            }}
+        >
+            <p style={{ margin: 0, fontWeight: 600, color: "var(--Text-text-primary)" }}>{label}</p>
+            <p style={{ margin: "4px 0 0", color: "var(--Primary-500)" }}>{t("invoiced")}: {invoiced}</p>
+            <p style={{ margin: "2px 0 0", color: "var(--Violet-500)" }}>{t("payment")}: {paid}</p>
+            <p style={{ margin: "4px 0 0", fontWeight: 600, color: "var(--Text-text-secondary)" }}>{t("outstanding")}: {outstanding.toFixed(2)}</p>
+        </div>
+    );
+}
 
 
 function InvoicesVsPayments({ data }: { data: { month: string; invoiced: number; paid: number }[] }) {
@@ -70,7 +77,7 @@ function InvoicesVsPayments({ data }: { data: { month: string; invoiced: number;
                         tickLine={false}
                         tick={{ fontSize: 16, fill: "var(--Text-text-tertiary)", fontFamily: "inherit" }}
                     />
-                    <Tooltip />
+                    <Tooltip content={<CustomTooltip />} />
                     <Line type="monotone" dataKey="invoiced" stroke="var(--Primary-500)" strokeWidth={2} />
                     <Line type="monotone" dataKey="paid" stroke="var(--Violet-500)" strokeWidth={2} strokeDasharray="5 5" />
                 </LineChart>

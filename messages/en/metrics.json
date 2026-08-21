@@ -1,0 +1,59 @@
+{
+    "header": "Metrics",
+    "temporal_chips": {
+        "month": "Month",
+        "quarter": "Quarter",
+        "year": "Year"
+    },
+    "data_cards": {
+        "delta_badge": {
+            "equal": "no change",
+            "diff": "vs previous period"
+        },
+        "invoiced": {
+            "title": "Invoiced"
+        },
+        "paid": {
+            "title": "Paid"
+        },
+        "pending": {
+            "title": "Pending"
+        },
+        "total_invoices": {
+            "title": "Total invoices"
+        },
+        "monthly_average": {
+            "title": "Average monthly invoiced",
+            "month": "month"
+        },
+        "clients": {
+            "title": "Clients"
+        }
+    },
+    "diagrams": {
+        "invoices_per_state": {
+            "title": "Collection status by month",
+            "paid": "Paid",
+            "pending": "Pending",
+            "total": "Total"
+        },
+        "invoices_vs_payments": {
+            "title": "Invoiced vs. paid (cumulative)",
+            "invoiced": "Invoiced",
+            "payment": "Paid",
+            "outstanding": "Outstanding"
+        },
+        "time_of_pay": {
+            "title": "Payment time",
+            "clients": "Clients",
+            "average": "Average",
+            "days": "days",
+            "status": {
+                "title": "Status",
+                "fast": "Fast",
+                "normal": "Normal",
+                "slow": "Slow"
+            }
+        }
+    }
+}
