@@ -4,6 +4,7 @@ import { resetAllStores } from "@/stores/storeResetter";
 import { clearUserLocale, setUserLocale } from "./locale";
 import { supabase } from "./supabase";
 import { Language } from "@/stores/userStore";
+import { clearProjectCookie } from "./project-cookies";
 
 export const login = async (email: string, password: string) => {
     const { data, error } = await supabase.auth.signInWithPassword({
@@ -27,6 +28,7 @@ export const logout = async () => {
 
     localStorage.clear(); // limpia todo el localStorage
     await clearUserLocale();
+    await clearProjectCookie()
     resetAllStores();     // resetea todos los stores registrados
 };
 

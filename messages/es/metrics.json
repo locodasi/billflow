@@ -1,0 +1,59 @@
+{
+    "header": "Métricas",
+    "temporal_chips": {
+        "month": "Mes",
+        "quarter": "Trimestre",
+        "year": "Año"
+    },
+    "data_cards": {
+        "delta_badge": {
+            "equal": "sin cambios",
+            "diff": "vs periodo anterior"
+        },
+        "invoiced": {
+            "title": "Facturado"
+        },
+        "paid": {
+            "title": "Pagado"
+        },
+        "pending": {
+            "title": "Pendiente"
+        },
+        "total_invoices": {
+            "title": "Total facturas"
+        },
+        "monthly_average": {
+            "title": "Promedio mensual facturado",
+            "month": "mes"
+        },
+        "clients": {
+            "title": "Clientes"
+        }
+    },
+    "diagrams": {
+        "invoices_per_state": {
+            "title": "Estado de cobro por mes",
+            "paid": "Pagadas",
+            "pending": "Pendientes",
+            "total": "Total"
+        },
+        "invoices_vs_payments": {
+            "title": "Facturado vs. pagado (acumulado)",
+            "invoiced": "Facturado",
+            "payment": "Pagado",
+            "outstanding": "Adeudado"
+        },
+        "time_of_pay": {
+            "title": "Tiempo de pago",
+            "clients": "Clientes",
+            "average": "Promedio",
+            "days": "días",
+            "status": {
+                "title": "Estado",
+                "fast": "Rápido",
+                "normal": "Normal",
+                "slow": "Lento"
+            }
+        }
+    }
+}

@@ -1,0 +1,59 @@
+{
+    "header": "Kennzahlen",
+    "temporal_chips": {
+        "month": "Monat",
+        "quarter": "Quartal",
+        "year": "Jahr"
+    },
+    "data_cards": {
+        "delta_badge": {
+            "equal": "unverändert",
+            "diff": "vs. Vorperiode"
+        },
+        "invoiced": {
+            "title": "Fakturiert"
+        },
+        "paid": {
+            "title": "Bezahlt"
+        },
+        "pending": {
+            "title": "Ausstehend"
+        },
+        "total_invoices": {
+            "title": "Rechnungen gesamt"
+        },
+        "monthly_average": {
+            "title": "Monatlicher Fakturierungsdurchschnitt",
+            "month": "Monat"
+        },
+        "clients": {
+            "title": "Kunden"
+        }
+    },
+    "diagrams": {
+        "invoices_per_state": {
+            "title": "Zahlungsstatus pro Monat",
+            "paid": "Bezahlt",
+            "pending": "Ausstehend",
+            "total": "Gesamt"
+        },
+        "invoices_vs_payments": {
+            "title": "Fakturiert vs. bezahlt (kumuliert)",
+            "invoiced": "Fakturiert",
+            "payment": "Bezahlt",
+            "outstanding": "Ausstehend"
+        },
+        "time_of_pay": {
+            "title": "Zahlungsdauer",
+            "clients": "Kunden",
+            "average": "Durchschnitt",
+            "days": "Tage",
+            "status": {
+                "title": "Status",
+                "fast": "Schnell",
+                "normal": "Normal",
+                "slow": "Langsam"
+            }
+        }
+    }
+}
