@@ -32,12 +32,12 @@
     },
     "diagrams": {
         "invoices_per_state": {
-            "title": "Facturas por estado",
+            "title": "Estado de cobro por mes",
             "paid": "Pagadas",
             "pending": "Pendientes"
         },
         "invoices_vs_payments": {
-            "title": "Facturas vs Pagos",
+            "title": "Facturado vs. pagado (acumulado)",
             "invoiced": "Facturado",
             "payment": "Pagado"
         },
