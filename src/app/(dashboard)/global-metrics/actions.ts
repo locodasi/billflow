@@ -3,7 +3,6 @@ import { Locale } from "next-intl";
 
 import { createServerClient } from "@/lib/supabase.server";
 import { getPeriodRange, type Period } from "@/lib/period";
-import { getCurrentProjectId } from "@/lib/project-cookies";
 import { getUserLocale } from "@/lib/locale";
 
 const roundToTwo = (value: number) => Number(value.toFixed(2));
@@ -53,6 +52,19 @@ function formatBucketLabel(bucketIso: string, granularity: "week" | "month", loc
 }
 
 
+type ChartsMetrics = {
+    by_client: {
+        client_id: string;
+        client_name: string;
+        invoiced: number;
+        paid: number;
+    }[];
+    timeline: {
+        bucket: string;
+        invoiced: number;
+        paid: number;
+    }[];
+};
 
 export async function getChartsValue(period: Period, offset: number = 0) {
     const { startUtc, endUtc, granularity } = getPeriodRange(period, offset);
@@ -70,7 +82,9 @@ export async function getChartsValue(period: Period, offset: number = 0) {
 
     if (error) throw new Error(`Error al obtener KPIs: ${error.message}`);
 
-    const barData = (data?.by_client ?? []).map((row) => ({
+    const metrics = data as unknown as ChartsMetrics;
+    
+    const barData = (metrics?.by_client ?? []).map((row) => ({
         clientId: row.client_id,
         clientName: row.client_name,
         owed: roundToTwo(Math.max(row.invoiced - row.paid, 0)),
@@ -78,7 +92,7 @@ export async function getChartsValue(period: Period, offset: number = 0) {
     }));
     
 
-    const timeline = data?.timeline ?? [];
+    const timeline = metrics?.timeline ?? [];
 
     const lineData = timeline.map((row) => ({
         month: formatBucketLabel(

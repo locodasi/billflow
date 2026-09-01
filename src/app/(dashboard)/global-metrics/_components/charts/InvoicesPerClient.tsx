@@ -39,7 +39,12 @@ function CustomTooltip({ active, payload, label }: { active?: boolean; payload?:
     );
 }
 
-function InvoicesPerState({ data }: { data: { month: string; paid: number; owed: number }[] }) {
+function InvoicesPerClient({ data }: { data: {
+    clientId: string;
+    clientName: string;
+    owed: number;
+    paid: number;
+}[] }) {
     const t = useTranslations("metrics.diagrams.invoices_per_client");
 
     console.log(data)
@@ -87,4 +92,4 @@ function InvoicesPerState({ data }: { data: { month: string; paid: number; owed:
     );
 }
 
-export default InvoicesPerState;
+export default InvoicesPerClient;
