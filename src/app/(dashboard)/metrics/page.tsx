@@ -1,10 +1,10 @@
 import { Suspense } from "react";
 
-import CardsSkeleton from "./components/cards/CardsSkeleton";
-import ServerCards from "./components/cards/ServerCards";
-import MetricsClient from "./components/MetricsClient";
-import ChartsSkeletons from "./components/charts/ChartsSkeletons";
-import ServerCharts from "./components/charts/ServerCharts";
+import CardsSkeleton from "./_components/cards/CardsSkeleton";
+import ServerCards from "./_components/cards/ServerCards";
+import MetricsClient from "./_components/MetricsClient";
+import ChartsSkeletons from "./_components/charts/ChartsSkeletons";
+import ServerCharts from "./_components/charts/ServerCharts";
 import { parseOffset, parsePeriod } from "@/lib/period";
 
 

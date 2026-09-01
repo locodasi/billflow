@@ -1,5 +1,6 @@
 {
     "header": "Métricas",
+    "global_header":"Métricas globales",
     "temporal_chips": {
         "month": "Mes",
         "quarter": "Trimestre",
@@ -33,6 +34,12 @@
     "diagrams": {
         "invoices_per_state": {
             "title": "Estado de cobro por mes",
+            "paid": "Pagadas",
+            "pending": "Pendientes",
+            "total": "Total"
+        },
+        "invoices_per_client": {
+            "title": "Estado de cobro por cliente",
             "paid": "Pagadas",
             "pending": "Pendientes",
             "total": "Total"

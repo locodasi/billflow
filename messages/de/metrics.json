@@ -1,5 +1,6 @@
 {
     "header": "Kennzahlen",
+    "global_header": "Globale Kennzahlen",
     "temporal_chips": {
         "month": "Monat",
         "quarter": "Quartal",
@@ -33,6 +34,12 @@
     "diagrams": {
         "invoices_per_state": {
             "title": "Zahlungsstatus pro Monat",
+            "paid": "Bezahlt",
+            "pending": "Ausstehend",
+            "total": "Gesamt"
+        },
+        "invoices_per_client": {
+            "title": "Zahlungsstatus nach Kunde",
             "paid": "Bezahlt",
             "pending": "Ausstehend",
             "total": "Gesamt"
