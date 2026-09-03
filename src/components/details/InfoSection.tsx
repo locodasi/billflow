@@ -1,9 +1,9 @@
-import styled from "styled-components";
+import styled, { CSSProperties } from "styled-components";
 
-const InfoSection = ({title, useBorder = true, children}: {title: string, useBorder?: boolean, children: React.ReactNode}) => {
+const InfoSection = ({title, useBorder = true, styles = {}, children}: {title: string, useBorder?: boolean, styles?: CSSProperties, children: React.ReactNode}) => {
 
     return(
-        <InfoSectionWrapper $useBorder={useBorder}>
+        <InfoSectionWrapper $useBorder={useBorder} style={styles}>
             <InfoTitle>{title}</InfoTitle>
             {children}
         </InfoSectionWrapper>

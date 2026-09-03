@@ -99,7 +99,7 @@ const PaymentDetail = ({ payment, pdfWidth, pdfHeight, updatePaymentStatus }: Pa
                     <p style={{ fontSize: '0.875rem', color: 'var(--Text-text-tertiary)' }}>{payment.notes || t('notes.no_notes')}</p>
                 </InfoSection>
 
-                <InfoSection title={t('element_associated.title').toUpperCase()} useBorder={false} >
+                <InfoSection title={t('element_associated.title').toUpperCase()} useBorder={false} styles={{overflow: "auto"}}>
                     {
                         invoicesRelation.map((relation) => (
                             <ElementAssociated

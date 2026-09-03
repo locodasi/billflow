@@ -80,7 +80,7 @@ export interface UploadModeProps {
 const UploadMode = ({ close, addPayment, mode, setMode }: UploadModeProps) => {
 
     const CURRENCIES = useCurrencyOptions();
-    const t = useTranslations('payments.upload');
+    const t = useTranslations('payments.upload')
 
     const [paymentData, setPaymentData] = useState<UploadPayload>(InitialState);
 
@@ -231,7 +231,6 @@ const UploadMode = ({ close, addPayment, mode, setMode }: UploadModeProps) => {
 
                     <NormalSelect
                         title={t('values.currency')}
-                        placeholder={t('values.currency_placeholder')}
                         options={CURRENCIES}
                         value={CURRENCIES.find(currency => currency.value === paymentData.currency.value) || null}
                         onChange={(v) => setPaymentData({ ...paymentData, currency: { automatic: false, value: v.value } })}

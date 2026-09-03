@@ -55,7 +55,31 @@ export async function createPayload(data: UploadPayload, projectId: string) {
     if (!data.currency?.value) throw new Error('Currency requerido')
     if (!data.file) throw new Error('Archivo PDF requerido')
 
+    if (!data.amount?.value || data.amount.value <= 0) {
+        throw new Error('Amount debe ser mayor a 0')
+    }
+
     const supabase = await createServerClient();
+
+    // Obtener proyecto ANTES de hacer cualquier operación
+    const { data: project, error: projectError } = await supabase
+        .from('projects')
+        .select('id, name, currency')
+        .eq('id', projectId)
+        .single()
+
+    if (projectError || !project) {
+        throw new Error('Proyecto no encontrado')
+    }
+
+    const paymentCurrency = data.currency.value.toUpperCase()
+    const projectCurrency = project.currency.toUpperCase()
+    
+    if (paymentCurrency !== projectCurrency) {
+        throw new Error(
+            `La moneda del pago (${paymentCurrency}) no coincide con la moneda del proyecto (${projectCurrency})`
+        )
+    }
 
     // Upload PDF
     const arrayBuffer = await data.file.arrayBuffer()
@@ -132,12 +156,6 @@ export async function createPayload(data: UploadPayload, projectId: string) {
 
         totalPayed -= amountToPay;
     }
-
-    const { data: project } = await supabase
-        .from('projects')
-        .select('name')
-        .eq('id', projectId)
-        .single()
 
     // Enviar notificación de nuevo pago
     const result = await notificationService.send(
