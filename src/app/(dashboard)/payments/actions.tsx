@@ -85,14 +85,14 @@ export async function createPayload(data: UploadPayload, projectId: string) {
     const arrayBuffer = await data.file.arrayBuffer()
     const filePath = `${projectId}/payments/${data.paymentNumber.value}.pdf`
 
-    const { error: uploadError } = await supabase.storage
-        .from('documents')
-        .upload(filePath, arrayBuffer, {
-            contentType: 'application/pdf',
-            upsert: false,
-        })
+    // const { error: uploadError } = await supabase.storage
+    //     .from('documents')
+    //     .upload(filePath, arrayBuffer, {
+    //         contentType: 'application/pdf',
+    //         upsert: false,
+    //     })
 
-    if (uploadError) throw new Error(`Upload fallido: ${uploadError.message}`)
+    // if (uploadError) throw new Error(`Upload fallido: ${uploadError.message}`)
 
     // Convertir a USD
     const { exchangeRate, amountUsd } = await convertToUSD(data.amount.value, data.currency.value)
@@ -128,6 +128,8 @@ export async function createPayload(data: UploadPayload, projectId: string) {
 
     let totalPayed = data.amount.value;
 
+    console.log(invoicesToPay)
+
     for (const invoice of invoicesToPay) {
         if (totalPayed <= 0) break;
 
@@ -152,9 +154,27 @@ export async function createPayload(data: UploadPayload, projectId: string) {
 
         if (paymentInvoiceError) {
             console.error(`Error al relacionar pago con factura: ${paymentInvoiceError.message}`)
+            continue;
         }
 
         totalPayed -= amountToPay;
+        console.log(totalPayed, amountToPay)
+    }
+
+    // Generar saldo a favor con el excedente
+    if (totalPayed > 0) {
+        const { error: creditError } = await supabase
+            .from('project_credits')
+            .insert({
+                payment_id: payment.id,
+                amount: totalPayed,
+            });
+
+        if (creditError) {
+            throw new Error(
+                `Error al crear saldo a favor: ${creditError.message}`
+            );
+        }
     }
 
     // Enviar notificación de nuevo pago
