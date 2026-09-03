@@ -22,8 +22,8 @@
     "text": "Upload payment",
     "pdf": {
       "title": "Upload PDF",
-      "subtitle": "Automatically detects data",
-      "detected": "Data was automatically detected. Review and correct it if necessary."
+      "subtitle": "Automatically detect data",
+      "detected": "Data detected automatically. Review and correct if necessary"
     },
     "manual": {
       "title": "Create manually",
@@ -31,7 +31,7 @@
     },
     "values": {
       "payment_number": "Payment number",
-      "payment_number_placeholder": "e.g. PAY_0001",
+      "payment_number_placeholder": "E.G. PAY_0001",
       "amount": "Amount",
       "currency": "Currency",
       "notes": "Notes",
@@ -45,14 +45,15 @@
     "invoices": {
       "title": "Invoices to cover",
       "total": "Total",
-      "owe": "Amount due",
+      "owe": "Owed",
       "distribution_note": "The amount will be automatically distributed from the oldest invoice to the newest.",
+      "available_credits": "Available credit",
       "payment_amount": "Payment amount",
       "invoices-selected": "Selected invoices",
       "difference": "Difference"
     },
     "errors": {
-      "project-id-enabled": "Project ID is not available",
+      "project-id-enabled": "Project ID not available",
       "unknown-error": "Unknown error"
     }
   },
@@ -69,13 +70,19 @@
     },
     "notes": {
       "title": "Notes",
-      "no_notes": "There are no notes for this payment"
+      "no_notes": "No notes for this payment"
     },
-    "element_associated": {
-      "title": "Associated invoices",
-      "no_invoices": "There are no invoices associated with this payment",
-      "moneyApplied": "{amount} {currency} applied",
-      "issuedOn": "Issued on {date}"
+    "aplication": {
+      "title": "Payment application",
+      "element_associated": {
+        "title": "Associated invoices",
+        "no_invoices": "No invoices associated with this payment",
+        "moneyApplied": "{amount} {currency} applied",
+        "issuedOn": "Issued {date}"
+      },
+      "credits_genereated": {
+        "title": "Credit generated"
+      }
     }
   }
 }

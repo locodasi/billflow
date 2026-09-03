@@ -12,6 +12,16 @@ const InfoSection = ({title, useBorder = true, styles = {}, children}: {title: s
 
 export default InfoSection;
 
+export const InfoSubSection = ({title, useBorder = true, styles = {}, children}: {title: string, useBorder?: boolean, styles?: CSSProperties, children: React.ReactNode}) => {
+
+    return(
+        <InfoSectionWrapper $useBorder={useBorder} style={{paddingLeft: "1rem", ...styles}}>
+            <InfoTitle style={{fontSize: "0.875rem"}}>{title}</InfoTitle>
+            {children}
+        </InfoSectionWrapper>
+    )
+}
+
 const InfoSectionWrapper = styled.div<{$useBorder?: boolean}>`
     display: flex;
     flex-direction: column;

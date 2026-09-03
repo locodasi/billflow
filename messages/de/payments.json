@@ -3,8 +3,8 @@
   "payment_plural": "Zahlungen",
   "all": "Alle",
   "status": {
-    "unpaid_singular": "Unbezahlt",
-    "unpaid_plural": "Unbezahlt",
+    "unpaid_singular": "Nicht bezahlt",
+    "unpaid_plural": "Nicht bezahlt",
     "paid_singular": "Bezahlt",
     "paid_plural": "Bezahlt",
     "processing_singular": "In Bearbeitung",
@@ -22,8 +22,8 @@
     "text": "Zahlung hochladen",
     "pdf": {
       "title": "PDF hochladen",
-      "subtitle": "Erkennt Daten automatisch",
-      "detected": "Die Daten wurden automatisch erkannt. Bitte überprüfen und bei Bedarf korrigieren."
+      "subtitle": "Daten automatisch erkennen",
+      "detected": "Daten automatisch erkannt. Bitte überprüfen und bei Bedarf korrigieren"
     },
     "manual": {
       "title": "Manuell erstellen",
@@ -31,7 +31,7 @@
     },
     "values": {
       "payment_number": "Zahlungsnummer",
-      "payment_number_placeholder": "z. B. PAY_0001",
+      "payment_number_placeholder": "Z. B. PAY_0001",
       "amount": "Betrag",
       "currency": "Währung",
       "notes": "Notizen",
@@ -43,16 +43,17 @@
       "cancel": "Abbrechen"
     },
     "invoices": {
-      "title": "Zu deckende Rechnungen",
+      "title": "Zu begleichende Rechnungen",
       "total": "Gesamt",
-      "owe": "Fälliger Betrag",
+      "owe": "Offener Betrag",
       "distribution_note": "Der Betrag wird automatisch von der ältesten bis zur neuesten Rechnung verteilt.",
+      "available_credits": "Guthaben",
       "payment_amount": "Zahlungsbetrag",
       "invoices-selected": "Ausgewählte Rechnungen",
       "difference": "Differenz"
     },
     "errors": {
-      "project-id-enabled": "Projekt-ID ist nicht verfügbar",
+      "project-id-enabled": "Projekt-ID nicht verfügbar",
       "unknown-error": "Unbekannter Fehler"
     }
   },
@@ -69,13 +70,19 @@
     },
     "notes": {
       "title": "Notizen",
-      "no_notes": "Es gibt keine Notizen zu dieser Zahlung"
+      "no_notes": "Keine Notizen für diese Zahlung"
     },
-    "element_associated": {
-      "title": "Zugehörige Rechnungen",
-      "no_invoices": "Es sind keine Rechnungen mit dieser Zahlung verknüpft",
-      "moneyApplied": "{amount} {currency} angewendet",
-      "issuedOn": "Ausgestellt am {date}"
+    "aplication": {
+      "title": "Zahlungszuordnung",
+      "element_associated": {
+        "title": "Zugeordnete Rechnungen",
+        "no_invoices": "Keine Rechnungen dieser Zahlung zugeordnet",
+        "moneyApplied": "{amount} {currency} angewendet",
+        "issuedOn": "Ausgestellt am {date}"
+      },
+      "credits_genereated": {
+        "title": "Erzeugtes Guthaben"
+      }
     }
   }
 }

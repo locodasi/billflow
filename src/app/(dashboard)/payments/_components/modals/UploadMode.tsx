@@ -83,6 +83,7 @@ const UploadMode = ({ close, addPayment, mode, setMode }: UploadModeProps) => {
     const t = useTranslations('payments.upload')
 
     const [paymentData, setPaymentData] = useState<UploadPayload>(InitialState);
+    const [availableCredits, setAvailableCredits] = useState(0)
 
     const [error, setError] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
@@ -90,6 +91,8 @@ const UploadMode = ({ close, addPayment, mode, setMode }: UploadModeProps) => {
     const projectId = useProjectsStore(s => s.project?.id);
 
     useEffect(() => {
+        if (!projectId) return
+
         const fechLastInvoiceNumber = async () => {
             const { data, error } = await supabase
                 .from('payments')
@@ -115,6 +118,15 @@ const UploadMode = ({ close, addPayment, mode, setMode }: UploadModeProps) => {
             }));
         }
 
+        const fetchAvailableProjectCredit = async () => {
+            const availableCredit = await getAvailableProjectCredit(
+                projectId,
+                supabase
+            );
+            setAvailableCredits(availableCredit)
+        }
+
+        fetchAvailableProjectCredit()
         fechLastInvoiceNumber();
     }, [projectId])
 
@@ -251,6 +263,11 @@ const UploadMode = ({ close, addPayment, mode, setMode }: UploadModeProps) => {
 
                     <Area>
                         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                            <Info>{t('invoices.available_credits')}</Info>
+                            <Info style={{ fontWeight: "bold", color: "var(--Text-text-primary)" }}>{availableCredits} {paymentData.currency.value}</Info>
+                        </div>
+
+                        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                             <Info>{t('invoices.payment_amount')}</Info>
                             <Info style={{ fontWeight: "bold", color: "var(--Text-text-primary)" }}>{paymentData.amount.value} {paymentData.currency.value}</Info>
                         </div>
@@ -267,7 +284,7 @@ const UploadMode = ({ close, addPayment, mode, setMode }: UploadModeProps) => {
                         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                             <Info>{t('invoices.difference')}</Info>
                             <Info style={{ fontWeight: "bold", color: InvoicesTotal(paymentData.invoicesToPay) > paymentData.amount.value ? "var(--Error-700)" : "var(--Success-700)" }}>
-                                {paymentData.amount.value - InvoicesTotal(paymentData.invoicesToPay)} {paymentData.currency.value}
+                                {paymentData.amount.value - InvoicesTotal(paymentData.invoicesToPay) + availableCredits} {paymentData.currency.value}
                             </Info>
                         </div>
                     </Area>
@@ -285,6 +302,7 @@ export default UploadMode;
 import styled from "styled-components";
 import { InvoiceSummary } from "@/types/Invoice";
 import Line from "@/components/Line";
+import { getAvailableProjectCredit } from "@/lib/credits";
 
 const Area = styled.div`
     padding: 0.5rem;

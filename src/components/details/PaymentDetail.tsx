@@ -14,7 +14,7 @@ import { parseDateToLocaleFormat } from "@/utils/timeFunctions";
 import Button from "../Button";
 
 import PDF from "./PDF"
-import InfoSection, { TwoRowData } from "./InfoSection"
+import InfoSection, { InfoSubSection, TwoRowData } from "./InfoSection"
 import ElementAssociated from "./ElementAssociated";
 
 
@@ -43,35 +43,66 @@ const PaymentDetail = ({ payment, pdfWidth, pdfHeight, updatePaymentStatus }: Pa
     const t = useTranslations('payments.detail');
 
     const [invoicesRelation, setInvoicesRelation] = useState<InvoiceRelation[]>([]);
+    const [creditGenerated, setCreditGenerated] = useState<number>(0);
+
     const projectName = useProjectsStore(s => s.project?.name);
+    const currency = useProjectsStore(s => s.project?.currency);
     const role = useUserStore(s => s.role);
 
     useEffect(() => {
-        const fetchInvoicesRelation = async () => {
-            const { data, error } = await supabase.from('payment_invoices')
-                .select(`
-                    invoice_id,
-                    amount_applied,
-                    invoices (
-                        invoice_number,
-                        currency,
-                        created_at
-                    ),
-                    invoice_summary (
-                        computed_status
-                    )
-                `)
-                .eq('payment_id', payment.id);
-
-            if (error) {
-                console.error("Error fetching invoices relation:", error);
+        const fetchPaymentRelations = async () => {
+            const [invoicesResult, creditsResult] = await Promise.all([
+                supabase
+                    .from('payment_invoices')
+                    .select(`
+                        invoice_id,
+                        amount_applied,
+                        invoices (
+                            invoice_number,
+                            currency,
+                            created_at
+                        ),
+                        invoice_summary (
+                            computed_status
+                        )
+                    `)
+                    .eq('payment_id', payment.id),
+    
+                supabase
+                    .from('project_credits')
+                    .select('amount')
+                    .eq('payment_id', payment.id)
+            ]);
+    
+            if (invoicesResult.error) {
+                console.error(
+                    "Error fetching invoices relation:",
+                    invoicesResult.error
+                );
             } else {
-                setInvoicesRelation(data as unknown as InvoiceRelation[]);
+                setInvoicesRelation(
+                    invoicesResult.data as unknown as InvoiceRelation[]
+                );
             }
-        }
-
-        fetchInvoicesRelation();
+    
+            if (creditsResult.error) {
+                console.error(
+                    "Error fetching payment credit:",
+                    creditsResult.error
+                );
+            } else {
+                const totalCredit = creditsResult.data.reduce(
+                    (total, credit) => total + Number(credit.amount),
+                    0
+                );
+    
+                setCreditGenerated(totalCredit);
+            }
+        };
+    
+        fetchPaymentRelations();
     }, [payment.id]);
+    
 
     return (
         <div style={{ display: 'flex', flex: "1", minHeight: 0 }}>
@@ -99,19 +130,25 @@ const PaymentDetail = ({ payment, pdfWidth, pdfHeight, updatePaymentStatus }: Pa
                     <p style={{ fontSize: '0.875rem', color: 'var(--Text-text-tertiary)' }}>{payment.notes || t('notes.no_notes')}</p>
                 </InfoSection>
 
-                <InfoSection title={t('element_associated.title').toUpperCase()} useBorder={false} styles={{overflow: "auto"}}>
-                    {
-                        invoicesRelation.map((relation) => (
-                            <ElementAssociated
-                                key={relation.invoice_id}
-                                title={relation.invoices.invoice_number}
-                                status={relation.invoice_summary.computed_status}
-                                moneyText={t('element_associated.moneyApplied', { amount: relation.amount_applied, currency: relation.invoices.currency })}
-                                date={t('element_associated.issuedOn', { date: parseDateToLocaleFormat(relation.invoices.created_at) })}
-                                url={`/invoices/${relation.invoice_id}`}
-                            />
-                        ))
-                    }
+                <InfoSection title={t('aplication.title').toUpperCase()} useBorder={false} styles={{overflow: "auto"}}>
+                    <InfoSubSection title={t("aplication.element_associated.title")} useBorder={false}>
+                        {
+                            invoicesRelation.map((relation) => (
+                                <ElementAssociated
+                                    key={relation.invoice_id}
+                                    title={relation.invoices.invoice_number}
+                                    status={relation.invoice_summary.computed_status}
+                                    moneyText={t('aplication.element_associated.moneyApplied', { amount: relation.amount_applied, currency: relation.invoices.currency })}
+                                    date={t('aplication.element_associated.issuedOn', { date: parseDateToLocaleFormat(relation.invoices.created_at) })}
+                                    url={`/invoices/${relation.invoice_id}`}
+                                />
+                            ))
+                        }
+                    </InfoSubSection>
+
+                    <InfoSubSection title={t("aplication.credits_genereated.title")} useBorder={false}>
+                        <p style={{color: "var(--Text-text-primary)", fontSize: "0.875rem", paddingLeft: "0.5rem"}}>{currency} {creditGenerated}</p>
+                    </InfoSubSection>
                 </InfoSection>
             </div>
         </div>
