@@ -78,6 +78,7 @@
         "title": "Zugeordnete Rechnungen",
         "no_invoices": "Keine Rechnungen dieser Zahlung zugeordnet",
         "moneyApplied": "{amount} {currency} angewendet",
+        "creditApplied": "{amount} {currency} an angewendeten Guthaben",
         "issuedOn": "Ausgestellt am {date}"
       },
       "credits_genereated": {

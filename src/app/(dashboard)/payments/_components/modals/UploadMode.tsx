@@ -206,6 +206,10 @@ const UploadMode = ({ close, addPayment, mode, setMode }: UploadModeProps) => {
         }
     }
 
+    const getDiff = () => {
+       return Number((paymentData.amount.value - InvoicesTotal(paymentData.invoicesToPay) + availableCredits).toFixed(2))
+    }
+
     return (
         <>
 
@@ -283,8 +287,8 @@ const UploadMode = ({ close, addPayment, mode, setMode }: UploadModeProps) => {
 
                         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                             <Info>{t('invoices.difference')}</Info>
-                            <Info style={{ fontWeight: "bold", color: InvoicesTotal(paymentData.invoicesToPay) > paymentData.amount.value ? "var(--Error-700)" : "var(--Success-700)" }}>
-                                {paymentData.amount.value - InvoicesTotal(paymentData.invoicesToPay) + availableCredits} {paymentData.currency.value}
+                            <Info style={{ fontWeight: "bold", color: getDiff() < 0 ? "var(--Error-700)" : "var(--Success-700)" }}>
+                                {getDiff()} {paymentData.currency.value}
                             </Info>
                         </div>
                     </Area>

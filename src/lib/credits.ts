@@ -4,7 +4,27 @@ export async function getAvailableProjectCredit(
     projectId: string,
     supabase: SupabaseClient
 ): Promise<number> {
-    const { data: credits, error: creditsError } = await supabase
+    const credits = await getAvailableProjectCredits(
+        projectId,
+        supabase
+    )
+
+    return credits.reduce(
+        (total, credit) => total + credit.amount,
+        0
+    )
+}
+
+type AvailableProjectCredit = {
+    id: number
+    amount: number
+}
+
+export async function getAvailableProjectCredits(
+    projectId: string,
+    supabase: SupabaseClient
+): Promise<AvailableProjectCredit[]> {
+    const { data: credits, error } = await supabase
         .from("project_credits")
         .select(`
             id,
@@ -15,40 +35,59 @@ export async function getAvailableProjectCredit(
             )
         `)
         .eq("payments.project_id", projectId)
-        .eq("payments.status", "approved");
+        .eq("payments.status", "approved")
+        .order("created_at", { ascending: true })
 
-    if (creditsError) {
+    if (error) {
         throw new Error(
-            `Error al obtener créditos del proyecto: ${creditsError.message}`
-        );
+            `Error al obtener créditos del proyecto: ${error.message}`
+        )
     }
 
     if (!credits || credits.length === 0) {
-        return 0;
+        return []
     }
 
-    const creditIds = credits.map((credit) => credit.id);
+    const creditIds = credits.map((credit) => credit.id)
 
-    const { data: applications, error: applicationsError } = await supabase
-        .from("credit_applications")
-        .select("credit_id, amount_applied")
-        .in("credit_id", creditIds);
+    const { data: applications, error: applicationsError } =
+        await supabase
+            .from("credit_applications")
+            .select(`
+                credit_id,
+                amount_applied,
+                payments!inner (
+                    status
+                )
+            `)
+            .in("credit_id", creditIds)
+            .neq("payments.status", "rejected")
+
 
     if (applicationsError) {
         throw new Error(
             `Error al obtener aplicaciones de créditos: ${applicationsError.message}`
-        );
+        )
     }
 
-    const totalCredits = credits.reduce(
-        (total, credit) => total + Number(credit.amount),
-        0
-    );
+    const appliedByCredit = new Map<number, number>()
 
-    const totalApplied = (applications ?? []).reduce(
-        (total, application) => total + Number(application.amount_applied),
-        0
-    );
+    for (const application of applications ?? []) {
+        const current =
+            appliedByCredit.get(application.credit_id) ?? 0
 
-    return Math.max(totalCredits - totalApplied, 0);
+        appliedByCredit.set(
+            application.credit_id,
+            current + Number(application.amount_applied)
+        )
+    }
+
+    return credits
+        .map((credit) => ({
+            id: credit.id,
+            amount:
+                Number(credit.amount) -
+                (appliedByCredit.get(credit.id) ?? 0),
+        }))
+        .filter((credit) => credit.amount > 0)
 }

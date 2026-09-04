@@ -21,15 +21,17 @@ import ElementAssociated from "./ElementAssociated";
 interface InvoiceRelation {
     invoice_id: string;
     amount_applied: number;
+    credit_amount_applied: number;
     invoices: {
         invoice_number: string;
         currency: string;
         created_at: string;
-    },
+    };
     invoice_summary: {
         computed_status: string;
-    }
+    };
 }
+
 
 interface PaymentDetailProps {
     payment: Payment;
@@ -51,37 +53,42 @@ const PaymentDetail = ({ payment, pdfWidth, pdfHeight, updatePaymentStatus }: Pa
 
     useEffect(() => {
         const fetchPaymentRelations = async () => {
-            const [invoicesResult, creditsResult] = await Promise.all([
-                supabase
-                    .from('payment_invoices')
-                    .select(`
-                        invoice_id,
-                        amount_applied,
-                        invoices (
-                            invoice_number,
-                            currency,
-                            created_at
-                        ),
-                        invoice_summary (
-                            computed_status
-                        )
-                    `)
-                    .eq('payment_id', payment.id),
+            const [invoicesResult, creditsResult, creditApplicationsResult] =
+                await Promise.all([
+                    supabase
+                        .from('payment_invoices')
+                        .select(`
+                            invoice_id,
+                            amount_applied,
+                            invoices (
+                                invoice_number,
+                                currency,
+                                created_at
+                            ),
+                            invoice_summary (
+                                computed_status
+                            )
+                        `)
+                        .eq('payment_id', payment.id),
     
-                supabase
-                    .from('project_credits')
-                    .select('amount')
-                    .eq('payment_id', payment.id)
-            ]);
+                    supabase
+                        .from('project_credits')
+                        .select('amount')
+                        .eq('payment_id', payment.id),
+    
+                    supabase
+                        .from('credit_applications')
+                        .select(`
+                            invoice_id,
+                            amount_applied
+                        `)
+                        .eq('payment_id', payment.id)
+                ]);
     
             if (invoicesResult.error) {
                 console.error(
                     "Error fetching invoices relation:",
                     invoicesResult.error
-                );
-            } else {
-                setInvoicesRelation(
-                    invoicesResult.data as unknown as InvoiceRelation[]
                 );
             }
     
@@ -90,7 +97,40 @@ const PaymentDetail = ({ payment, pdfWidth, pdfHeight, updatePaymentStatus }: Pa
                     "Error fetching payment credit:",
                     creditsResult.error
                 );
-            } else {
+            }
+    
+            if (creditApplicationsResult.error) {
+                console.error(
+                    "Error fetching credit applications:",
+                    creditApplicationsResult.error
+                );
+            }
+    
+            if (!invoicesResult.error && !creditApplicationsResult.error) {
+                const creditApplicationsByInvoice = new Map<string, number>();
+    
+                for (const application of creditApplicationsResult.data ?? []) {
+                    const current =
+                        creditApplicationsByInvoice.get(application.invoice_id) ?? 0;
+    
+                    creditApplicationsByInvoice.set(
+                        application.invoice_id,
+                        current + Number(application.amount_applied)
+                    );
+                }
+    
+                const relations = (invoicesResult.data ?? []).map((relation) => ({
+                    ...relation,
+                    credit_amount_applied:
+                        creditApplicationsByInvoice.get(relation.invoice_id) ?? 0,
+                }));
+    
+                setInvoicesRelation(
+                    relations as unknown as InvoiceRelation[]
+                );
+            }
+    
+            if (!creditsResult.error) {
                 const totalCredit = creditsResult.data.reduce(
                     (total, credit) => total + Number(credit.amount),
                     0
@@ -103,6 +143,7 @@ const PaymentDetail = ({ payment, pdfWidth, pdfHeight, updatePaymentStatus }: Pa
         fetchPaymentRelations();
     }, [payment.id]);
     
+    console.log(invoicesRelation)
 
     return (
         <div style={{ display: 'flex', flex: "1", minHeight: 0 }}>
@@ -139,6 +180,7 @@ const PaymentDetail = ({ payment, pdfWidth, pdfHeight, updatePaymentStatus }: Pa
                                     title={relation.invoices.invoice_number}
                                     status={relation.invoice_summary.computed_status}
                                     moneyText={t('aplication.element_associated.moneyApplied', { amount: relation.amount_applied, currency: relation.invoices.currency })}
+                                    creditText={t('aplication.element_associated.creditApplied', { amount: relation.credit_amount_applied, currency: relation.invoices.currency })}
                                     date={t('aplication.element_associated.issuedOn', { date: parseDateToLocaleFormat(relation.invoices.created_at) })}
                                     url={`/invoices/${relation.invoice_id}`}
                                 />

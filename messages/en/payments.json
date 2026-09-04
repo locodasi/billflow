@@ -78,6 +78,7 @@
         "title": "Associated invoices",
         "no_invoices": "No invoices associated with this payment",
         "moneyApplied": "{amount} {currency} applied",
+        "creditApplied": "{amount} {currency} in credits applied",
         "issuedOn": "Issued {date}"
       },
       "credits_genereated": {
