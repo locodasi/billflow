@@ -276,14 +276,14 @@ export async function createPayload(data: UploadPayload, projectId: string) {
 
     const { data: invoicesToPay, error: invoicesError } = await supabase
         .from('invoice_summary')
-        .select('*')
+        .select('id, outstanding_amount')
         .in('id', data.invoicesToPay.map(inv => inv.id))
         .gt('outstanding_amount', 0)
         .order('created_at', { ascending: true });
 
     if (invoicesError) throw new Error(`Error al obtener facturas: ${invoicesError.message}`)
 
-    const unpaidInvoices = await payInvoicesWithPayment(payment.id, invoicesToPay, data.amount.value, exchangeRate, supabase)
+    const unpaidInvoices = await payInvoicesWithPayment(payment.id, invoicesToPay as UnpaidInvoice[], data.amount.value, exchangeRate, supabase)
     await payInvoicesWithProjectCredits(project.id, payment.id, unpaidInvoices, exchangeRate, supabase)
 
     // Enviar notificación de nuevo pago
