@@ -48,7 +48,8 @@
             "title": "Invoiced vs. paid (cumulative)",
             "invoiced": "Invoiced",
             "payment": "Paid",
-            "outstanding": "Outstanding"
+            "outstanding": "Outstanding",
+            "credit_available": "Credit available"
         },
         "time_of_pay": {
             "title": "Payment time",

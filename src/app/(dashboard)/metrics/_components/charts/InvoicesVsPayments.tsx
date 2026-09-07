@@ -18,7 +18,9 @@ function CustomTooltip({ active, payload, label }: { active?: boolean; payload?:
 
     const invoiced = payload.find((p: ChartPayloadEntry) => p.dataKey === "invoiced")?.value ?? 0;
     const paid = payload.find((p: ChartPayloadEntry) => p.dataKey === "paid")?.value ?? 0;
-    const outstanding = invoiced - paid;
+    const difference = invoiced - paid;
+    const hasCredit = difference < 0;
+    const amount = Math.abs(difference);
 
     return (
         <div
@@ -34,7 +36,19 @@ function CustomTooltip({ active, payload, label }: { active?: boolean; payload?:
             <p style={{ margin: 0, fontWeight: 600, color: "var(--Text-text-primary)" }}>{label}</p>
             <p style={{ margin: "4px 0 0", color: "var(--Primary-500)" }}>{t("invoiced")}: {invoiced}</p>
             <p style={{ margin: "2px 0 0", color: "var(--Violet-500)" }}>{t("payment")}: {paid}</p>
-            <p style={{ margin: "4px 0 0", fontWeight: 600, color: "var(--Text-text-secondary)" }}>{t("outstanding")}: {outstanding.toFixed(2)}</p>
+            <p
+                style={{
+                    margin: "4px 0 0",
+                    fontWeight: 600,
+                    color: hasCredit
+                        ? "var(--Success-500)"
+                        : "var(--Text-text-secondary)",
+                }}
+            >
+                {hasCredit
+                    ? `${t("credit_available")}: ${amount.toFixed(2)}`
+                    : `${t("outstanding")}: ${amount.toFixed(2)}`}
+            </p>
         </div>
     );
 }

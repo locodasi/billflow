@@ -92,8 +92,6 @@ export async function getChartsValue(period: Period, offset: number = 0) {
 
     if (error) throw new Error(`Error al obtener KPIs: ${error.message}`);
 
-    console.log(data)
-
     const barData = data.map((row) => ({
         month: formatBucketLabel(row.bucket, granularity, locale),
         paid: row.paid,
@@ -102,8 +100,8 @@ export async function getChartsValue(period: Period, offset: number = 0) {
 
     const lineData = data.map((row) => ({
         month: formatBucketLabel(row.bucket, granularity, locale),
-        invoiced: row.invoiced_cumulative,
-        paid: row.paid_cumulative,
+        invoiced: row.invoiced_to_date,
+        paid: row.paid_to_date,
     }));
 
     return { barData, lineData };

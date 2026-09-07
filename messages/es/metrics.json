@@ -48,7 +48,8 @@
             "title": "Facturado vs. pagado (acumulado)",
             "invoiced": "Facturado",
             "payment": "Pagado",
-            "outstanding": "Adeudado"
+            "outstanding": "Adeudado",
+            "credit_available": "Creditos disponibles"
         },
         "time_of_pay": {
             "title": "Tiempo de pago",

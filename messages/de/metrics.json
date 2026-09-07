@@ -48,7 +48,8 @@
             "title": "Fakturiert vs. bezahlt (kumuliert)",
             "invoiced": "Fakturiert",
             "payment": "Bezahlt",
-            "outstanding": "Ausstehend"
+            "outstanding": "Ausstehend",
+            "credit_available": "Verfügbares Guthaben"
         },
         "time_of_pay": {
             "title": "Zahlungsdauer",
