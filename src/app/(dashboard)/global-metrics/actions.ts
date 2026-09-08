@@ -63,8 +63,11 @@ type ChartsMetrics = {
         bucket: string;
         invoiced: number;
         paid: number;
+        invoiced_cumulative: number;
+        paid_cumulative: number;
     }[];
 };
+
 
 export async function getChartsValue(period: Period, offset: number = 0) {
     const { startUtc, endUtc, granularity } = getPeriodRange(period, offset);
@@ -83,11 +86,10 @@ export async function getChartsValue(period: Period, offset: number = 0) {
     if (error) throw new Error(`Error al obtener KPIs: ${error.message}`);
 
     const metrics = data as unknown as ChartsMetrics;
-    
     const barData = (metrics?.by_client ?? []).map((row) => ({
         clientId: row.client_id,
         clientName: row.client_name,
-        owed: roundToTwo(Math.max(row.invoiced - row.paid, 0)),
+        invoiced: roundToTwo(Number(row.invoiced)),
         paid: roundToTwo(Number(row.paid)),
     }));
     
@@ -100,8 +102,8 @@ export async function getChartsValue(period: Period, offset: number = 0) {
             granularity,
             locale
         ),
-        invoiced: roundToTwo(Number(row.invoiced)),
-        paid: roundToTwo(Number(row.paid)),
+        invoiced: roundToTwo(Number(row.invoiced_cumulative)),
+        paid: roundToTwo(Number(row.paid_cumulative)),
     }));
 
     return { barData, lineData };

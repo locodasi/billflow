@@ -35,13 +35,13 @@
         "invoices_per_state": {
             "title": "Zahlungsstatus pro Monat",
             "paid": "Bezahlt",
-            "pending": "Ausstehend",
+            "invoiced": "Fakturiert",
             "total": "Gesamt"
         },
         "invoices_per_client": {
             "title": "Zahlungsstatus nach Kunde",
             "paid": "Bezahlt",
-            "pending": "Ausstehend",
+            "invoiced": "Fakturiert",
             "total": "Gesamt"
         },
         "invoices_vs_payments": {

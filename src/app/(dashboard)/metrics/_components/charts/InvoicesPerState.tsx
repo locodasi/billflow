@@ -17,8 +17,7 @@ function CustomTooltip({ active, payload, label }: { active?: boolean; payload?:
     if (!active || !payload || !payload.length) return null;
 
     const paid = payload.find((p: ChartPayloadEntry) => p.dataKey === "paid")?.value ?? 0;
-    const owed = payload.find((p: ChartPayloadEntry) => p.dataKey === "owed")?.value ?? 0;
-    const total = paid + owed;
+    const invoiced = payload.find((p: ChartPayloadEntry) => p.dataKey === "invoiced")?.value ?? 0;
 
     return (
         <div
@@ -33,8 +32,7 @@ function CustomTooltip({ active, payload, label }: { active?: boolean; payload?:
         >
             <p style={{ margin: 0, fontWeight: 600, color: "var(--Text-text-primary)" }}>{label}</p>
             <p style={{ margin: "4px 0 0", color: "var(--Success-500)" }}>{t("paid")}: {paid}</p>
-            <p style={{ margin: "2px 0 0", color: "var(--Error-500)" }}>{t("pending")}: {owed}</p>
-            <p style={{ margin: "4px 0 0", fontWeight: 600, color: "var(--Text-text-secondary)" }}>{t("total")}: {total}</p>
+            <p style={{ margin: "2px 0 0", color: "var(--Error-500)" }}>{t("invoiced")}: {invoiced}</p>
         </div>
     );
 }
@@ -56,7 +54,7 @@ function InvoicesPerState({ data }: { data: { month: string; paid: number; owed:
 
                     <div style={{display: "flex", alignItems: "center", gap: 4}}>
                         <div style={{width: 14, height: 14, backgroundColor: "var(--Error-500)", borderRadius: 2}}></div>
-                        <span style={{fontSize: 14, color: "var(--Text-text-tertiary)" }}>{t('pending')}</span>
+                        <span style={{fontSize: 14, color: "var(--Text-text-tertiary)" }}>{t('invoiced')}</span>
                     </div>
                 </div>
             </div>
@@ -76,8 +74,8 @@ function InvoicesPerState({ data }: { data: { month: string; paid: number; owed:
                         tick={{ fontSize: 12, fill: "var(--Text-text-tertiary)" }}
                     />
                     <Tooltip content={<CustomTooltip />} cursor={{ fill: "#000", opacity: 0.1 }} />
-                    <Bar dataKey="paid" stackId="total" fill="#82ca9d" radius={[0, 0, 0, 0]} />
-                    <Bar dataKey="owed" stackId="total" fill="#e57373" radius={[4, 4, 0, 0]} />
+                    <Bar dataKey="paid" fill="#82ca9d" radius={[4, 4, 0, 0]} />
+                    <Bar dataKey="invoiced" fill="#e57373" radius={[4, 4, 0, 0]} />
                 </BarChart>
             </ResponsiveContainer>
         </Card>

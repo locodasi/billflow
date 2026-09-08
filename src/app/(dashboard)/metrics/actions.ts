@@ -66,8 +66,6 @@ export type InvoiceMetricBucket = {
     bucket: string;
     invoiced: number;
     paid: number;
-    pending: number;
-    outstanding: number;
     invoiced_cumulative: number;
     paid_cumulative: number;
 };
@@ -95,13 +93,13 @@ export async function getChartsValue(period: Period, offset: number = 0) {
     const barData = data.map((row) => ({
         month: formatBucketLabel(row.bucket, granularity, locale),
         paid: row.paid,
-        owed: row.outstanding,
+        invoiced: row.invoiced,
     }));
 
     const lineData = data.map((row) => ({
         month: formatBucketLabel(row.bucket, granularity, locale),
-        invoiced: row.invoiced_to_date,
-        paid: row.paid_to_date,
+        invoiced: row.invoiced_cumulative,
+        paid: row.paid_cumulative,
     }));
 
     return { barData, lineData };
