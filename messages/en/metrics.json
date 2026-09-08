@@ -1,5 +1,6 @@
 {
     "header": "Metrics",
+    "global_header":"Global metrics",
     "temporal_chips": {
         "month": "Month",
         "quarter": "Quarter",
@@ -34,14 +35,21 @@
         "invoices_per_state": {
             "title": "Collection status by month",
             "paid": "Paid",
-            "pending": "Pending",
+            "invoiced": "Invoiced",
+            "total": "Total"
+        },
+        "invoices_per_client": {
+            "title": "Collection status by client",
+            "paid": "Paid",
+            "invoiced": "Invoiced",
             "total": "Total"
         },
         "invoices_vs_payments": {
             "title": "Invoiced vs. paid (cumulative)",
             "invoiced": "Invoiced",
             "payment": "Paid",
-            "outstanding": "Outstanding"
+            "outstanding": "Outstanding",
+            "credit_available": "Credit available"
         },
         "time_of_pay": {
             "title": "Payment time",

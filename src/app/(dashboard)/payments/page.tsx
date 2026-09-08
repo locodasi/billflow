@@ -98,7 +98,7 @@ const PaymentsPage = () => {
 
             <Header title={`${t('payment_plural')} -- ${projectName}`} showButton={true} buttontext={t('new_payment')} buttonIcon="plus" onButtonClick={() => setIsModalOpen(true)} />
 
-            <div style={{ padding: '1rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            <div style={{ padding: '1rem', display: 'flex', flexDirection: 'column', gap: '1rem', overflow:"auto" }}>
                 <Filters filters={filters} setFilters={setFilters} count={totalCount} />
                 
                 <div style={{

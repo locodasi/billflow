@@ -66,6 +66,7 @@
       "title": "Zugehörige Zahlungen",
       "no_payments": "Keine Zahlungen mit dieser Rechnung verknüpft",
       "moneyApplied": "{amount} {currency} angewendet",
+      "creditApplied": "{amount} {currency} an angewendeten Guthaben",
       "issuedOn": "Ausgestellt am {date}"
     }
   }

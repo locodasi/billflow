@@ -66,6 +66,7 @@
       "title": "Recibos asociados",
       "no_payments": "No hay recibos asociados a esta factura",
       "moneyApplied": "{amount} {currency} aplicado",
+      "creditApplied": "{amount} {currency} de creditos aplicados",
       "issuedOn": "Emitida {date}"
     }
   } 

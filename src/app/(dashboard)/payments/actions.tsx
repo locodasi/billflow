@@ -2,6 +2,7 @@
 'use server'
 
 import { extractText, getDocumentProxy } from 'unpdf'
+import { SupabaseClient } from '@supabase/supabase-js'
 
 type PaymentData = {
     paymentNumber: string | null
@@ -38,15 +39,171 @@ export async function parsePayment(formData: FormData): Promise<PaymentData> {
     return { paymentNumber, amount, currency }
 }
 
+import { UploadPayload } from './_components/modals/UploadMode'
+
 import { createServerClient } from "@/lib/supabase.server";
 import { convertToUSD } from "@/lib/exchange-rate";
 import { notificationService } from '@/lib/notifications/notification-service'
 import { paymentsUploadedEmailTemplate, paymentStatusEmailTemplate } from '@/lib/notifications/templates/email/helper'
 import serverEnv from '@/lib/env.server'
-
-import { UploadPayload } from './_components/modals/UploadMode'
 import { DEFAULT_SETTINGS, UserSettingsInput } from '@/stores/userStore'
 import { deepMerge } from '@/lib/deep-merge'
+import { getAvailableProjectCredits } from '@/lib/credits'
+
+type UnpaidInvoice = {
+    id: string
+    outstanding_amount: number
+}
+
+async function payInvoicesWithPayment(
+    paymentId: string,
+    invoices: UnpaidInvoice[],
+    amount: number,
+    exchangeRate: number,
+    supabase: SupabaseClient
+): Promise<UnpaidInvoice[]> {
+    let remainingAmount = amount
+    const unpaidInvoices: UnpaidInvoice[] = []
+
+    for (const invoice of invoices) {
+        if (remainingAmount <= 0) {
+            unpaidInvoices.push(invoice)
+            continue
+        }
+
+        if (invoice.outstanding_amount == null) {
+            console.error(
+                `outstanding_amount null para invoice ${invoice.id}, se omite`
+            )
+            unpaidInvoices.push(invoice)
+            continue
+        }
+
+        const amountToPay = Math.min(
+            invoice.outstanding_amount,
+            remainingAmount
+        )
+
+        const { error } = await supabase
+            .from("payment_invoices")
+            .insert({
+                payment_id: paymentId,
+                invoice_id: invoice.id,
+                amount_applied: amountToPay,
+                amount_applied_usd: amountToPay * exchangeRate,
+            })
+
+        if (error) {
+            console.error(
+                `Error al relacionar pago con factura ${invoice.id}: ${error.message}`
+            )
+
+            // Como el pago no se pudo aplicar, la factura sigue pendiente.
+            unpaidInvoices.push(invoice)
+            continue
+        }
+
+        remainingAmount -= amountToPay
+
+        const remainingInvoiceAmount =
+            invoice.outstanding_amount - amountToPay
+
+        if (remainingInvoiceAmount > 0) {
+            unpaidInvoices.push({
+                ...invoice,
+                outstanding_amount: remainingInvoiceAmount,
+            })
+        }
+    }
+
+    // El excedente del recibo se convierte en crédito.
+    if (remainingAmount > 0) {
+        const { error } = await supabase
+            .from("project_credits")
+            .insert({
+                payment_id: paymentId,
+                amount: remainingAmount,
+            })
+
+        if (error) {
+            throw new Error(
+                `Error al crear saldo a favor: ${error.message}`
+            )
+        }
+    }
+
+    return unpaidInvoices
+}
+
+async function payInvoicesWithProjectCredits(
+    projectId: string,
+    paymentId: string,
+    invoices: UnpaidInvoice[],
+    exchangeRate: number,
+    supabase: SupabaseClient
+) {
+    if (invoices.length === 0) {
+        return
+    }
+
+    const credits = await getAvailableProjectCredits(
+        projectId,
+        supabase
+    )
+
+    if (credits.length === 0) {
+        return
+    }
+
+    let creditIndex = 0
+
+    for (const invoice of invoices) {
+        let invoiceRemaining = invoice.outstanding_amount
+
+        while (invoiceRemaining > 0 && creditIndex < credits.length) {
+            const credit = credits[creditIndex]
+
+            if (credit.amount <= 0) {
+                creditIndex++
+                continue
+            }
+
+            const amountToApply = Math.min(
+                invoiceRemaining,
+                credit.amount
+            )
+
+            const { error } = await supabase
+                .from("credit_applications")
+                .insert({
+                    credit_id: credit.id,
+                    invoice_id: invoice.id,
+                    payment_id: paymentId,
+                    amount_applied: amountToApply,
+                    amount_applied_usd: amountToApply * exchangeRate,
+                })
+
+            if (error) {
+                throw new Error(
+                    `Error al aplicar crédito ${credit.id} a factura ${invoice.id}: ${error.message}`
+                )
+            }
+
+            // Actualizamos el crédito en memoria.
+            credit.amount -= amountToApply
+
+            // Actualizamos lo que queda de la factura.
+            invoiceRemaining -= amountToApply
+
+            // Si este crédito se agotó, pasamos al siguiente.
+            if (credit.amount <= 0) {
+                creditIndex++
+            }
+        }
+    }
+}
+
+
 
 export async function createPayload(data: UploadPayload, projectId: string) {
     // Validación
@@ -55,7 +212,31 @@ export async function createPayload(data: UploadPayload, projectId: string) {
     if (!data.currency?.value) throw new Error('Currency requerido')
     if (!data.file) throw new Error('Archivo PDF requerido')
 
+    if (!data.amount?.value || data.amount.value <= 0) {
+        throw new Error('Amount debe ser mayor a 0')
+    }
+
     const supabase = await createServerClient();
+
+    // Obtener proyecto ANTES de hacer cualquier operación
+    const { data: project, error: projectError } = await supabase
+        .from('projects')
+        .select('id, name, currency')
+        .eq('id', projectId)
+        .single()
+
+    if (projectError || !project) {
+        throw new Error('Proyecto no encontrado')
+    }
+
+    const paymentCurrency = data.currency.value.toUpperCase()
+    const projectCurrency = project.currency.toUpperCase()
+    
+    if (paymentCurrency !== projectCurrency) {
+        throw new Error(
+            `La moneda del pago (${paymentCurrency}) no coincide con la moneda del proyecto (${projectCurrency})`
+        )
+    }
 
     // Upload PDF
     const arrayBuffer = await data.file.arrayBuffer()
@@ -95,49 +276,15 @@ export async function createPayload(data: UploadPayload, projectId: string) {
 
     const { data: invoicesToPay, error: invoicesError } = await supabase
         .from('invoice_summary')
-        .select('*')
+        .select('id, outstanding_amount')
         .in('id', data.invoicesToPay.map(inv => inv.id))
         .gt('outstanding_amount', 0)
         .order('created_at', { ascending: true });
 
     if (invoicesError) throw new Error(`Error al obtener facturas: ${invoicesError.message}`)
 
-    let totalPayed = data.amount.value;
-
-    for (const invoice of invoicesToPay) {
-        if (totalPayed <= 0) break;
-
-        // outstanding_amount viene de invoice_summary como GREATEST(..., 0) + COALESCE,
-        // por lo que en runtime siempre es un número — Postgres solo no puede
-        // garantizarlo a nivel de tipos porque es una columna calculada de una view.
-        if (invoice.outstanding_amount == null) {
-            console.error(`invoice_summary devolvió outstanding_amount null para ${invoice.id}, se omite`);
-            continue;
-        }
-
-        const amountToPay = Math.min(invoice.outstanding_amount, totalPayed);
-
-        const { error: paymentInvoiceError } = await supabase
-            .from('payment_invoices')
-            .insert({
-                payment_id: payment.id,
-                invoice_id: invoice.id!,
-                amount_applied: amountToPay,
-                amount_applied_usd: amountToPay * exchangeRate, // revisá la dirección
-            })
-
-        if (paymentInvoiceError) {
-            console.error(`Error al relacionar pago con factura: ${paymentInvoiceError.message}`)
-        }
-
-        totalPayed -= amountToPay;
-    }
-
-    const { data: project } = await supabase
-        .from('projects')
-        .select('name')
-        .eq('id', projectId)
-        .single()
+    const unpaidInvoices = await payInvoicesWithPayment(payment.id, invoicesToPay as UnpaidInvoice[], data.amount.value, exchangeRate, supabase)
+    await payInvoicesWithProjectCredits(project.id, payment.id, unpaidInvoices, exchangeRate, supabase)
 
     // Enviar notificación de nuevo pago
     const result = await notificationService.send(

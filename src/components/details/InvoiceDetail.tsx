@@ -20,6 +20,7 @@ import ElementAssociated from "./ElementAssociated";
 interface PaymentRelation {
     payment_id: string;
     amount_applied: number;
+    credit_amount_applied: number;
     payments: {
         payment_number: string;
         status: string;
@@ -27,6 +28,8 @@ interface PaymentRelation {
         created_at: string;
     }
 }
+
+
 const InvoiceDetail = ({ invoice, pdfWidth, pdfHeight }: { invoice: InvoiceSummary, pdfWidth: string, pdfHeight: string }) => {
     const t = useTranslations('invoices.detail');
 
@@ -35,28 +38,73 @@ const InvoiceDetail = ({ invoice, pdfWidth, pdfHeight }: { invoice: InvoiceSumma
 
     useEffect(() => {
         const fetchPaymentsRelation = async () => {
-            const { data, error } = await supabase.from('payment_invoices')
-                .select(`
-                    payment_id,
-                    amount_applied,
-                    payments (
-                        payment_number,
-                        status,
-                        currency,
-                        created_at
-                    )
-                `)
-                .eq('invoice_id', invoice.id);
-
-            if (error) {
-                console.error("Error fetching payments relation:", error);
-            } else {
-                setPaymentsRelation(data as unknown as PaymentRelation[]);
+            const [paymentsResult, creditApplicationsResult] =
+                await Promise.all([
+                    supabase
+                        .from('payment_invoices')
+                        .select(`
+                            payment_id,
+                            amount_applied,
+                            payments (
+                                payment_number,
+                                status,
+                                currency,
+                                created_at
+                            )
+                        `)
+                        .eq('invoice_id', invoice.id),
+    
+                    supabase
+                        .from('credit_applications')
+                        .select(`
+                            payment_id,
+                            amount_applied
+                        `)
+                        .eq('invoice_id', invoice.id)
+                ]);
+    
+            if (paymentsResult.error) {
+                console.error(
+                    "Error fetching payments relation:",
+                    paymentsResult.error
+                );
+                return;
             }
-        }
-
+    
+            if (creditApplicationsResult.error) {
+                console.error(
+                    "Error fetching credit applications:",
+                    creditApplicationsResult.error
+                );
+                return;
+            }
+    
+            const creditByPayment = new Map<string, number>();
+    
+            for (const application of creditApplicationsResult.data ?? []) {
+                const current =
+                    creditByPayment.get(application.payment_id) ?? 0;
+    
+                creditByPayment.set(
+                    application.payment_id,
+                    current + Number(application.amount_applied)
+                );
+            }
+    
+            const relations = (paymentsResult.data ?? []).map((relation) => ({
+                ...relation,
+                credit_amount_applied:
+                    creditByPayment.get(relation.payment_id) ?? 0,
+            }));
+    
+            setPaymentsRelation(
+                relations as unknown as PaymentRelation[]
+            );
+        };
+    
         fetchPaymentsRelation();
     }, [invoice.id]);
+    
 
     return (
         <div style={{ display: 'flex', flex: "1", minHeight: 0 }}>
@@ -82,7 +130,7 @@ const InvoiceDetail = ({ invoice, pdfWidth, pdfHeight }: { invoice: InvoiceSumma
                     <p style={{ fontSize: '0.875rem', color: 'var(--Text-text-tertiary)' }}>{invoice.notes || ""}</p>
                 </InfoSection>
 
-                <InfoSection title={t("element_associated.title").toUpperCase()} useBorder={false} >
+                <InfoSection title={t("element_associated.title").toUpperCase()} useBorder={false} styles={{overflow: "auto"}}>
                     {
                         paymentsRelation.map((relation) => (
                             <ElementAssociated
@@ -91,6 +139,10 @@ const InvoiceDetail = ({ invoice, pdfWidth, pdfHeight }: { invoice: InvoiceSumma
                                 status={relation.payments.status}
                                 moneyText={t('element_associated.moneyApplied', {
                                     amount: relation.amount_applied,
+                                    currency: invoice.currency,
+                                })}
+                                creditText={t('element_associated.creditApplied', {
+                                    amount: relation.credit_amount_applied,
                                     currency: invoice.currency,
                                 })}
                                 date={relation.payments.created_at}

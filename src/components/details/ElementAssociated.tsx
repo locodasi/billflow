@@ -13,11 +13,12 @@ interface ElementAssociatedProps {
     title: string;
     status: string;
     moneyText: string;
+    creditText: string;
     date: string;
     type?: "invoices" | "payments";
 }
 
-const ElementAssociated = ({ url, title, status, moneyText, date, type = "invoices" }: ElementAssociatedProps) => {
+const ElementAssociated = ({ url, title, status, moneyText, creditText, date, type = "invoices" }: ElementAssociatedProps) => {
 
     const {parseDateToLocaleFormat} = useFormattedDate();
 
@@ -34,6 +35,7 @@ const ElementAssociated = ({ url, title, status, moneyText, date, type = "invoic
             <div style={{display: "flex", flexDirection: "column"}}>
                 <Title>{title}</Title>
                 <MoneyText>{moneyText}</MoneyText>
+                <MoneyText>{creditText}</MoneyText>
                 <DateText>{t('issuedOn', { date: parseDateToLocaleFormat(date) })}</DateText>
             </div>
 

@@ -71,6 +71,65 @@ export type Database = {
           },
         ]
       }
+      credit_applications: {
+        Row: {
+          amount_applied: number
+          amount_applied_usd: number
+          created_at: string
+          credit_id: number
+          id: number
+          invoice_id: string
+          payment_id: string | null
+        }
+        Insert: {
+          amount_applied: number
+          amount_applied_usd: number
+          created_at?: string
+          credit_id: number
+          id?: never
+          invoice_id: string
+          payment_id?: string | null
+        }
+        Update: {
+          amount_applied?: number
+          amount_applied_usd?: number
+          created_at?: string
+          credit_id?: number
+          id?: never
+          invoice_id?: string
+          payment_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "credit_applications_credit_id_fkey"
+            columns: ["credit_id"]
+            isOneToOne: false
+            referencedRelation: "project_credits"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "credit_applications_invoice_id_fkey"
+            columns: ["invoice_id"]
+            isOneToOne: false
+            referencedRelation: "invoice_summary"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "credit_applications_invoice_id_fkey"
+            columns: ["invoice_id"]
+            isOneToOne: false
+            referencedRelation: "invoices"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "credit_applications_payment_id_fkey"
+            columns: ["payment_id"]
+            isOneToOne: false
+            referencedRelation: "payments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       invoices: {
         Row: {
           amount: number
@@ -267,6 +326,35 @@ export type Database = {
         }
         Relationships: []
       }
+      project_credits: {
+        Row: {
+          amount: number
+          created_at: string
+          id: number
+          payment_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          id?: never
+          payment_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          id?: never
+          payment_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "project_credits_payment_id_fkey"
+            columns: ["payment_id"]
+            isOneToOne: false
+            referencedRelation: "payments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       projects: {
         Row: {
           bill_address: string | null
@@ -328,6 +416,8 @@ export type Database = {
           amount_usd: number | null
           computed_status: string | null
           created_at: string | null
+          credit_paid_amount: number | null
+          credit_pending_amount: number | null
           currency: string | null
           due_date: string | null
           exchange_rate_to_usd: number | null
@@ -406,6 +496,40 @@ export type Database = {
           total_invoices: number
         }[]
       }
+      get_credit_metrics: {
+        Args: {
+          p_end: string
+          p_project_id: string
+          p_start: string
+          p_value_type?: string
+        }
+        Returns: {
+          applied: number
+          created_at: string
+          credit_id: number
+          generated: number
+        }[]
+      }
+      get_global_cards_metrics: {
+        Args: {
+          p_end: string
+          p_prev_end: string
+          p_prev_start: string
+          p_start: string
+        }
+        Returns: {
+          invoiced: number
+          payed: number
+          prev_invoiced: number
+          prev_payed: number
+          prev_total_invoices: number
+          total_invoices: number
+        }[]
+      }
+      get_global_charts_metrics: {
+        Args: { p_end: string; p_granularity: string; p_start: string }
+        Returns: Json
+      }
       get_project_charts_metrics: {
         Args: {
           p_end: string
@@ -417,10 +541,8 @@ export type Database = {
           bucket: string
           invoiced: number
           invoiced_cumulative: number
-          outstanding: number
           paid: number
           paid_cumulative: number
-          pending: number
         }[]
       }
       get_user_role: { Args: { user_id: string }; Returns: string }
@@ -447,12 +569,12 @@ export type Tables<
   DefaultSchemaTableNameOrOptions extends
     | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
     | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
         DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
-    : never = never,
+    : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -476,11 +598,11 @@ export type TablesInsert<
   DefaultSchemaTableNameOrOptions extends
     | keyof DefaultSchema["Tables"]
     | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
-    : never = never,
+    : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -501,11 +623,11 @@ export type TablesUpdate<
   DefaultSchemaTableNameOrOptions extends
     | keyof DefaultSchema["Tables"]
     | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
-    : never = never,
+    : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -526,11 +648,11 @@ export type Enums<
   DefaultSchemaEnumNameOrOptions extends
     | keyof DefaultSchema["Enums"]
     | { schema: keyof DatabaseWithoutInternals },
-  EnumName extends DefaultSchemaEnumNameOrOptions extends {
+  EnumName extends (DefaultSchemaEnumNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
-    : never = never,
+    : never) = never,
 > = DefaultSchemaEnumNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -543,11 +665,11 @@ export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
     | keyof DefaultSchema["CompositeTypes"]
     | { schema: keyof DatabaseWithoutInternals },
-  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
+  CompositeTypeName extends (PublicCompositeTypeNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
-    : never = never,
+    : never) = never,
 > = PublicCompositeTypeNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }

@@ -3,7 +3,6 @@ import { Locale } from "next-intl";
 
 import { createServerClient } from "@/lib/supabase.server";
 import { getPeriodRange, type Period } from "@/lib/period";
-import { getCurrentProjectId } from "@/lib/project-cookies";
 import { getUserLocale } from "@/lib/locale";
 
 const roundToTwo = (value: number) => Number(value.toFixed(2));
@@ -12,21 +11,11 @@ export async function getCardsValue(period: Period, offset: number = 0) {
     const { startUtc, endUtc } = getPeriodRange(period, offset);
     const { startUtc: prevStartUtc, endUtc: prevEndUtc } = getPeriodRange(period, offset + 1);
 
-    console.log(startUtc, endUtc)
-
     const supabase = await createServerClient();
-    const projectId = await getCurrentProjectId();
 
-    if (!projectId) {
-        return {
-            invoiced: 0, payed: 0, totalInvoices: 0, averagePerMonth: 0,
-            prevInvoiced: 0, prevPayed: 0, prevTotalInvoices: 0
-        };
-    }
 
     const { data, error } = await supabase
-        .rpc("get_cards_metrics", {
-            p_project_id: projectId,
+        .rpc("get_global_cards_metrics", {
             p_start: startUtc,
             p_end: endUtc,
             p_prev_start: prevStartUtc,
@@ -45,8 +34,8 @@ export async function getCardsValue(period: Period, offset: number = 0) {
     const averagePerMonth = period === "month" ? invoiced : invoiced / (period === "quarter" ? 3 : 12);
 
     return {
-        invoiced,
-        payed,
+        invoiced: roundToTwo(invoiced),
+        payed: roundToTwo(payed),
         totalInvoices,
         averagePerMonth: roundToTwo(averagePerMonth),
         prevInvoiced,
@@ -62,27 +51,33 @@ function formatBucketLabel(bucketIso: string, granularity: "week" | "month", loc
         : date.toLocaleDateString(locale, { month: "short", timeZone: "UTC" });
 }
 
-export type InvoiceMetricBucket = {
-    bucket: string;
-    invoiced: number;
-    paid: number;
-    invoiced_cumulative: number;
-    paid_cumulative: number;
+
+type ChartsMetrics = {
+    by_client: {
+        client_id: string;
+        client_name: string;
+        invoiced: number;
+        paid: number;
+    }[];
+    timeline: {
+        bucket: string;
+        invoiced: number;
+        paid: number;
+        invoiced_cumulative: number;
+        paid_cumulative: number;
+    }[];
 };
+
 
 export async function getChartsValue(period: Period, offset: number = 0) {
     const { startUtc, endUtc, granularity } = getPeriodRange(period, offset);
 
     console.log(startUtc, endUtc, granularity);
     const supabase = await createServerClient();
-    const projectId = await getCurrentProjectId();
     const locale = await getUserLocale();
 
-    if (!projectId) return { barData: [], lineData: [] };
-
     const { data, error } = await supabase
-        .rpc("get_project_charts_metrics", {
-            p_project_id: projectId,
+        .rpc("get_global_charts_metrics", {
             p_start: startUtc,
             p_end: endUtc,
             p_granularity: granularity,
@@ -90,16 +85,25 @@ export async function getChartsValue(period: Period, offset: number = 0) {
 
     if (error) throw new Error(`Error al obtener KPIs: ${error.message}`);
 
-    const barData = data.map((row) => ({
-        month: formatBucketLabel(row.bucket, granularity, locale),
-        paid: row.paid,
-        invoiced: row.invoiced,
+    const metrics = data as unknown as ChartsMetrics;
+    const barData = (metrics?.by_client ?? []).map((row) => ({
+        clientId: row.client_id,
+        clientName: row.client_name,
+        invoiced: roundToTwo(Number(row.invoiced)),
+        paid: roundToTwo(Number(row.paid)),
     }));
+    
 
-    const lineData = data.map((row) => ({
-        month: formatBucketLabel(row.bucket, granularity, locale),
-        invoiced: row.invoiced_cumulative,
-        paid: row.paid_cumulative,
+    const timeline = metrics?.timeline ?? [];
+
+    const lineData = timeline.map((row) => ({
+        month: formatBucketLabel(
+            row.bucket,
+            granularity,
+            locale
+        ),
+        invoiced: roundToTwo(Number(row.invoiced_cumulative)),
+        paid: roundToTwo(Number(row.paid_cumulative)),
     }));
 
     return { barData, lineData };

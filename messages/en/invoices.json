@@ -66,6 +66,7 @@
       "title": "Associated Payments",
       "no_payments": "No payments associated with this invoice",
       "moneyApplied": "{amount} {currency} applied",
+      "creditApplied": "{amount} {currency} in credits applied",
       "issuedOn": "Issued {date}"
     }
   } 

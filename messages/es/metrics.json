@@ -1,5 +1,6 @@
 {
     "header": "Métricas",
+    "global_header":"Métricas globales",
     "temporal_chips": {
         "month": "Mes",
         "quarter": "Trimestre",
@@ -34,14 +35,21 @@
         "invoices_per_state": {
             "title": "Estado de cobro por mes",
             "paid": "Pagadas",
-            "pending": "Pendientes",
+            "invoiced": "Facturado",
+            "total": "Total"
+        },
+        "invoices_per_client": {
+            "title": "Estado de cobro por cliente",
+            "paid": "Pagadas",
+            "invoiced": "Facturado",
             "total": "Total"
         },
         "invoices_vs_payments": {
             "title": "Facturado vs. pagado (acumulado)",
             "invoiced": "Facturado",
             "payment": "Pagado",
-            "outstanding": "Adeudado"
+            "outstanding": "Adeudado",
+            "credit_available": "Creditos disponibles"
         },
         "time_of_pay": {
             "title": "Tiempo de pago",

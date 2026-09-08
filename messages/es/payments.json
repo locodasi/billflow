@@ -47,6 +47,7 @@
       "total": "Total",
       "owe": "Debe",
       "distribution_note": "El monto se distribuirá automáticamente de la factura más vieja a la más nueva.",
+      "available_credits": "Saldo a favor",
       "payment_amount": "Monto del recibo",
       "invoices-selected": "Facturas seleccionadas",
       "difference": "Diferencia"
@@ -71,11 +72,18 @@
       "title": "Notas",
       "no_notes": "No hay notas para este recibo"
     },
-    "element_associated": {
-      "title": "Facturas asociadas",
-      "no_invoices": "No hay facturas asociadas a este recibo",
-      "moneyApplied": "{amount} {currency} aplicado",
-      "issuedOn": "Emitida {date}"
+    "aplication": {
+      "title": "Aplicación del pago",
+      "element_associated": {
+        "title": "Facturas asociadas",
+        "no_invoices": "No hay facturas asociadas a este recibo",
+        "moneyApplied": "{amount} {currency} aplicado",
+        "creditApplied": "{amount} {currency} de creditos aplicados",
+        "issuedOn": "Emitida {date}"
+      },
+      "credits_genereated": {
+        "title": "Saldo a favor generado"
+      }
     }
   } 
 }

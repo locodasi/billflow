@@ -119,7 +119,7 @@ const Invoices = () => {
                 </div>
             </HeaderWrapper>
 
-            <div style={{ padding: '1rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            <div style={{ padding: '1rem', display: 'flex', flexDirection: 'column', gap: '1rem', overflow:"auto" }}>
                 <Filters filters={filters} setFilters={setFilters} count={totalCount} />
 
                 <div style={{
