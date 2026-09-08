@@ -37,7 +37,7 @@ function CustomTooltip({ active, payload, label }: { active?: boolean; payload?:
     );
 }
 
-function InvoicesPerState({ data }: { data: { month: string; paid: number; owed: number }[] }) {
+function InvoicesPerState({ data }: { data: { month: string; paid: number; invoiced: number }[] }) {
     const t = useTranslations("metrics.diagrams.invoices_per_state");
 
     return (

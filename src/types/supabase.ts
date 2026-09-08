@@ -496,6 +496,20 @@ export type Database = {
           total_invoices: number
         }[]
       }
+      get_credit_metrics: {
+        Args: {
+          p_end: string
+          p_project_id: string
+          p_start: string
+          p_value_type?: string
+        }
+        Returns: {
+          applied: number
+          created_at: string
+          credit_id: number
+          generated: number
+        }[]
+      }
       get_global_cards_metrics: {
         Args: {
           p_end: string
@@ -527,10 +541,8 @@ export type Database = {
           bucket: string
           invoiced: number
           invoiced_cumulative: number
-          outstanding: number
           paid: number
           paid_cumulative: number
-          pending: number
         }[]
       }
       get_user_role: { Args: { user_id: string }; Returns: string }
