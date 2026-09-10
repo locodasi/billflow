@@ -6,7 +6,7 @@ import { useState } from "react";
 
 import { useRouter } from "next/navigation";
 
-import {useTranslations} from "next-intl";
+import { useTranslations } from "next-intl";
 
 import { useUserStore } from "@/stores/userStore";
 
@@ -32,12 +32,27 @@ const Sidenav = () => {
 
     return (
         <Wrapper $isExpanded={isExpanded}>
-            <div style={{ display: "flex", alignItems: "center", justifyContent: isExpanded ? "space-between" : "center" }}>
-                {isExpanded && <SelectProject />}
-                <Icon icon={isExpanded ? "sidebar-collapse" : "sidebar-expand"} size={24} iconColor="var(--Icons-icon-400)" grab onClick={() => setIsExpanded(prev => !prev)} />
-            </div>
+            {
+                isExpanded ? (
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                        <SelectProject isExpanded={isExpanded} />
+                        <Icon icon={isExpanded ? "sidebar-collapse" : "sidebar-expand"} size={24} iconColor="var(--Icons-icon-400)" grab onClick={() => setIsExpanded(prev => !prev)} />
+                    </div>
+                ) : (
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column" }}>
+                        <Icon icon={isExpanded ? "sidebar-collapse" : "sidebar-expand"} size={24} iconColor="var(--Icons-icon-400)" grab onClick={() => setIsExpanded(prev => !prev)} />
+                    </div>
+                )
+            }
 
             <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+                {
+                    !isExpanded && (
+                        <>
+                            <SelectProject isExpanded={isExpanded} />
+                        </>
+                    )
+                }
                 <SidenavButton isExpanded={isExpanded} text={t("invoices")} icon="page" onClick={() => goTo("/invoices")} />
                 <SidenavButton isExpanded={isExpanded} text={t("payments")} icon="journal" onClick={() => goTo("/payments")} />
                 {role === "admin" && <SidenavButton isExpanded={isExpanded} text={t("clients")} icon="user" onClick={() => goTo("/clients")} />}

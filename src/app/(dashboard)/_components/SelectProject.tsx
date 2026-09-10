@@ -1,22 +1,40 @@
 import styled from "styled-components";
 
+import { useTranslations } from "next-intl";
+
+import { useState } from "react";
+
 import { useProjectsStore } from "@/stores/projectStore";
 
-import { ClickTooltip } from "@/components/Tooltip";
 import Icon from "@/components/icons/Icon";
 
-const SelectProject = () => {
+import SidenavButton from "./SidenavButton";
+
+const SelectProject = ({ isExpanded }: { isExpanded: boolean }) => {
     const project = useProjectsStore(state => state.project);
+    const t = useTranslations("sidenav")
+
+    const [showModal, setShowModal] = useState(false)
+
+    const open = () => setShowModal(true)
+    const close = () => setShowModal(false)
+
+    if (!isExpanded) {
+        return (
+            <>
+                <SidenavButton isExpanded={false} text={t("projects")} icon="folder" onClick={open} />
+                {showModal && <Projects close={close} />}
+            </>
+        )
+    }
 
     return (
         <div style={{ width: "100%" }}>
-            <ClickTooltip content={close => <Projects close={close} />} theme="transparent" position="right">
-                <ProjectWrapper>
-                    <ProjectTitle>{project ? project.name : "No project selected"}</ProjectTitle>
+            <ProjectWrapper onClick={open}>
+                <ProjectTitle>{project ? project.name : "No project selected"}</ProjectTitle>
+            </ProjectWrapper>
 
-                    <Icon icon="nav-arrow-down" size={16} iconColor="var(--Icons-icon-700)" />
-                </ProjectWrapper>
-            </ClickTooltip>
+            {showModal && <Projects close={close} />}
         </div>
     )
 }
@@ -47,28 +65,49 @@ const ProjectTitle = styled.h2`
     white-space: nowrap;
 `;
 
+import Modal from "@/components/modals/Modal";
+
 const Projects = ({ close }: { close: () => void }) => {
     const projects = useProjectsStore(state => state.projects);
     const project = useProjectsStore(state => state.project);
     const setProject = useProjectsStore(state => state.setProject);
 
+    const t = useTranslations("sidenav")
     const handleClose = (projectId: string) => {
         setProject(projects.find(p => p.id === projectId)!);
         close();
     }
 
     return (
-        <ProjectsWrapper>
-            {projects.filter(p => p.id !== project?.id).map(p => (
-                <ProjectWrapperElement key={p.id}>
-                    <ProjectTitle onClick={() => handleClose(p.id)}>
-                        {p.name}
-                    </ProjectTitle>
-                </ProjectWrapperElement>
-            ))}
-        </ProjectsWrapper>
+        <Modal onClose={close} zIndex={1000}>
+            <ModalWrapper>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                    <p style={{ fontSize: "1rem", color: "var(--Text-text-primary)" }}>{t("select_project")}</p>
+                    <Icon icon="cancel" onClick={close} size={20} />
+                </div>
+                <ProjectsWrapper>
+                    {projects.filter(p => p.id !== project?.id).map(p => (
+                        <ProjectWrapperElement key={p.id}>
+                            <ProjectTitle onClick={() => handleClose(p.id)}>
+                                {p.name}
+                            </ProjectTitle>
+                        </ProjectWrapperElement>
+                    ))}
+                </ProjectsWrapper>
+            </ModalWrapper>
+        </Modal>
     )
 }
+
+const ModalWrapper = styled.div`
+    padding: 2rem;
+    min-width: 50%;
+    border-radius: 0.5rem;
+    background: var(--Background-Colors-bg-primary);
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+`;
 
 const ProjectsWrapper = styled.div`
     padding: 0.5rem;
@@ -76,8 +115,8 @@ const ProjectsWrapper = styled.div`
     flex-direction: column;
     gap: 0.25rem;
     background-color: var(--Background-Colors-bg-primary);
-    border: 1px solid var(--Border-Colors-border-secondary);
     border-radius: 0.5rem;
+    overflow: auto;
 `;
 
 const ProjectWrapperElement = styled.div`
