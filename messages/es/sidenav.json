@@ -4,5 +4,7 @@
     "clients": "Clientes",
     "metrics": "Métricas",
     "settings": "Configuración",
-    "global_metrics": "Métricas Globales"
+    "global_metrics": "Métricas Globales",
+    "projects": "Proyectos",
+    "select_project": "Selecciona un proyecto"
 }

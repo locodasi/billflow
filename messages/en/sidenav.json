@@ -4,5 +4,7 @@
     "clients": "Clients",
     "metrics": "Metrics",
     "settings": "Settings",
-    "global_metrics": "Global Metrics"
+    "global_metrics": "Global Metrics",
+    "projects": "Projects",
+    "select_project": "Select a project"
 }
