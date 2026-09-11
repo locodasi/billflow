@@ -29,7 +29,7 @@ const InvoiceView = ({ invoice }: { invoice: InvoiceSummary }) => {
             </HeaderWrapper>
 
             <Wrapper>
-                <InvoiceDetail invoice={invoice} pdfHeight="100%" pdfWidth="80%"/>
+                <InvoiceDetail invoice={invoice}/>
             </Wrapper>
         </>
     )

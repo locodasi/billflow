@@ -16,6 +16,7 @@ import PDF from "./PDF"
 import InfoSection, { TwoRowData } from "./InfoSection"
 import ProgressBar from "../ProgressBar";
 import ElementAssociated from "./ElementAssociated";
+import { DesktopComponent } from "../DiscoverVersions";
 
 interface PaymentRelation {
     payment_id: string;
@@ -30,7 +31,7 @@ interface PaymentRelation {
 }
 
 
-const InvoiceDetail = ({ invoice, pdfWidth, pdfHeight }: { invoice: InvoiceSummary, pdfWidth: string, pdfHeight: string }) => {
+const InvoiceDetail = ({ invoice }: { invoice: InvoiceSummary }) => {
     const t = useTranslations('invoices.detail');
 
     const [paymentsRelation, setPaymentsRelation] = useState<PaymentRelation[]>([]);
@@ -53,7 +54,7 @@ const InvoiceDetail = ({ invoice, pdfWidth, pdfHeight }: { invoice: InvoiceSumma
                             )
                         `)
                         .eq('invoice_id', invoice.id),
-    
+
                     supabase
                         .from('credit_applications')
                         .select(`
@@ -62,7 +63,7 @@ const InvoiceDetail = ({ invoice, pdfWidth, pdfHeight }: { invoice: InvoiceSumma
                         `)
                         .eq('invoice_id', invoice.id)
                 ]);
-    
+
             if (paymentsResult.error) {
                 console.error(
                     "Error fetching payments relation:",
@@ -70,7 +71,7 @@ const InvoiceDetail = ({ invoice, pdfWidth, pdfHeight }: { invoice: InvoiceSumma
                 );
                 return;
             }
-    
+
             if (creditApplicationsResult.error) {
                 console.error(
                     "Error fetching credit applications:",
@@ -78,39 +79,41 @@ const InvoiceDetail = ({ invoice, pdfWidth, pdfHeight }: { invoice: InvoiceSumma
                 );
                 return;
             }
-    
+
             const creditByPayment = new Map<string, number>();
-    
+
             for (const application of creditApplicationsResult.data ?? []) {
                 const current =
                     creditByPayment.get(application.payment_id) ?? 0;
-    
+
                 creditByPayment.set(
                     application.payment_id,
                     current + Number(application.amount_applied)
                 );
             }
-    
+
             const relations = (paymentsResult.data ?? []).map((relation) => ({
                 ...relation,
                 credit_amount_applied:
                     creditByPayment.get(relation.payment_id) ?? 0,
             }));
-    
+
             setPaymentsRelation(
                 relations as unknown as PaymentRelation[]
             );
         };
-    
+
         fetchPaymentsRelation();
     }, [invoice.id]);
-    
+
 
     return (
-        <div style={{ display: 'flex', flex: "1", minHeight: 0 }}>
-            <PDF path={invoice.pdf_path} width={pdfWidth} height={pdfHeight} />
+        <Wrapper>
+            <DesktopComponent style={{ height: "100%", width: "80%" }}>
+                <PDF path={invoice.pdf_path} />
+            </DesktopComponent>
 
-            <div style={{ display: 'flex', flexDirection: 'column', width: '50%', minHeight: 0 }}>
+            <InfoWrapper>
                 <InfoSection title={t('resume.title').toUpperCase()}>
                     <TwoRowData leftText={t('resume.total')} rightText={`${invoice.amount} ${invoice.currency}`} />
                     <TwoRowData leftText={t('resume.paid')} rightText={`${invoice.paid_amount} ${invoice.currency}`} rightTextColor="var(--Success-600)" />
@@ -130,7 +133,7 @@ const InvoiceDetail = ({ invoice, pdfWidth, pdfHeight }: { invoice: InvoiceSumma
                     <p style={{ fontSize: '0.875rem', color: 'var(--Text-text-tertiary)' }}>{invoice.notes || ""}</p>
                 </InfoSection>
 
-                <InfoSection title={t("element_associated.title").toUpperCase()} useBorder={false} styles={{overflow: "auto"}}>
+                <InfoSection title={t("element_associated.title").toUpperCase()} useBorder={false} styles={{ overflow: "auto" }}>
                     {
                         paymentsRelation.map((relation) => (
                             <ElementAssociated
@@ -151,8 +154,8 @@ const InvoiceDetail = ({ invoice, pdfWidth, pdfHeight }: { invoice: InvoiceSumma
                         ))
                     }
                 </InfoSection>
-            </div>
-        </div>
+            </InfoWrapper>
+        </Wrapper>
     )
 }
 
@@ -163,4 +166,29 @@ const PercentText = styled.span`
     color: var(--Text-text-tertiary);
     font-weight: 400;
     align-self: flex-end;
+`;
+
+const Wrapper = styled.div`
+    display: flex;
+    flex: 1;
+    min-height: 0;
+    width: 100%;
+
+    @media (max-width: 768px) {
+        flex-direction: column;
+        overflow: auto;
+    }
+`;
+
+const InfoWrapper = styled.div`
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    min-height: 0;
+
+    @media (max-width: 768px) {
+        order: 1;
+        width: 100%;
+        flex-shrink: 0;
+    }
 `;
