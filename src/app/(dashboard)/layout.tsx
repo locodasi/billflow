@@ -1,3 +1,5 @@
+import styled from "styled-components";
+
 import { redirect } from "next/navigation";
 import { createServerClient } from "@/lib/supabase.server";
 
@@ -5,6 +7,7 @@ import { StoreHydrator } from "./_components/StoreHydrator";
 import { AuthListener } from "./_components/AuthListener";
 import Sidenav from "./_components/Sidenav";
 import { UserSettingsInput } from "@/stores/userStore";
+import MobileHeader from "./_components/MobileHeader";
 
 export default async function DashboardLayout({
     children,
@@ -36,13 +39,24 @@ export default async function DashboardLayout({
         : null;
 
     return (
-        <div style={{ display: "flex", height: "100vh" }}>
+        <DashboardContainer>
             <StoreHydrator session={session} profile={normalizedProfile} projects={projects ?? []} />
             <AuthListener />
             <Sidenav />
+            <MobileHeader />
             <main style={{ display: "flex", flexDirection: "column", height: "100%", width: "100%", backgroundColor: "var(--Background-Colors-bg-primary)" }}>
                 {children}
             </main>
-        </div>
+        </DashboardContainer>
     );
 }
+
+const DashboardContainer = styled.div`
+    display: flex;
+    flex-direction: row;
+    height: 100vh;
+
+    @media (max-width: 768px) {
+        flex-direction: column;
+    }
+`;

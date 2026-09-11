@@ -78,5 +78,9 @@ const Wrapper = styled.div<{ $isExpanded: boolean }>`
     border: 1px solid var(--Border-Colors-border-secondary);
     transition: width 0.7s ease;
     gap: 1rem;
+
+    @media (max-width: 768px) {
+        display: none;
+    }
 `;
 
