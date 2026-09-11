@@ -44,9 +44,9 @@ export default async function DashboardLayout({
             <AuthListener />
             <Sidenav />
             <MobileHeader />
-            <main style={{ display: "flex", flexDirection: "column", height: "100%", width: "100%", backgroundColor: "var(--Background-Colors-bg-primary)" }}>
+            <Main>
                 {children}
-            </main>
+            </Main>
         </DashboardContainer>
     );
 }
@@ -59,4 +59,16 @@ const DashboardContainer = styled.div`
     @media (max-width: 768px) {
         flex-direction: column;
     }
+`;
+
+const Main = styled.main`
+    display: flex;
+    flex-direction: column;
+
+    width: 100%;
+    height: 100%;
+    min-width: 0;
+    min-height: 0;
+
+    background-color: var(--Background-Colors-bg-primary);
 `;

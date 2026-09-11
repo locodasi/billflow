@@ -51,7 +51,7 @@ const ClientView = ({ client, projects }: { client: Client, projects: Project[] 
 
     return (
         <>
-            <Header title={t("header")} showButton={false} />
+            <Header title={t("header")} />
 
             <Wrapper>
                 <Path>

@@ -8,7 +8,10 @@ import Card, { TwoRowData } from "@/components/card/Card"
 import { getDeltaDisplay } from "@/lib/period";
 import Icon from "@/components/icons/Icon";
 
-const FILL_ROW_CARD_STYLES: React.CSSProperties = { flex: 1, minWidth: 0 };
+const FILL_ROW_CARD_STYLES: React.CSSProperties = {
+    flex: "1 1 200px",
+    minWidth: 0,
+};
 
 const ClientCards = ({ invoiced, payed, totalInvoices, averagePerMonth, prevInvoiced, prevPayed, prevTotalInvoices }: { invoiced: number, payed: number, totalInvoices: number, averagePerMonth: number, prevInvoiced: number, prevPayed: number, prevTotalInvoices: number }) => {
 
@@ -17,7 +20,7 @@ const ClientCards = ({ invoiced, payed, totalInvoices, averagePerMonth, prevInvo
     const currency = useProjectsStore(s => s.project?.currency);
 
     return (
-        <div style={{ display: 'flex', gap: '1rem', flexWrap: 'nowrap' }}>
+        <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
             <Card pointer={false} cardStyles={FILL_ROW_CARD_STYLES}>
                 <TwoRowData normalText={t('data_cards.invoiced.title')} boldText={`USD ${invoiced}`} reverse />
                 <DeltaBadge current={invoiced} previous={prevInvoiced} currency={"USD"} />

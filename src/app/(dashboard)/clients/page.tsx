@@ -2,7 +2,7 @@
 
 import styled from "styled-components";
 
-import {useTranslations} from "next-intl";
+import { useTranslations } from "next-intl";
 
 import { useState, useEffect } from "react";
 
@@ -15,6 +15,8 @@ import NewClientModal from "./_components/NewClientModal";
 import ClientCard from "./_components/ClientCard";
 
 import { Client } from "./_types/types";
+import Button from "@/components/Button";
+import IconButton from "@/components/IconButton";
 
 const ClientsPage = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -46,7 +48,19 @@ const ClientsPage = () => {
         <>
             {isModalOpen && <NewClientModal onClose={() => setIsModalOpen(false)} addClient={(client) => setClients([...clients, client])} />}
 
-            <Header title={t("header")} showButton={true} buttontext={t("new-client-button")} buttonIcon="plus" onButtonClick={() => setIsModalOpen(true)} />
+            <Header
+                title={t('header')}
+                actions={(
+                    <div style={{ display: 'flex', gap: '0.5rem' }}>
+                        <Button size="small" text={t('new-client-button')} firstIcon="plus" onClick={() => setIsModalOpen(true)} />
+                    </div>
+                )}
+                mobileActions={(
+                    <div style={{ display: 'flex', gap: '0.5rem' }}>
+                        <IconButton size="small" icon="plus" onClick={() => setIsModalOpen(true)} />
+                    </div>
+                )}
+            />
 
             <Wrapper>
                 <SearchInput onSearch={setSearch} placeholder={t("search-placeholder")} />
@@ -70,6 +84,7 @@ const Wrapper = styled.div`
     flex-direction: column;
     gap: 1rem;
     padding: 1rem;
+    overflow: auto;
 `;
 
 const ClientsContainer = styled.div`

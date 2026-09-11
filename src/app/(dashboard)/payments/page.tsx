@@ -9,6 +9,8 @@ import { supabase } from "@/lib/supabase";
 import { useProjectsStore } from "@/stores/projectStore";
 
 import Header from "@/components/Header";
+import Button from "@/components/Button";
+import IconButton from "@/components/IconButton";
 
 import NewPaymentModal from "./_components/modals/NewPaymentModal";
 
@@ -22,6 +24,7 @@ import Filters from "./_components/Filters";
 import PaymentCard from "./_components/PaymentCard";
 import PaymentDetailModal from "./_components/modals/PaymentDetailModal";
 import { updatePaymentStatus } from "./actions";
+
 
 const PaymentsPage = () => {
 
@@ -96,7 +99,20 @@ const PaymentsPage = () => {
         <>
             {isModalOpen && <NewPaymentModal onClose={() => setIsModalOpen(false)} addPayment={addPayment} />}
 
-            <Header title={`${t('payment_plural')} -- ${projectName}`} showButton={true} buttontext={t('new_payment')} buttonIcon="plus" onButtonClick={() => setIsModalOpen(true)} />
+            <Header
+                title={t('payment_plural')}
+                projectName={projectName}
+                actions={(
+                    <div style={{ display: 'flex', gap: '0.5rem' }}>
+                        <Button size="small" text={t('new_payment')} firstIcon="plus" onClick={() => setIsModalOpen(true)} />
+                    </div>
+                )}
+                mobileActions={(
+                    <div style={{ display: 'flex', gap: '0.5rem' }}>
+                        <IconButton size="small" icon="plus" onClick={() => setIsModalOpen(true)} />
+                    </div>
+                )}
+            />
 
             <div style={{ padding: '1rem', display: 'flex', flexDirection: 'column', gap: '1rem', overflow:"auto" }}>
                 <Filters filters={filters} setFilters={setFilters} count={totalCount} />

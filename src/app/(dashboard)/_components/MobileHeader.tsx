@@ -4,7 +4,6 @@ import styled from "styled-components";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-import { useProjectsStore } from "@/stores/projectStore";
 import Icon from "@/components/icons/Icon";
 import Modal, { HeaderModal, WrapperModal } from "@/components/modals/Modal";
 import SidenavButton from "./SidenavButton";
@@ -13,7 +12,6 @@ import { useUserStore } from "@/stores/userStore";
 import MobileProjectSelector from "./MobileProjectSelector";
 
 const MobileHeader = () => {
-    const project = useProjectsStore(state => state.project);
     const t = useTranslations("sidenav");
     const role = useUserStore(state => state.role);
 
@@ -87,9 +85,6 @@ const Wrapper = styled.header`
         align-items: center;
         justify-content: space-between;
 
-        position: sticky;
-        top: 0;
-        z-index: 100;
 
         height: 56px;
         width: 100%;
