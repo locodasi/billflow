@@ -26,7 +26,7 @@ const InvoiceDetailModal = ({ invoice, onClose }: { invoice: InvoiceSummary, onC
 
     return (
         <Modal onClose={onClose}>
-            <WrapperModal styles={{ padding: '0', gap: '0' }}>
+            <WrapperModal styles={{ padding: '0', gap: '0', width: "90vw", height: "90vh" }}>
                 <HeaderWrapper style={{ borderBottom: '1px solid var(--Border-Colors-border-secondary)', padding: '1rem' }}>
                     <Title text={invoice.invoice_number} status={invoice.computed_status} type="invoices" />
 
@@ -37,7 +37,7 @@ const InvoiceDetailModal = ({ invoice, onClose }: { invoice: InvoiceSummary, onC
                     </div>
                 </HeaderWrapper>
 
-                <InvoiceDetail invoice={invoice} pdfWidth="50vw" pdfHeight="80vh" />
+                <InvoiceDetail invoice={invoice} />
 
             </WrapperModal>
         </Modal>

@@ -1,12 +1,16 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+
 
 import { useTranslations } from "next-intl";
 
 import { supabase } from "@/lib/supabase";
 
 import { useProjectsStore } from "@/stores/projectStore";
+
+import { useDevice } from "@/hooks/useDevice";
 
 import Header from "@/components/Header";
 
@@ -35,7 +39,9 @@ const Invoices = () => {
     const [filters, setFilters] = useState<InvoiceFilters>({ projectId: '', page: 1 });
     const [totalCount, setTotalCount] = useState(0);
     const [selectedInvoice, setSelectedInvoice] = useState<InvoiceSummary | null>(null);
-
+    const device = useDevice();
+    const router = useRouter();
+    
     const role = useUserStore(s => s.role);
 
     const projectName = useProjectsStore(s => s.project?.name);
@@ -107,6 +113,15 @@ const Invoices = () => {
         URL.revokeObjectURL(url);
     }
 
+    const onCardClick = (invoice: InvoiceSummary) => {
+        if (device === "mobile") {
+            router.push(`invoices/${invoice.id}`);
+            return
+        }
+
+        setSelectedInvoice(invoice)
+    }
+
     return (
         <>
             {isModalOpen && <NewInvoiceModal onClose={() => setIsModalOpen(false)} addInvoice={addInvoice} />}
@@ -137,7 +152,7 @@ const Invoices = () => {
                     gap: '1rem'
                 }}>
                     {invoices.map(invoice => (
-                        <InvoiceCard key={invoice.id} invoice={invoice} onClick={() => setSelectedInvoice(invoice)} />
+                        <InvoiceCard key={invoice.id} invoice={invoice} onClick={() => onCardClick(invoice)} />
                     ))}
                 </div>
             </div>

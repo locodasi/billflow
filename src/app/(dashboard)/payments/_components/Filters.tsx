@@ -29,7 +29,7 @@ const Filters = ({ filters, setFilters, count }: { filters: PaymentFilters, setF
         setFilters(newFilters)
     }
 
-    const pages = 5//Math.ceil(count / ITEMS_PER_PAGE);
+    const pages = Math.ceil(count / ITEMS_PER_PAGE);
 
     const SELECT_OPTIONS = [
         { label: t('all'), value: 'all' },
@@ -57,61 +57,59 @@ const Filters = ({ filters, setFilters, count }: { filters: PaymentFilters, setF
                 />
             </DesktopComponent>
 
-            <div style={{ display: "flex", justifyContent: "space-between", gap: "0.25rem", alignItems: "center", width: "100%" }}>
-                <MobileComponent>
-                    <NormalSelect
-                        options={SELECT_OPTIONS}
-                        value={SELECT_OPTIONS.find(o => o.value === filters.status) || { label: t('all'), value: 'all' }}
-                        onChange={(v) => changeStatus(v.value)}
-                        width="160px"
-                    />
-                </MobileComponent>
+            <MobileComponent>
+                <NormalSelect
+                    options={SELECT_OPTIONS}
+                    value={SELECT_OPTIONS.find(o => o.value === filters.status) || { label: t('all'), value: 'all' }}
+                    onChange={(v) => changeStatus(v.value)}
+                    width="160px"
+                />
+            </MobileComponent>
 
-                <Pagination>
-                    {pages <= 5 ? (
-                        <>
-                            {[...Array(pages)].map((_, i) => (
-                                <Button
-                                    key={i}
-                                    text={(i + 1).toString()}
-                                    size="ultra-small"
-                                    onClick={() => setFilters({ ...filters, page: i + 1 })}
-                                    disabled={filters.page === i + 1}
-                                />
-                            ))}
-                        </>
-                    ) : (
-                        <>
-                            <IconButton icon={"nav-arrow-left"} onClick={() => setFilters({ ...filters, page: filters.page - 1 })} disabled={filters.page === 1} />
-
-                            {filters.page > 1 && (
-                                <Button
-                                    text={(filters.page - 1).toString()}
-                                    size="ultra-small"
-                                    onClick={() => setFilters({ ...filters, page: filters.page - 1 })}
-                                />
-                            )}
-
+            <Pagination>
+                {pages <= 5 ? (
+                    <>
+                        {[...Array(pages)].map((_, i) => (
                             <Button
-                                text={filters.page.toString()}
+                                key={i}
+                                text={(i + 1).toString()}
                                 size="ultra-small"
-                                onClick={() => setFilters({ ...filters, page: filters.page })}
-                                disabled
+                                onClick={() => setFilters({ ...filters, page: i + 1 })}
+                                disabled={filters.page === i + 1}
                             />
+                        ))}
+                    </>
+                ) : (
+                    <>
+                        <IconButton icon={"nav-arrow-left"} onClick={() => setFilters({ ...filters, page: filters.page - 1 })} disabled={filters.page === 1} />
 
-                            {filters.page < pages && (
-                                <Button
-                                    text={(filters.page + 1).toString()}
-                                    size="ultra-small"
-                                    onClick={() => setFilters({ ...filters, page: filters.page + 1 })}
-                                />
-                            )}
+                        {filters.page > 1 && (
+                            <Button
+                                text={(filters.page - 1).toString()}
+                                size="ultra-small"
+                                onClick={() => setFilters({ ...filters, page: filters.page - 1 })}
+                            />
+                        )}
 
-                            <IconButton icon={"nav-arrow-right"} onClick={() => setFilters({ ...filters, page: filters.page + 1 })} disabled={filters.page === pages} />
-                        </>
-                    )}
-                </Pagination>
-            </div>
+                        <Button
+                            text={filters.page.toString()}
+                            size="ultra-small"
+                            onClick={() => setFilters({ ...filters, page: filters.page })}
+                            disabled
+                        />
+
+                        {filters.page < pages && (
+                            <Button
+                                text={(filters.page + 1).toString()}
+                                size="ultra-small"
+                                onClick={() => setFilters({ ...filters, page: filters.page + 1 })}
+                            />
+                        )}
+
+                        <IconButton icon={"nav-arrow-right"} onClick={() => setFilters({ ...filters, page: filters.page + 1 })} disabled={filters.page === pages} />
+                    </>
+                )}
+            </Pagination>
         </Wrapper >
     )
 }
@@ -144,6 +142,6 @@ const Pagination = styled.div`
     margin-left: auto;
 
     @media (max-width: 768px) {
-        margin-left: 0;
+        margin-left: auto;
     }
 `;
