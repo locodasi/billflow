@@ -12,8 +12,9 @@ import { HeaderWrapper } from "@/components/Header";
 import Path, { RedirectPath } from "@/components/Path";
 
 import Title from "@/components/details/Title";
-import DownloadButton from "@/components/details/DownloadButton";
+import DownloadButton, {MobileActions} from "@/components/details/DownloadButton";
 import PaymentDetail from "@/components/details/PaymentDetail";
+import { DesktopComponent, MobileComponent } from "@/components/DiscoverVersions";
 
 import { updatePaymentStatus } from "../../actions";
 
@@ -34,7 +35,13 @@ const PaymentView = ({ payment }: { payment: Payment }) => {
                     <Title text={statePayment.payment_number} type="payments" status={statePayment.status} />
                 </Path>
 
-                <DownloadButton file_title={statePayment.payment_number} path={statePayment.receipt_pdf_path} />
+                <DesktopComponent>
+                    <DownloadButton file_title={statePayment.payment_number} path={statePayment.receipt_pdf_path} />
+                </DesktopComponent>
+
+                <MobileComponent>
+                    <MobileActions file_title={statePayment.payment_number} path={statePayment.receipt_pdf_path} />
+                </MobileComponent>
             </HeaderWrapper>
 
             <Wrapper>

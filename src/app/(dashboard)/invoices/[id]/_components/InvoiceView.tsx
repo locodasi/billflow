@@ -35,7 +35,7 @@ const InvoiceView = ({ invoice }: { invoice: InvoiceSummary }) => {
                     <MobileActions file_title={invoice.invoice_number} path={invoice.pdf_path} />
                 </MobileComponent>
 
-            </HeaderWrapper>
+            </HeaderWrapper> 
 
             <Wrapper>
                 <InvoiceDetail invoice={invoice} />

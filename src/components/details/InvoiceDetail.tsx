@@ -155,7 +155,7 @@ const InvoiceDetail = ({ invoice }: { invoice: InvoiceSummary }) => {
                     }
                 </InfoSection>
             </InfoWrapper>
-        </Wrapper>
+        </Wrapper> 
     )
 }
 
