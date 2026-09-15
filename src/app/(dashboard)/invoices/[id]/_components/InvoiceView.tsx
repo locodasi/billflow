@@ -6,12 +6,14 @@ import { useTranslations } from "next-intl";
 
 import { InvoiceSummary } from "@/types/Invoice";
 
-import {HeaderWrapper} from "@/components/Header";
-import Path, {RedirectPath} from "@/components/Path";
+import { HeaderWrapper } from "@/components/Header";
+import Path, { RedirectPath } from "@/components/Path";
 
 import Title from "@/components/details/Title";
-import DownloadButton from "@/components/details/DownloadButton";
+import DownloadButton, { MobileActions } from "@/components/details/DownloadButton";
 import InvoiceDetail from "@/components/details/InvoiceDetail";
+
+import { DesktopComponent, MobileComponent } from "@/components/DiscoverVersions";
 
 const InvoiceView = ({ invoice }: { invoice: InvoiceSummary }) => {
 
@@ -22,14 +24,21 @@ const InvoiceView = ({ invoice }: { invoice: InvoiceSummary }) => {
             <HeaderWrapper>
                 <Path>
                     <RedirectPath path="/invoices" label={t('invoice_plural')} />
-                    <Title text={invoice.invoice_number} status={invoice.computed_status} type="invoices"/>
+                    <Title text={invoice.invoice_number} status={invoice.computed_status} type="invoices" />
                 </Path>
 
-                <DownloadButton file_title={invoice.invoice_number} path={invoice.pdf_path} />
+                <DesktopComponent>
+                    <DownloadButton file_title={invoice.invoice_number} path={invoice.pdf_path} />
+                </DesktopComponent>
+
+                <MobileComponent>
+                    <MobileActions file_title={invoice.invoice_number} path={invoice.pdf_path} />
+                </MobileComponent>
+
             </HeaderWrapper>
 
             <Wrapper>
-                <InvoiceDetail invoice={invoice}/>
+                <InvoiceDetail invoice={invoice} />
             </Wrapper>
         </>
     )
