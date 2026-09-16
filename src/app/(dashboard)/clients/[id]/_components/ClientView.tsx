@@ -5,13 +5,15 @@ import styled from "styled-components";
 
 import { useRouter } from "next/navigation";
 
-import {useTranslations} from "next-intl";
+import { useTranslations } from "next-intl";
 
 import { useState } from "react";
 
 import { sendSetPasswordEmail_action } from "@/actions/auth";
 
-import {useProjectsStore} from "@/stores/projectStore";
+import { useProjectsStore } from "@/stores/projectStore";
+
+import { useDevice } from "@/hooks/useDevice";
 
 import Header from "@/components/Header";
 import Card, { TwoRowData } from "@/components/card/Card";
@@ -22,6 +24,7 @@ import { Client, Project } from "../../_types/types";
 
 import NewProjectModal from "./NewProjectModal";
 import EditProjectModal from "./EditProjectModal";
+import IconButton from "@/components/IconButton";
 
 type ModalState = "new_project" | "edit_client" | "edit_project" | null;
 
@@ -30,6 +33,7 @@ const ClientView = ({ client, projects }: { client: Client, projects: Project[] 
     const [clientState, setClientState] = useState(client);
     const [projectsList, setProjectsList] = useState<Project[]>(projects);
     const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+    const device = useDevice()
 
     const t = useTranslations("clients");
 
@@ -58,7 +62,7 @@ const ClientView = ({ client, projects }: { client: Client, projects: Project[] 
                     <p onClick={() => router.push("/clients")} style={{ cursor: "pointer" }}>{t("header")}</p> &gt; <span>{clientState.name}</span>
                 </Path>
 
-                <Card direction="row" cardStyles={{ justifyContent: "space-between" }} pointer={false}>
+                <Card direction={device === "mobile" ? "column" : "row"} cardStyles={{ justifyContent: "space-between" }} pointer={false}>
                     <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
                         <ClientLogo name={clientState.name} padding="1rem" />
                         <TwoRowData boldText={clientState.name} normalText={clientState.email} />
@@ -67,8 +71,21 @@ const ClientView = ({ client, projects }: { client: Client, projects: Project[] 
                     <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
                         <TwoRowData boldText={clientState.project_count.toString()} normalText={t("projects")} reverse />
                         <TwoRowData boldText={clientState.total_invoiced_usd.toString()} normalText={t("total-amount")} reverse />
-                        <Button text={t("edit-button")} onClick={() => setModal("edit_client")} firstIcon={"edit-pencil"} style="outline" />
-                        <Button text={t("resend-invite-button")} onClick={() => sendSetPasswordEmail_action({ email: clientState.email, isNewAccount: false })} firstIcon={"link"} style="outline" />
+
+                        {
+                            device === "desktop" ? (
+                                <>
+                                    <Button text={t("edit-button")} onClick={() => setModal("edit_client")} firstIcon={"edit-pencil"} style="outline" />
+                                    <Button text={t("resend-invite-button")} onClick={() => sendSetPasswordEmail_action({ email: clientState.email, isNewAccount: false })} firstIcon={"link"} style="outline" />
+                                </>
+                            ) :
+                                (
+                                    <>
+                                        <IconButton onClick={() => setModal("edit_client")} icon={"edit-pencil"} size="small"/>
+                                        <IconButton onClick={() => sendSetPasswordEmail_action({ email: clientState.email, isNewAccount: false })} icon={"link"} size="small"/>
+                                    </>
+                                )
+                        }
                     </div>
                 </Card>
 
@@ -80,7 +97,7 @@ const ClientView = ({ client, projects }: { client: Client, projects: Project[] 
                 <ProjectContainer>
                     {
                         projectsList.map(project => (
-                            <Card key={project.project_id} direction="column" onClick={() => {setSelectedProject(project); setModal("edit_project")}} pointer>
+                            <Card key={project.project_id} direction="column" onClick={() => { setSelectedProject(project); setModal("edit_project") }} pointer>
                                 <TwoRowData boldText={project.name} normalText={project.currency} />
 
                                 <div style={{ display: "flex", gap: "0.5rem" }}>
@@ -107,6 +124,7 @@ const Wrapper = styled.div`
     flex-direction: column;
     gap: 1rem;
     padding: 1rem;
+    overflow: auto;
 `;
 
 const Path = styled.div`
