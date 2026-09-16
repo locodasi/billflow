@@ -113,23 +113,23 @@ const ErrorText = styled.p`
 `;
 
 export const InputStyle = styled.input`
+    min-width: 0;
+
     display: flex;
-    padding: var(--padding-none, 0rem);
+    padding: 0;
     align-items: center;
-    gap: var(--8, 0.5rem);
-    flex: 1 0 0;
+    gap: 0.5rem;
+    flex: 1 1 0;
+
     background: transparent;
     border: none;
     outline: none;
 
     color: var(--Text-text-primary, #637083);
-
-    /* Paragraph M/Regular */
     font-family: Inter;
     font-size: 1rem;
-    font-style: normal;
     font-weight: 400;
-    line-height: 1.5rem; /* 150% */
+    line-height: 1.5rem;
 
     &::placeholder {
         color: var(--Text-text-tertiary, #637083);
