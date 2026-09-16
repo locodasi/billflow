@@ -22,6 +22,11 @@ const Wrapper = styled.div`
     display: flex;
     flex: 1;
     min-height: 0;
+
+    @media (max-width: 768px) {
+        flex-direction: column;
+        overflow: auto;
+    }
 `;
 
 const Separator = styled.div`

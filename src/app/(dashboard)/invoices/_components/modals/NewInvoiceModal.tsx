@@ -89,7 +89,7 @@ const ModeOption = styled.div<{ $active: boolean, $disabled?: boolean }>`
 
 
     @media (max-width: 410px) {
-        .subtitle {
+        .subtitle { 
             display: none;
         }
     }

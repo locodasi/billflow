@@ -316,7 +316,6 @@ const Area = styled.div`
     flex-direction: column;
     gap: 0.25rem;
 
-    width: 400px;
 `;
 
 const InfoText = () => {
