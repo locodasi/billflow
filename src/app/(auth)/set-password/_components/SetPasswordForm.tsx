@@ -119,6 +119,11 @@ const Modal = styled.div`
     border-radius: 0.5rem;
     border: 1px solid var(--Border-Colors-border-primary);
     gap: 1.5rem;
+
+    @media (max-width: 768px) {
+        padding: 0.5rem;
+        margin-inline: 1rem;
+    }
 `;
 
 const Title = styled.h2`
