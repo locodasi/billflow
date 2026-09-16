@@ -149,7 +149,6 @@ const UploadMode = ({close, addInvoice}: {close: () => void, addInvoice: (invoic
                 />
                 <NumberInput
                     label={t("values.amount")}
-                    placeholder={t("values.amount_placeholder")}
                     value={invoiceData.amount.value}
                     onChange={(v) => setInvoiceData({ ...invoiceData, amount: { automatic: false, value: v } })}
                     styles={getAutoStyle(invoiceData.amount.automatic)}
@@ -159,7 +158,6 @@ const UploadMode = ({close, addInvoice}: {close: () => void, addInvoice: (invoic
 
             <NormalSelect
                 title={t("values.currency")}
-                placeholder={t("values.currency_placeholder")}
                 options={CURRENCIES}
                 value={CURRENCIES.find(currency => currency.value === invoiceData.currency.value) || null}
                 onChange={(v) => setInvoiceData({ ...invoiceData, currency: { automatic: false, value: v.value } })}

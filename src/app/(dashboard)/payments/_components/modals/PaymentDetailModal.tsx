@@ -27,7 +27,7 @@ const PaymentDetailModal = ({ payment, onClose, updatePaymentStatus }: { payment
 
     return (
         <Modal onClose={onClose}>
-            <WrapperModal styles={{ padding: '0', gap: '0' }}>
+            <WrapperModal styles={{ padding: '0', gap: '0', width: "90vw", height: "90vh" }}>
                 <HeaderWrapper style={{ borderBottom: '1px solid var(--Border-Colors-border-secondary)', padding: '1rem' }}>
                     <Title text={payment.payment_number} status={payment.status} type="payments"/>
 

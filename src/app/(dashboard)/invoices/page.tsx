@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+
 
 import { useTranslations } from "next-intl";
 
@@ -8,7 +10,9 @@ import { supabase } from "@/lib/supabase";
 
 import { useProjectsStore } from "@/stores/projectStore";
 
-import { HeaderTitle, HeaderWrapper } from "@/components/Header";
+import { useDevice } from "@/hooks/useDevice";
+
+import Header from "@/components/Header";
 
 import NewInvoiceModal from "./_components/modals/NewInvoiceModal";
 
@@ -22,6 +26,7 @@ import Filters from "./_components/Filters";
 import InvoiceCard from "./_components/InvoiceCard";
 import InvoiceDetailModal from "./_components/modals/InvoiceDetailModal";
 import Button from "@/components/Button";
+import IconButton from "@/components/IconButton";
 import { downloadUnpaidInvoicesPDF } from "./actions";
 import { useUserStore } from "@/stores/userStore";
 
@@ -34,7 +39,9 @@ const Invoices = () => {
     const [filters, setFilters] = useState<InvoiceFilters>({ projectId: '', page: 1 });
     const [totalCount, setTotalCount] = useState(0);
     const [selectedInvoice, setSelectedInvoice] = useState<InvoiceSummary | null>(null);
-
+    const device = useDevice();
+    const router = useRouter();
+    
     const role = useUserStore(s => s.role);
 
     const projectName = useProjectsStore(s => s.project?.name);
@@ -85,7 +92,7 @@ const Invoices = () => {
             setTotalCount(prev => prev + 1)
             return
         }
-        
+
 
         setInvoices(prev => [invoice, ...prev])
     }
@@ -106,20 +113,37 @@ const Invoices = () => {
         URL.revokeObjectURL(url);
     }
 
+    const onCardClick = (invoice: InvoiceSummary) => {
+        if (device === "mobile") {
+            router.push(`invoices/${invoice.id}`);
+            return
+        }
+
+        setSelectedInvoice(invoice)
+    }
+
     return (
         <>
             {isModalOpen && <NewInvoiceModal onClose={() => setIsModalOpen(false)} addInvoice={addInvoice} />}
 
-            <HeaderWrapper>
-                <HeaderTitle>{`${t('invoice_plural')} -- ${projectName}`}</HeaderTitle>
+            <Header
+                title={t('invoice_plural')}
+                projectName={projectName}
+                actions={(
+                    <div style={{ display: 'flex', gap: '0.5rem' }}>
+                        <Button size="small" text={t('download_unpaid_invoices')} firstIcon="download" onClick={handleDownloadUnpaidInvoices} />
+                        {role === "admin" && <Button size="small" text={t('new_invoice')} firstIcon="plus" onClick={() => setIsModalOpen(true)} />}
+                    </div>
+                )}
+                mobileActions={(
+                    <div style={{ display: 'flex', gap: '0.5rem' }}>
+                        <IconButton size="small" icon="download" onClick={handleDownloadUnpaidInvoices} />
+                        {role === "admin" && <IconButton size="small" icon="plus" onClick={() => setIsModalOpen(true)} />}
+                    </div>
+                )}
+            />
 
-                <div style={{ display: 'flex', gap: '0.5rem' }}>
-                    <Button size="small" text={t('download_unpaid_invoices')} firstIcon="download" onClick={handleDownloadUnpaidInvoices} />
-                    {role === "admin" && <Button size="small" text={t('new_invoice')} firstIcon="plus" onClick={() => setIsModalOpen(true)} />}
-                </div>
-            </HeaderWrapper>
-
-            <div style={{ padding: '1rem', display: 'flex', flexDirection: 'column', gap: '1rem', overflow:"auto" }}>
+            <div style={{ padding: '1rem', display: 'flex', flexDirection: 'column', gap: '1rem', overflow: "auto" }}>
                 <Filters filters={filters} setFilters={setFilters} count={totalCount} />
 
                 <div style={{
@@ -128,7 +152,7 @@ const Invoices = () => {
                     gap: '1rem'
                 }}>
                     {invoices.map(invoice => (
-                        <InvoiceCard key={invoice.id} invoice={invoice} onClick={() => setSelectedInvoice(invoice)} />
+                        <InvoiceCard key={invoice.id} invoice={invoice} onClick={() => onCardClick(invoice)} />
                     ))}
                 </div>
             </div>

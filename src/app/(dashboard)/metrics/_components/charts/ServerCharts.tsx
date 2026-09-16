@@ -1,3 +1,5 @@
+import styled from "styled-components";
+
 import { Period } from "@/lib/period";
 
 import { getChartsValue } from "../../actions";
@@ -10,11 +12,21 @@ const ServerCharts = async ({ period, offset }: { period: Period; offset: number
     const { barData, lineData } = await getChartsValue(period, offset);
 
     return (
-        <div style={{ display: 'flex', gap: '1rem' }}>
+        <ChartsWrapper>
             <InvoicesPerState data={barData} />
             <InvoicesVsPayments data={lineData} />
-        </div>
+        </ChartsWrapper>
     );
 };
 
 export default ServerCharts;
+
+const ChartsWrapper = styled.div`
+    display: flex;
+    gap: 1rem;
+    width: 100%;
+
+    @media (max-width: 768px) {
+        flex-direction: column;
+    }
+`;

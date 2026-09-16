@@ -82,6 +82,10 @@ const NormalSelect = ({ options, value, onChange, title, width, disabled = false
             lineHeight: "1.25rem",
             letterSpacing: 0,
         }),
+        menuPortal: (provided) => ({
+            ...provided,
+            zIndex: 99999,
+        }),
     };
 
     return(
@@ -94,6 +98,11 @@ const NormalSelect = ({ options, value, onChange, title, width, disabled = false
                 styles={customStyles}
                 onChange={(selectedOption) => onChange(selectedOption as { value: string; label: string | JSX.Element })} // Type assertion to match the expected type
                 placeholder={placeholder || "Select..."}
+                menuPortalTarget={
+                    typeof document !== "undefined"
+                        ? document.body
+                        : undefined
+                }
             />
 
             <UnderText style={styles?.underText}>{underText}</UnderText>

@@ -8,7 +8,7 @@ import { useRouter, useSearchParams, usePathname } from "next/navigation";
 
 import { useProjectsStore } from "@/stores/projectStore";
 
-import { HeaderTitle, HeaderWrapper } from "@/components/Header";
+import Header, { HeaderTitle, HeaderWrapper } from "@/components/Header";
 import Chips from "@/components/Chips";
 import PeriodNavigator from "./PeriodNavigator";
 import { parsePeriod } from "@/lib/period";
@@ -45,21 +45,32 @@ function GloablMetricsClient({
     return (
         <>
 
-            <HeaderWrapper>
-                <HeaderTitle>{`${t('global_header')}`}</HeaderTitle>
+            <Header
+                title={t('global_header')}
+                projectName={projectName}
+                actions={(
+                    <div style={{ display: 'flex', gap: '0.5rem' }}>
+                        <Chips
+                            items={TEMPORAL_CHIPS.map(chip => ({ text: t(`temporal_chips.${chip}`), value: chip }))}
+                            selected={currentPeriod}
+                            onClick={handleSelect}
+                        />
+                    </div>
+                )}
+                mobileActions={(
+                    <div style={{ display: 'flex', gap: '0.5rem' }}>
+                        <Chips
+                            items={TEMPORAL_CHIPS.map(chip => ({ text: t(`temporal_chips.${chip}`), value: chip }))}
+                            selected={currentPeriod}
+                            onClick={handleSelect}
+                        />
+                    </div>
+                )}
+            />
 
-                <div style={{ display: 'flex', gap: '0.5rem' }}>
-                    <Chips
-                        items={TEMPORAL_CHIPS.map(chip => ({ text: t(`temporal_chips.${chip}`), value: chip }))}
-                        selected={currentPeriod}
-                        onClick={handleSelect}
-                    />
-                </div>
-            </HeaderWrapper>
+            <PeriodNavigator period={parsePeriod(currentPeriod)} />
 
-            <PeriodNavigator period={parsePeriod(currentPeriod)}/>
-
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', padding: '1rem' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', padding: '1rem', overflow: "auto" }}>
                 {isPending ? skeleton : content}
             </div>
         </>

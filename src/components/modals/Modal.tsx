@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { CSSProperties } from "styled-components";
 
 import { createPortal } from "react-dom";
 
@@ -31,12 +31,19 @@ const Modal = ({children, onClose, zIndex = 1000}: Props) => {
 
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
-            console.log(e)
-            if (e.key === "Escape") onClose();
+            if (e.key === "Escape") {
+                onClose();
+            }
         };
-
+    
         document.addEventListener("keydown", handleKeyDown);
-        return () => document.removeEventListener("keydown", handleKeyDown);
+    
+        document.body.style.overflow = "hidden";
+    
+        return () => {
+            document.removeEventListener("keydown", handleKeyDown);
+            document.body.style.overflow = "";
+        };
     }, [onClose]);
 
     return createPortal(
@@ -49,19 +56,21 @@ const Modal = ({children, onClose, zIndex = 1000}: Props) => {
 
 export default Modal
 
-import Icon from "../icons/Icon";
+import Icon, { Icons } from "../icons/Icon";
 
 interface HeaderModalProps {
-    title: string;
     onClose: () => void;
+    closeIcon?: Icons;
+    title?: string;
+    styles?: CSSProperties;
 }
 
-export const HeaderModal = ({ title, onClose }: HeaderModalProps) => {
+export const HeaderModal = ({ title, onClose, closeIcon = "delete-circle", styles }: HeaderModalProps) => {
 
     return(
-        <HeaderWrapper>
+        <HeaderWrapper style={styles}>
             <HeaderTitle>{title}</HeaderTitle>
-            <Icon icon={"delete-circle"} size={24} onClick={onClose} />
+            <Icon icon={closeIcon} size={24} onClick={onClose} />
         </HeaderWrapper>
     )
 }
@@ -97,4 +106,13 @@ const Wrapper = styled.div`
     border-radius: 0.5rem;
 
     max-height: 90vh;
+
+    @media (max-width: 768px) {
+        width: 100%;
+        height: 100%;
+        max-height: none;
+
+        border: none;
+        border-radius: 0;
+    }
 `;

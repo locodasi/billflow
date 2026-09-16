@@ -1,34 +1,38 @@
+import styled from "styled-components";
 
 import { supabase } from "@/lib/supabase";
+import { useState, useEffect } from "react";
 
-import {useState, useEffect} from "react";
-
-const PDF = ({ path, width, height }: { path: string, width?: string, height?: string }) => {
-
-    const [url, setUrl] = useState<string | undefined>(undefined)
+const PDF = ({ path }: { path: string }) => {
+    const [url, setUrl] = useState<string | undefined>(undefined);
 
     useEffect(() => {
-
         const fetchUrl = async () => {
             const { data } = await supabase.storage
                 .from("documents")
-                .createSignedUrl(path, 60 * 60) // 1 hora
+                .createSignedUrl(path, 60 * 60);
 
-            const url = data?.signedUrl
-            if (url) setUrl(url)
-            console.log(url)
-        }
+            if (data?.signedUrl) {
+                setUrl(data.signedUrl);
+            }
+        };
 
-        fetchUrl()
-    }, [path])
+        fetchUrl();
+    }, [path]);
 
     return (
-        <iframe
+        <PDFFrame
             src={url || undefined}
-            style={{ width: width || '50vh', height: height || '80vh', border: 'none' }}
             title="Documento"
         />
-    )
-}
+    );
+};
 
 export default PDF;
+
+const PDFFrame = styled.iframe`
+    width: 100%;
+    height: 100%;
+    border: none;
+    display: block;
+`;

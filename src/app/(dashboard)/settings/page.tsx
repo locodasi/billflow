@@ -49,62 +49,90 @@ const SettingsPage = () => {
         <>
             <Header title={t("header")} />
 
-            <SectionWrapper >
-                <div style={{ display: "flex", alignItems: "center", gap: "1rem", justifyContent: "space-between" }}>
-                    <UserImg />
-                    <UserData showEmail showRole={false} />
-                    <LogoutButton text={t("log-out")} styles={{ marginLeft: "auto" }} />
-                </div>
-            </SectionWrapper>
-
-            <Section title={t("appearance.header")} description={t("appearance.text")}>
-                <div>
-                    <Modes />
-                </div>
-            </Section>
-
-            <Section title={t("language.header")} description={t("language.text")}>
-                <NormalSelect
-                    options={LANGUAGE_OPTIONS}
-                    value={LANGUAGE_OPTIONS.find(option => option.value === language) || null}
-                    onChange={(selectedOption) => handleLanguageChange(selectedOption.value)}
-                />
-            </Section>
-
-            <Section title={t("notifications.header")} description={t("notifications.text")} last>
-                <Switch type="primary" isOn={settings.notifications.email.invoiceUploaded || false} handleToggle={() => handleNotificationsEmailSettingsChange("invoiceUploaded", !settings.notifications.email.invoiceUploaded)} right={false} styles={{ justifyContent: "space-between" }}>
-                    <TextWrapper>
-                        <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
-                            <Title>{t("notifications.new-invoice.header")}</Title>
-                            {/* <Soon /> */}
+            <div style={{display: "flex", flexDirection: "column", overflow: "auto"}}>
+                <SectionWrapper >
+                    <div style={{ display: "flex", alignItems: "center", gap: "1rem", justifyContent: "space-between" }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+                            <UserImg />
+                            <UserData showEmail showRole={false} />
                         </div>
-                        <Subtitle>{t("notifications.new-invoice.text")}</Subtitle>
-                    </TextWrapper>
-                </Switch>
 
-                <Switch type="primary" isOn={settings.notifications.email.invoiceApproved || false} handleToggle={() => handleNotificationsEmailSettingsChange("invoiceApproved", !settings.notifications.email.invoiceApproved)} right={false} styles={{ justifyContent: "space-between" }}>
-                    <TextWrapper>
-                        <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
-                            <Title>{t("notifications.payload-approved.header")}</Title>
-                        </div>
-                        <Subtitle>{t("notifications.payload-approved.text")}</Subtitle>
-                    </TextWrapper>
-                </Switch>
+                        <DesktopLogout>
+                            <LogoutButton text={t("log-out")} styles={{ marginLeft: "auto" }} />
+                        </DesktopLogout>
 
-                <Switch type="primary" isOn={settings.notifications.email.invoiceRejected || false} handleToggle={() => handleNotificationsEmailSettingsChange("invoiceRejected", !settings.notifications.email.invoiceRejected)} right={false} styles={{ justifyContent: "space-between" }}>
-                    <TextWrapper>
-                        <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
-                            <Title>{t("notifications.payload-rejected.header")}</Title>
-                        </div>
-                        <Subtitle>{t("notifications.payload-rejected.text")}</Subtitle>
-                    </TextWrapper>
-                </Switch>
-            </Section>
+                        <MobileLogout>
+                            <LogoutButton styles={{ marginLeft: "auto" }} />
+                        </MobileLogout>
+                    </div>
+                </SectionWrapper>
+
+                <Section title={t("appearance.header")} description={t("appearance.text")}>
+                    <div>
+                        <Modes />
+                    </div>
+                </Section>
+
+                <Section title={t("language.header")} description={t("language.text")}>
+                    <NormalSelect
+                        options={LANGUAGE_OPTIONS}
+                        value={LANGUAGE_OPTIONS.find(option => option.value === language) || null}
+                        onChange={(selectedOption) => handleLanguageChange(selectedOption.value)}
+                    />
+                </Section>
+
+                <Section title={t("notifications.header")} description={t("notifications.text")} last>
+                    <Switch type="primary" isOn={settings.notifications.email.invoiceUploaded || false} handleToggle={() => handleNotificationsEmailSettingsChange("invoiceUploaded", !settings.notifications.email.invoiceUploaded)} right={false} styles={{ justifyContent: "space-between" }}>
+                        <TextWrapper>
+                            <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
+                                <Title>{t("notifications.new-invoice.header")}</Title>
+                                {/* <Soon /> */}
+                            </div>
+                            <Subtitle>{t("notifications.new-invoice.text")}</Subtitle>
+                        </TextWrapper>
+                    </Switch>
+
+                    <Switch type="primary" isOn={settings.notifications.email.invoiceApproved || false} handleToggle={() => handleNotificationsEmailSettingsChange("invoiceApproved", !settings.notifications.email.invoiceApproved)} right={false} styles={{ justifyContent: "space-between" }}>
+                        <TextWrapper>
+                            <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
+                                <Title>{t("notifications.payload-approved.header")}</Title>
+                            </div>
+                            <Subtitle>{t("notifications.payload-approved.text")}</Subtitle>
+                        </TextWrapper>
+                    </Switch>
+
+                    <Switch type="primary" isOn={settings.notifications.email.invoiceRejected || false} handleToggle={() => handleNotificationsEmailSettingsChange("invoiceRejected", !settings.notifications.email.invoiceRejected)} right={false} styles={{ justifyContent: "space-between" }}>
+                        <TextWrapper>
+                            <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
+                                <Title>{t("notifications.payload-rejected.header")}</Title>
+                            </div>
+                            <Subtitle>{t("notifications.payload-rejected.text")}</Subtitle>
+                        </TextWrapper>
+                    </Switch>
+                </Section>
+            </div>
         </>
     )
 }
 
 export default SettingsPage;
+
+const DesktopLogout = styled.div`
+    display: block;
+
+    @media (max-width: 768px) {
+        display: none;
+    }
+`;
+
+const MobileLogout = styled.div`
+    display: none;
+
+    @media (max-width: 768px) {
+        display: block;
+    }
+`;
+
 
 const Soon = () => {
 

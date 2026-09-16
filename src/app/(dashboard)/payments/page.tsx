@@ -1,6 +1,8 @@
 "use client";
 
-import {useTranslations} from "next-intl";
+import { useTranslations } from "next-intl";
+import { useRouter } from "next/navigation";
+
 
 import { useState, useEffect } from "react";
 
@@ -8,7 +10,11 @@ import { supabase } from "@/lib/supabase";
 
 import { useProjectsStore } from "@/stores/projectStore";
 
+import { useDevice } from "@/hooks/useDevice";
+
 import Header from "@/components/Header";
+import Button from "@/components/Button";
+import IconButton from "@/components/IconButton";
 
 import NewPaymentModal from "./_components/modals/NewPaymentModal";
 
@@ -23,6 +29,7 @@ import PaymentCard from "./_components/PaymentCard";
 import PaymentDetailModal from "./_components/modals/PaymentDetailModal";
 import { updatePaymentStatus } from "./actions";
 
+
 const PaymentsPage = () => {
 
     const t = useTranslations('payments');
@@ -32,7 +39,8 @@ const PaymentsPage = () => {
     const [filters, setFilters] = useState<PaymentFilters>({ projectId: '', page: 1 });
     const [totalCount, setTotalCount] = useState(0);
     const [selectedPayment, setSelectedPayment] = useState<Payment | null>(null);
-
+    const device = useDevice();
+    const router = useRouter();
 
     const projectName = useProjectsStore(s => s.project?.name);
     const projectId = useProjectsStore(s => s.project?.id);
@@ -92,22 +100,44 @@ const PaymentsPage = () => {
         setSelectedPayment(prev => prev && prev.id === paymentId ? { ...prev, status: newStatus } : prev);
     }
 
+    const onCardClick = (payment: Payment) => {
+        if (device === "mobile") {
+            router.push(`payments/${payment.id}`);
+            return
+        }
+
+        setSelectedPayment(payment)
+    }
+
     return (
         <>
             {isModalOpen && <NewPaymentModal onClose={() => setIsModalOpen(false)} addPayment={addPayment} />}
 
-            <Header title={`${t('payment_plural')} -- ${projectName}`} showButton={true} buttontext={t('new_payment')} buttonIcon="plus" onButtonClick={() => setIsModalOpen(true)} />
+            <Header
+                title={t('payment_plural')}
+                projectName={projectName}
+                actions={(
+                    <div style={{ display: 'flex', gap: '0.5rem' }}>
+                        <Button size="small" text={t('new_payment')} firstIcon="plus" onClick={() => setIsModalOpen(true)} />
+                    </div>
+                )}
+                mobileActions={(
+                    <div style={{ display: 'flex', gap: '0.5rem' }}>
+                        <IconButton size="small" icon="plus" onClick={() => setIsModalOpen(true)} />
+                    </div>
+                )}
+            />
 
-            <div style={{ padding: '1rem', display: 'flex', flexDirection: 'column', gap: '1rem', overflow:"auto" }}>
+            <div style={{ padding: '1rem', display: 'flex', flexDirection: 'column', gap: '1rem', overflow: "auto" }}>
                 <Filters filters={filters} setFilters={setFilters} count={totalCount} />
-                
+
                 <div style={{
                     display: 'grid',
                     gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
                     gap: '1rem'
                 }}>
                     {payments.map(payment => (
-                        <PaymentCard key={payment.id} payment={payment} onClick={() => setSelectedPayment(payment)} />
+                        <PaymentCard key={payment.id} payment={payment} onClick={() => onCardClick(payment)} />
                     ))}
                 </div>
             </div>

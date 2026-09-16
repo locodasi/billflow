@@ -70,4 +70,10 @@ const ModeOption = styled.div<{ $active: boolean, $disabled?: boolean }>`
         font-size: 0.875rem;
         color: ${({ $disabled }) => $disabled ? 'var(--Text-text-tertiary)' : 'var(--Text-text-primary)'};
     }
+
+    @media (max-width: 410px) {
+        .subtitle { 
+            display: none;
+        }
+    }
 `;

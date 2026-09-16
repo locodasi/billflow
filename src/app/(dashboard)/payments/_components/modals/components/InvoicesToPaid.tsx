@@ -62,7 +62,10 @@ const Wrapper = styled.div`
     gap: 0.5rem;
     overflow-y: auto;
     padding-right: 0.5rem;
-    width: 400px;
+
+    @media (max-width: 768px) {
+        height: 50vh;
+    }
 `;
 
 const Title = styled.h3`

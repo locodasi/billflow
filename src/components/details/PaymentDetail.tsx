@@ -1,3 +1,5 @@
+import styled from "styled-components";
+
 import { useState, useEffect } from "react";
 
 import {useTranslations} from "next-intl";
@@ -16,6 +18,7 @@ import Button from "../Button";
 import PDF from "./PDF"
 import InfoSection, { InfoSubSection, TwoRowData } from "./InfoSection"
 import ElementAssociated from "./ElementAssociated";
+import { DesktopComponent } from "../DiscoverVersions";
 
 
 interface InvoiceRelation {
@@ -39,7 +42,7 @@ interface PaymentDetailProps {
     pdfHeight: string;
     updatePaymentStatus: (paymentId: string, newStatus: "approved" | "rejected") => Promise<void>;
 }
-
+ 
 const PaymentDetail = ({ payment, pdfWidth, pdfHeight, updatePaymentStatus }: PaymentDetailProps) => {
 
     const t = useTranslations('payments.detail');
@@ -143,13 +146,13 @@ const PaymentDetail = ({ payment, pdfWidth, pdfHeight, updatePaymentStatus }: Pa
         fetchPaymentRelations();
     }, [payment.id]);
     
-    console.log(invoicesRelation)
-
     return (
-        <div style={{ display: 'flex', flex: "1", minHeight: 0 }}>
-            <PDF path={payment.receipt_pdf_path} width={pdfWidth} height={pdfHeight} />
+        <Wrapper>
+            <DesktopComponent style={{ height: "100%", width: "80%" }}>
+                <PDF path={payment.receipt_pdf_path} />
+            </DesktopComponent>
 
-            <div style={{ display: 'flex', flexDirection: 'column', width: '50%', minHeight: 0 }}>
+            <InfoWrapper>
                 <InfoSection title={t('details.title').toUpperCase()}>
                     <TwoRowData leftText={t('details.amount')} rightText={payment.amount.toString()} />
                     <TwoRowData leftText={t('details.currency')} rightText={payment.currency} />
@@ -192,9 +195,34 @@ const PaymentDetail = ({ payment, pdfWidth, pdfHeight, updatePaymentStatus }: Pa
                         <p style={{color: "var(--Text-text-primary)", fontSize: "0.875rem", paddingLeft: "0.5rem"}}>{currency} {creditGenerated}</p>
                     </InfoSubSection>
                 </InfoSection>
-            </div>
-        </div>
+            </InfoWrapper>
+        </Wrapper>
     )
 }
 
 export default PaymentDetail;
+
+const Wrapper = styled.div`
+    display: flex;
+    flex: 1;
+    min-height: 0;
+    width: 100%;
+
+    @media (max-width: 768px) {
+        flex-direction: column;
+        overflow: auto;
+    }
+`;
+
+const InfoWrapper = styled.div`
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    min-height: 0;
+
+    @media (max-width: 768px) {
+        order: 1;
+        width: 100%;
+        flex-shrink: 0;
+    }
+`;
