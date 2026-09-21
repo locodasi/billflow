@@ -1,8 +1,8 @@
 "use client";
 
 import styled from "styled-components";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useRouter, usePathname } from "next/navigation";
 
 import Icon from "@/components/icons/Icon";
 import Modal, { HeaderModal, WrapperModal } from "@/components/modals/Modal";
@@ -14,10 +14,18 @@ import MobileProjectSelector from "./MobileProjectSelector";
 const MobileHeader = () => {
     const t = useTranslations("sidenav");
     const role = useUserStore(state => state.role);
+    const pathname = usePathname();
+    const router = useRouter();
 
     const [showMenu, setShowMenu] = useState(false);
+    const [prevPathname, setPrevPathname] = useState(pathname);
 
-    const router = useRouter();
+
+    // Si cambió la ruta, cerramos el menú en el mismo render (sin effect)
+    if (pathname !== prevPathname) {
+        setPrevPathname(pathname);
+        setShowMenu(false);
+    }
 
     const openMenu = () => setShowMenu(true);
     const closeMenu = () => setShowMenu(false);
@@ -25,6 +33,17 @@ const MobileHeader = () => {
     const goTo = (url: string) => {
         router.push(url)
         closeMenu()
+    }
+
+    function goToFromMenu(url: string) {
+        // Misma página: no hay navegación, así que cerramos el menú a mano
+        if (url === pathname) {
+            closeMenu();
+            return;
+        }
+
+        // replace pisa la entrada de historial que agregó el modal
+        router.replace(url);
     }
 
     return (
@@ -42,7 +61,7 @@ const MobileHeader = () => {
                     <MobileProjectSelector />
                 </LeftSection>
 
-                <ProfileButton onClick={()=>goTo("/settings")}>
+                <ProfileButton onClick={() => goTo("/settings")}>
                     <Icon
                         icon="profile-circle"
                         size={24}
@@ -59,12 +78,12 @@ const MobileHeader = () => {
                         />
 
                         <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem", alignItems: "flex-start" }}>
-                            <SidenavButton isExpanded={true} text={t("invoices")} icon="page" onClick={() => goTo("/invoices")} />
-                            <SidenavButton isExpanded={true} text={t("payments")} icon="journal" onClick={() => goTo("/payments")} />
-                            {role === "admin" && <SidenavButton isExpanded={true} text={t("clients")} icon="user" onClick={() => goTo("/clients")} />}
-                            <SidenavButton isExpanded={true} text={t("metrics")} icon="reports" onClick={() => goTo("/metrics")} />
-                            {role === "admin" && <SidenavButton isExpanded={true} text={t("global_metrics")} icon="reports" onClick={() => goTo("/global-metrics")} />}
-                            <SidenavButton isExpanded={true} text={t("settings")} icon="settings" onClick={() => goTo("/settings")} />
+                            <SidenavButton isExpanded={true} text={t("invoices")} icon="page" onClick={() => goToFromMenu("/invoices")} />
+                            <SidenavButton isExpanded={true} text={t("payments")} icon="journal" onClick={() => goToFromMenu("/payments")} />
+                            {role === "admin" && <SidenavButton isExpanded={true} text={t("clients")} icon="user" onClick={() => goToFromMenu("/clients")} />}
+                            <SidenavButton isExpanded={true} text={t("metrics")} icon="reports" onClick={() => goToFromMenu("/metrics")} />
+                            {role === "admin" && <SidenavButton isExpanded={true} text={t("global_metrics")} icon="reports" onClick={() => goToFromMenu("/global-metrics")} />}
+                            <SidenavButton isExpanded={true} text={t("settings")} icon="settings" onClick={() => goToFromMenu("/settings")} />
                         </div>
 
                     </WrapperModal>

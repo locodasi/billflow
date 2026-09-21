@@ -4,6 +4,8 @@ import { createPortal } from "react-dom";
 
 import {useEffect} from "react";
 
+import { useCloseOnBack } from "@/hooks/useCloseOnBack";
+
 
 const ModalWrapper = styled.div`
     position: fixed;
@@ -25,6 +27,8 @@ interface Props {
 }
 
 const Modal = ({children, onClose, zIndex = 1000}: Props) => {
+    useCloseOnBack(onClose);
+
     const handleClick = (e: React.MouseEvent) => {
         e.stopPropagation();
     };
