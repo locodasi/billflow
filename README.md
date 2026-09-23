@@ -1,201 +1,210 @@
 # Billflow
 
-Billflow es una aplicacion de gestion de facturas y pagos con autenticacion por roles, proyectos por cliente, carga de PDF y conversion de moneda a USD.
+Billflow is an invoice and payment management application built with Next.js. It provides role-based authentication, multi-project client management, PDF upload with parsing, and currency conversion to USD for standardized reporting.
 
-## Que resuelve
+## What It Solves
 
-- Gestiona clientes y sus proyectos.
-- Permite subir facturas y recibos en PDF.
-- Calcula montos convertidos a USD para normalizar reportes.
-- Relaciona pagos con facturas pendientes.
-- Envia notificaciones por email (alta de cliente, factura subida, pago subido).
+- Manages clients and their associated projects.
+- Allows uploading invoices and receipts as PDFs.
+- Converts amounts to USD for normalized reporting.
+- Links payments to outstanding invoices.
+- Sends email notifications for client onboarding, invoice uploads, and payment registration.
 
-## Funcionalidades principales
+## Features
 
-### Autenticacion
+### Authentication
 
-- Login y manejo de sesion con Supabase.
-- Recuperacion y alta de password por link de recovery.
-- Roles `admin` y `client`.
-- Middleware/proxy de proteccion de rutas.
+- Login and session management via Supabase Auth.
+- Password reset and initial password setup via recovery links.
+- Role-based access with `admin` and `client` roles.
+- Route protection middleware.
 
-### Clientes y proyectos
+### Clients & Projects
 
-- Alta de cliente con creacion de usuario en Supabase Auth.
-- Envio de email para definir password inicial.
-- CRUD de proyectos por cliente.
-- Estructura de carpetas por proyecto en bucket `documents`.
+- Create clients with automatic Supabase Auth user creation.
+- Initial password setup emails via React Email + Nodemailer.
+- CRUD for projects per client.
+- Folder structure per project in Supabase Storage bucket `documents`.
 
-### Facturas
+### Invoices
 
-- Carga de PDF en Supabase Storage.
-- Parseo basico de numero, monto y moneda desde PDF.
-- Guardado de tipo de cambio y monto en USD.
-- Vista con filtros y estados derivados (`unpaid`, `pending`, `paid`).
-- Descarga masiva de PDFs impagos en ZIP.
+- PDF upload to Supabase Storage.
+- Basic parsing of invoice number, amount, and currency from PDFs.
+- Stores exchange rate and USD-equivalent amount.
+- Dashboard view with filters and derived states (`unpaid`, `pending`, `paid`).
+- Bulk download of unpaid invoices as ZIP.
 
-### Pagos
+### Payments
 
-- Carga de recibos PDF y parseo basico.
-- Estado de pago (`pending`, `approved`, `rejected`).
-- Aplicacion de montos a facturas pendientes via tabla puente `payment_invoices`.
-- Notificacion por email al registrar un pago.
+- PDF receipt upload with basic parsing.
+- Payment status tracking (`pending`, `approved`, `rejected`).
+- Payment application to outstanding invoices via the `payment_invoices` junction table.
+- Email notification on payment registration.
 
-### Metricas
+### Metrics
 
-- Existe el modulo y la ruta, pero actualmente esta en estado inicial (placeholder).
+- Module and route exist but are currently in early development (placeholder).
 
-## Stack tecnico
+## Tech Stack
 
-- Next.js 16 (App Router)
-- React 19
-- TypeScript
-- Supabase (Auth, Postgres, Storage)
-- Zustand (estado global)
-- styled-components + estilos globales
-- React Email + Nodemailer
-- unpdf + JSZip
+| Layer | Technology |
+| --- | --- |
+| Framework | Next.js 16 (App Router) |
+| UI | React 19, styled-components, Tailwind CSS 4 |
+| Language | TypeScript |
+| Database | Supabase (PostgreSQL) |
+| Auth | Supabase Auth |
+| Storage | Supabase Storage |
+| State | Zustand |
+| Email | React Email, Nodemailer |
+| PDF | unpdf |
+| Archives | JSZip |
+| Charts | Recharts |
+| i18n | next-intl |
 
-## Requisitos
+## Requirements
 
 - Node.js 18+
-- pnpm
-- Supabase CLI
-- Docker Desktop (requerido por varios flujos de migraciones de Supabase)
-- Cuenta de Supabase
-- Cuenta de Gmail con App Password (si queres enviar emails reales)
+- [pnpm](https://pnpm.io/) package manager
+- [Supabase CLI](https://supabase.com/docs/guides/cli)
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/) (required by Supabase migrations)
+- A [Supabase](https://supabase.com/) account
+- A Gmail account with an App Password (for sending real emails)
 
-## Instalacion y ejecucion local
+## Installation & Local Development
 
-1. Instalar dependencias:
+1. **Install dependencies:**
 
-```bash
-pnpm install
-```
+   ```bash
+   pnpm install
+   ```
 
-2. Generar el mapa de iconos:
+2. **Generate the icon map:**
 
-```bash
-pnpm icons
-```
+   ```bash
+   pnpm icons
+   ```
 
-3. Crear archivo de entorno:
+3. **Create the environment file:**
 
-```bash
-cp .env.example .env.local
-```
+   ```bash
+   cp .env.example .env.local
+   ```
 
-4. Completar variables en `.env.local` (ver seccion Variables de entorno).
+4. **Fill in `.env.local`** (see Environment Variables below).
 
-5. Linkear y aplicar migraciones de Supabase:
+5. **Link and apply Supabase migrations:**
 
-```bash
-supabase login
-supabase link --project-ref <tu-project-ref>
-supabase db push
-```
+   ```bash
+   supabase login
+   supabase link --project-ref <your-project-ref>
+   supabase db push
+   ```
 
-6. Levantar la app:
+6. **Start the development server:**
 
-```bash
-pnpm dev
-```
+   ```bash
+   pnpm dev
+   ```
 
-7. Abrir `http://localhost:3000`.
+7. **Open** [`http://localhost:3000`](http://localhost:3000).
 
-## Variables de entorno
+## Environment Variables
 
-### Publicas
+### Public
 
 ```env
 NEXT_PUBLIC_APP_URL=http://localhost:3000
-NEXT_PUBLIC_SUPABASE_URL=https://tu-proyecto.supabase.co
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
 NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=...
 ```
 
-### Privadas
+### Private
 
 ```env
 SUPABASE_SECRET_KEY=...
-GMAIL_USER=tu-cuenta@gmail.com
-GMAIL_APP_PASSWORD=tu-app-password
-PERSONAL_EMAIL=tu-email@dominio.com
+GMAIL_USER=your-account@gmail.com
+GMAIL_APP_PASSWORD=your-app-password
+PERSONAL_EMAIL=your-email@domain.com
 ```
 
-### Nota importante
-
-En `.env.example` figura `NEXT_PUBLIC_SUPABASE_ANON_KEY`, pero el codigo actual valida y usa `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`. Para que la app arranque sin error, defini `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`.
+> **Note:** `.env.example` references `NEXT_PUBLIC_SUPABASE_ANON_KEY`, but the codebase expects `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`. Make sure to define the latter in `.env.local` for the app to start without errors.
 
 ## Scripts
 
-- `pnpm dev`: servidor de desarrollo.
-- `pnpm build`: build de produccion.
-- `pnpm start`: servidor de produccion.
-- `pnpm lint`: lint del proyecto.
-- `pnpm icons`: genera `src/components/icons/icons.ts` desde `public/icons/*.svg`.
-- `pnpm email:dev`: preview local de plantillas de email.
+| Script | Description |
+| --- | --- |
+| `pnpm dev` | Start the development server |
+| `pnpm build` | Production build |
+| `pnpm start` | Start the production server |
+| `pnpm lint` | Run ESLint |
+| `pnpm icons` | Generate `src/components/icons/icons.ts` from `public/icons/*.svg` |
+| `pnpm email:dev` | Local preview of email templates |
+| `pnpm db:types` | Generate TypeScript types from Supabase schema |
 
-## Base de datos y migraciones
+## Database & Migrations
 
-Las migraciones estan en `supabase/migrations/`.
+Migrations live in `supabase/migrations/`.
 
-- Snapshot inicial de schema en `public`.
-- Trigger sobre `auth.users` en migracion separada.
-- Definicion de bucket `documents` y policies de storage en migracion separada.
+- Initial schema snapshot under `public/`.
+- Auth user trigger in a separate migration.
+- `documents` bucket definition and storage policies in a separate migration.
 
-Para cambios de schema:
+For schema changes:
 
-1. Hacer cambios por SQL (no por clicks en Table Editor).
-2. Generar migracion:
+1. Write changes as SQL (use the Supabase SQL Editor, not the Table Editor).
+2. Generate the migration:
 
-```bash
-supabase db diff -f <nombre_migracion> --schema public
-```
+   ```bash
+   supabase db diff -f <migration_name> --schema public
+   ```
 
-3. Revisar SQL generado.
+3. Review the generated SQL.
 4. Commit.
-5. Aplicar con `supabase db push`.
+5. Apply with `supabase db push`.
 
-Mas detalle en:
+More details in `guides/database_guide.md` and `internal_guides/database_internal.md`.
 
-- `guides/database_guide.md`
-- `internal_guides/database_internal.md`
+## Data Model (High-Level)
 
-## Modelo de datos (alto nivel)
-
-Tablas principales:
+### Tables
 
 - `profiles`
 - `clients`
 - `projects`
 - `invoices`
 - `payments`
-- `payment_invoices`
+- `payment_invoices` (junction table linking payments to invoices)
 
-Vistas:
+### Views
 
 - `invoice_summary`
 - `client_stats`
 - `project_stats`
 
-## Estructura general
+## Project Structure
 
-- `src/app`: rutas y layouts de Next.js.
-- `src/actions`: server actions globales.
-- `src/lib`: integraciones (Supabase, notificaciones, env, utilidades).
-- `src/stores`: estado global con Zustand.
-- `src/components`: componentes UI reutilizables.
-- `supabase`: config y migraciones.
+| Directory | Purpose |
+| --- | --- |
+| `src/app/` | Next.js App Router routes and layouts |
+| `src/actions/` | Global server actions |
+| `src/lib/` | Integrations (Supabase, notifications, env, utilities) |
+| `src/stores/` | Zustand global state |
+| `src/components/` | Reusable UI components |
+| `src/types/` | TypeScript type definitions |
+| `supabase/` | Supabase config and migrations |
 
-## Troubleshooting rapido
+## Quick Troubleshooting
 
-- Error `Missing environment variable`: revisar `.env.local` y nombre exacto de variables.
-- No llegan emails: validar `GMAIL_USER` y `GMAIL_APP_PASSWORD` (App Password real).
-- `supabase db push` falla: verificar Docker en ejecucion y proyecto linkeado correcto.
-- Login redirige en loop: revisar sesion de Supabase y variables `NEXT_PUBLIC_SUPABASE_*`.
+| Problem | Solution |
+| --- | --- |
+| `Missing environment variable` | Check `.env.local` and verify variable names match exactly. |
+| Emails not arriving | Validate `GMAIL_USER` and `GMAIL_APP_PASSWORD` (ensure it's a real App Password, not your account password). |
+| `supabase db push` fails | Verify Docker is running and the correct Supabase project is linked. |
+| Login redirects in a loop | Check Supabase session state and verify `NEXT_PUBLIC_SUPABASE_*` variables. |
 
-## Estado del proyecto
+## Project Status
 
-- Facturacion y pagos: funcional.
-- Invitacion y seteo de password: funcional.
-- Metricas: en construccion.
+- **Billing & Payments:** Functional
+- **Client Invitation & Password Setup:** Functional
+- **Metrics:** In progress
