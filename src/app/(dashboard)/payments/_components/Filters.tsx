@@ -20,11 +20,7 @@ const Filters = ({ filters, setFilters, count }: { filters: PaymentFilters, setF
     const changeStatus = (status: string) => {
         const newFilters = { ...filters, page: 1 }
 
-        if (status === 'all') {
-            delete newFilters.status
-        } else {
-            newFilters.status = status as PaymentFilters['status']
-        }
+        newFilters.status = status as PaymentFilters['status']
 
         setFilters(newFilters)
     }
