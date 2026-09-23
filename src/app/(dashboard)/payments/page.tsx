@@ -128,7 +128,7 @@ const PaymentsPage = () => {
                 )}
             />
 
-            <div style={{ padding: '1rem', display: 'flex', flexDirection: 'column', gap: '1rem', overflow: "auto" }}>
+            <div style={{ padding: '1rem', display: 'flex', flexDirection: 'column', gap: '1rem', overflow: "auto", height: "100%" }}>
                 <Filters filters={filters} setFilters={setFilters} count={totalCount} />
 
                 {
