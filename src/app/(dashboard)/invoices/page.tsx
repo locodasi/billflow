@@ -36,7 +36,7 @@ const Invoices = () => {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [invoices, setInvoices] = useState<InvoiceSummary[]>([]);
-    const [filters, setFilters] = useState<InvoiceFilters>({ projectId: '', page: 1 });
+    const [filters, setFilters] = useState<InvoiceFilters>({ projectId: '', page: 1, search: "", status: "all" });
     const [totalCount, setTotalCount] = useState(0);
     const [selectedInvoice, setSelectedInvoice] = useState<InvoiceSummary | null>(null);
     const device = useDevice();
@@ -113,6 +113,7 @@ const Invoices = () => {
         URL.revokeObjectURL(url);
     }
 
+    console.log(filters)
     const onCardClick = (invoice: InvoiceSummary) => {
         if (device === "mobile") {
             router.push(`invoices/${invoice.id}`);
@@ -143,18 +144,22 @@ const Invoices = () => {
                 )}
             />
 
-            <div style={{ padding: '1rem', display: 'flex', flexDirection: 'column', gap: '1rem', overflow: "auto" }}>
+            <div style={{ padding: '1rem', display: 'flex', flexDirection: 'column', gap: '1rem', overflow: "auto", height: "100%" }}>
                 <Filters filters={filters} setFilters={setFilters} count={totalCount} />
 
-                <div style={{
-                    display: 'grid',
-                    gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
-                    gap: '1rem'
-                }}>
-                    {invoices.map(invoice => (
-                        <InvoiceCard key={invoice.id} invoice={invoice} onClick={() => onCardClick(invoice)} />
-                    ))}
-                </div>
+                {
+                    invoices.length > 0 ? (
+                        <div style={{
+                            display: 'grid',
+                            gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
+                            gap: '1rem'
+                        }}>
+                            {invoices.map(invoice => (
+                                <InvoiceCard key={invoice.id} invoice={invoice} onClick={() => onCardClick(invoice)} />
+                            ))}
+                        </div>
+                    ) : <EmptyInvoices has_filters={filters.status !== "all" || filters.search !== ""} create_invoice={() => setIsModalOpen(true)}/>
+                }
             </div>
 
             {selectedInvoice && <InvoiceDetailModal invoice={selectedInvoice} onClose={() => setSelectedInvoice(null)} />}
@@ -164,3 +169,29 @@ const Invoices = () => {
 
 export default Invoices;
 
+import styled from "styled-components";
+
+const EmptyInvoices = ({has_filters, create_invoice}: {has_filters: boolean, create_invoice: () => void}) => {
+
+    return(
+        <EmptyWrapper>
+            <Text>{has_filters ? "No tienes facturas con estos filtros. Prueba otros" : "No tienes facturas. Crea una"}</Text>
+            {!has_filters && <Button text="Crear factura" size="large" onClick={create_invoice}/>}
+        </EmptyWrapper>
+    )
+}
+
+const EmptyWrapper = styled.div`
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 1rem;
+`;
+
+const Text = styled.p`
+    color: var(--Text-text-primary);
+    font-size: 1rem;
+`;

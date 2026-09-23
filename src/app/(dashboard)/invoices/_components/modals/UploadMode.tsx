@@ -127,7 +127,7 @@ const UploadMode = ({close, addInvoice}: {close: () => void, addInvoice: (invoic
     }
 
     return (
-        <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: "1rem", overflow: "auto" }}>
 
             { invoiceData.file ? (
                 <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
