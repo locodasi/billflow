@@ -173,10 +173,11 @@ import styled from "styled-components";
 
 const EmptyInvoices = ({has_filters, create_invoice}: {has_filters: boolean, create_invoice: () => void}) => {
 
+    const t = useTranslations("invoices.empty")
     return(
         <EmptyWrapper>
-            <Text>{has_filters ? "No tienes facturas con estos filtros. Prueba otros" : "No tienes facturas. Crea una"}</Text>
-            {!has_filters && <Button text="Crear factura" size="large" onClick={create_invoice}/>}
+            <Text>{has_filters ? t("text_with_filters") : t("text_without_filters")}</Text>
+            {!has_filters && <Button text={t("button_text")} size="large" onClick={create_invoice}/>}
         </EmptyWrapper>
     )
 }

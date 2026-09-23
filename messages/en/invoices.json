@@ -69,5 +69,10 @@
       "creditApplied": "{amount} {currency} in credits applied",
       "issuedOn": "Issued {date}"
     }
-  } 
+  },
+  "empty": {
+    "text_with_filters": "You don't have any invoices with these filters. Try different ones.",
+    "text_without_filters": "You don't have any invoices. Create one.",
+    "button_text": "Create invoice"
+  }
 }

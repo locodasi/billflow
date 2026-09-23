@@ -69,5 +69,10 @@
       "creditApplied": "{amount} {currency} de creditos aplicados",
       "issuedOn": "Emitida {date}"
     }
-  } 
+  },
+  "empty": {
+    "text_with_filters": "No tienes facturas con estos filtros. Prueba otros",
+    "text_without_filters": "No tienes facturas. Crea una",
+    "button_text": "Crear factura"
+  }
 }

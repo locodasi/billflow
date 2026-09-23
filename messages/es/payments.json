@@ -85,5 +85,10 @@
         "title": "Saldo a favor generado"
       }
     }
-  } 
+  },
+  "empty": {
+    "text_with_filters": "No tienes recibos con estos filtros. Prueba otros",
+    "text_without_filters": "No tienes recibos. Crea uno",
+    "button_text": "Crear recibo"
+  }
 }
