@@ -36,7 +36,7 @@ const PaymentsPage = () => {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [payments, setPayments] = useState<Payment[]>([]);
-    const [filters, setFilters] = useState<PaymentFilters>({ projectId: '', page: 1 });
+    const [filters, setFilters] = useState<PaymentFilters>({ projectId: '', page: 1, search: "", status: "all" });
     const [totalCount, setTotalCount] = useState(0);
     const [selectedPayment, setSelectedPayment] = useState<Payment | null>(null);
     const device = useDevice();
@@ -128,18 +128,22 @@ const PaymentsPage = () => {
                 )}
             />
 
-            <div style={{ padding: '1rem', display: 'flex', flexDirection: 'column', gap: '1rem', overflow: "auto" }}>
+            <div style={{ padding: '1rem', display: 'flex', flexDirection: 'column', gap: '1rem', overflow: "auto", height: "100%" }}>
                 <Filters filters={filters} setFilters={setFilters} count={totalCount} />
 
-                <div style={{
-                    display: 'grid',
-                    gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
-                    gap: '1rem'
-                }}>
-                    {payments.map(payment => (
-                        <PaymentCard key={payment.id} payment={payment} onClick={() => onCardClick(payment)} />
-                    ))}
-                </div>
+                {
+                    payments.length > 0 ? (
+                        <div style={{
+                            display: 'grid',
+                            gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
+                            gap: '1rem'
+                        }}>
+                            {payments.map(payment => (
+                                <PaymentCard key={payment.id} payment={payment} onClick={() => onCardClick(payment)} />
+                            ))}
+                        </div>
+                    ) : <EmptyPayments has_filters={filters.status !== "all" || filters.search !== ""} create_payment={() => setIsModalOpen(true)} />
+                }
             </div>
 
             {selectedPayment && <PaymentDetailModal payment={selectedPayment} onClose={() => setSelectedPayment(null)} updatePaymentStatus={handleUpdatePaymentStatus} />}
@@ -149,3 +153,30 @@ const PaymentsPage = () => {
 
 export default PaymentsPage;
 
+
+import styled from "styled-components";
+
+const EmptyPayments = ({has_filters, create_payment}: {has_filters: boolean, create_payment: () => void}) => {
+
+    return(
+        <EmptyWrapper>
+            <Text>{has_filters ? "No tienes recibos con estos filtros. Prueba otros" : "No tienes recibos. Crea uno"}</Text>
+            {!has_filters && <Button text="Crear recibo" size="large" onClick={create_payment}/>}
+        </EmptyWrapper>
+    )
+}
+
+const EmptyWrapper = styled.div`
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 1rem;
+`;
+
+const Text = styled.p`
+    color: var(--Text-text-primary);
+    font-size: 1rem;
+`;
