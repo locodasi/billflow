@@ -157,10 +157,14 @@ import styled from "styled-components";
 
 const EmptyPayments = ({has_filters, create_payment}: {has_filters: boolean, create_payment: () => void}) => {
 
+    const t = useTranslations("payments.empty")
+    
     return(
         <EmptyWrapper>
             <Text>{has_filters ? "No tienes recibos con estos filtros. Prueba otros" : "No tienes recibos. Crea uno"}</Text>
             {!has_filters && <Button text="Crear recibo" size="large" onClick={create_payment}/>}
+            <Text>{has_filters ? t("text_with_filters") : t("text_without_filters")}</Text>
+            {!has_filters && <Button text={t("button_text")} size="large" onClick={create_payment}/>}
         </EmptyWrapper>
     )
 }
