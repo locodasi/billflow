@@ -85,5 +85,10 @@
         "title": "Credit generated"
       }
     }
+  },
+  "empty": {
+    "text_with_filters": "You don't have any receipts with these filters. Try different ones.",
+    "text_without_filters": "You don't have any receipts. Create one.",
+    "button_text": "Create receipt"
   }
 }

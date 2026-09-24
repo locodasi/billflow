@@ -11,6 +11,8 @@ import ThemeProvider from "./_components/ThemeProvider";
 import { LanguageSync } from "./_components/LanguageSync";
 import ProjectSync from "./_components/ProjectSync";
 
+import SWRegister from './sw-register'
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -69,6 +71,7 @@ export default async function RootLayout({
       </head>
 
       <body className="min-h-full flex flex-col">
+        <SWRegister />
         <NextIntlClientProvider locale={locale} messages={messages}>
           <StyledComponentsRegistry>
             <ThemeProvider>

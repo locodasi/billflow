@@ -69,5 +69,10 @@
       "creditApplied": "{amount} {currency} an angewendeten Guthaben",
       "issuedOn": "Ausgestellt am {date}"
     }
+  },
+  "empty": {
+    "text_with_filters": "Du hast keine Rechnungen mit diesen Filtern. Versuche es mit anderen.",
+    "text_without_filters": "Du hast keine Rechnungen. Erstelle eine.",
+    "button_text": "Rechnung erstellen"
   }
 }

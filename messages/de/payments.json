@@ -85,5 +85,10 @@
         "title": "Erzeugtes Guthaben"
       }
     }
+  },
+  "empty": {
+    "text_with_filters": "Du hast keine Belege mit diesen Filtern. Versuche es mit anderen.",
+    "text_without_filters": "Du hast keine Belege. Erstelle einen.",
+    "button_text": "Beleg erstellen"
   }
 }
