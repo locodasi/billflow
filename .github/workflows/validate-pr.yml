@@ -1,0 +1,58 @@
+name: Validate PR
+
+on:
+  pull_request:
+    types:
+      - opened
+      - edited
+      - synchronize
+      - reopened
+
+permissions:
+  pull-requests: read
+
+jobs:
+  validate-title:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Validate PR title
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          echo "PR title: $PR_TITLE"
+
+          if [[ "$PR_TITLE" =~ ^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\([a-zA-Z0-9._/-]+\))?!?:\ .+ ]]; then
+            echo "✅ PR title is valid."
+          else
+            echo "❌ Invalid PR title."
+            echo ""
+            echo "The PR title must indicate the type of change:"
+            echo ""
+            echo "  fix:      Bug fix → PATCH"
+            echo "  feat:     New functionality → MINOR"
+            echo "  feat!:    Breaking/incompatible change → MAJOR"
+            echo ""
+            echo "Other accepted types:"
+            echo "  docs:     Documentation"
+            echo "  refactor: Code restructuring"
+            echo "  test:     Tests"
+            echo "  chore:    Maintenance"
+            echo "  ci:       CI/CD changes"
+            echo "  build:    Build/dependency changes"
+            echo "  perf:     Performance improvements"
+            echo "  revert:   Revert a previous change"
+            echo ""
+            echo "Examples:"
+            echo "  fix: correct invoice validation"
+            echo "  feat: add customer metrics"
+            echo "  feat!: change invoice API format"
+            echo ""
+            echo "Version rules:"
+            echo "  fix  → 1.0.0 → 1.0.1"
+            echo "  feat → 1.0.0 → 1.1.0"
+            echo "  feat! → 1.0.0 → 2.0.0"
+            echo ""
+            exit 1
+          fi
+
