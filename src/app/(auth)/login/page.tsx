@@ -27,6 +27,7 @@ const Login = () => {
             await login(email, password);
             router.push("/invoices");
         } catch (err) {
+            console.log(err)
             setError(err instanceof Error ? err.message : "An error occurred");
         }
     };
