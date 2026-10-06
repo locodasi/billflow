@@ -39,9 +39,10 @@ const Invoices = () => {
     const [filters, setFilters] = useState<InvoiceFilters>({ projectId: '', page: 1, search: "", status: "all" });
     const [totalCount, setTotalCount] = useState(0);
     const [selectedInvoice, setSelectedInvoice] = useState<InvoiceSummary | null>(null);
+    const [isLoading, setIsLoading] = useState(false)
     const device = useDevice();
     const router = useRouter();
-    
+
     const role = useUserStore(s => s.role);
 
     const projectName = useProjectsStore(s => s.project?.name);
@@ -49,6 +50,8 @@ const Invoices = () => {
 
     const fetchInvoices = async (filters: InvoiceFilters) => {
         if (!filters.projectId) return
+
+        setIsLoading(true)
 
         let query = supabase
             .from('invoice_summary')
@@ -67,6 +70,8 @@ const Invoices = () => {
         }
 
         const { data, error, count } = await query
+
+        setIsLoading(false)
 
         if (error) {
             console.error('Error fetching invoices:', error)
@@ -147,17 +152,19 @@ const Invoices = () => {
                 <Filters filters={filters} setFilters={setFilters} count={totalCount} />
 
                 {
-                    invoices.length > 0 ? (
-                        <div style={{
-                            display: 'grid',
-                            gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
-                            gap: '1rem'
-                        }}>
-                            {invoices.map(invoice => (
-                                <InvoiceCard key={invoice.id} invoice={invoice} onClick={() => onCardClick(invoice)} />
-                            ))}
-                        </div>
-                    ) : <EmptyInvoices has_filters={filters.status !== "all" || filters.search !== ""} create_invoice={() => setIsModalOpen(true)}/>
+                    isLoading ? <SkeletonCards /> : (
+                        invoices.length > 0 ? (
+                            <div style={{
+                                display: 'grid',
+                                gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
+                                gap: '1rem'
+                            }}>
+                                {invoices.map(invoice => (
+                                    <InvoiceCard key={invoice.id} invoice={invoice} onClick={() => onCardClick(invoice)} />
+                                ))}
+                            </div>
+                        ) : <EmptyInvoices has_filters={filters.status !== "all" || filters.search !== ""} create_invoice={() => setIsModalOpen(true)} />
+                    )
                 }
             </div>
 
@@ -170,14 +177,31 @@ export default Invoices;
 
 import styled from "styled-components";
 
-const EmptyInvoices = ({has_filters, create_invoice}: {has_filters: boolean, create_invoice: () => void}) => {
+import Skeleton from "@/components/Skeleton";
+
+const SkeletonCards = () => {
+
+    return (
+        <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
+            gap: '1rem'
+        }}>
+            {Array(ITEMS_PER_PAGE).fill(0).map((_, index) => (
+                <Skeleton key={index} customStyles={{height: "150px", borderRadius:"0.5rem"}}/>
+            ))}
+        </div>
+    )
+}
+
+const EmptyInvoices = ({ has_filters, create_invoice }: { has_filters: boolean, create_invoice: () => void }) => {
 
     const t = useTranslations("invoices.empty")
 
-    return(
+    return (
         <EmptyWrapper>
             <Text>{has_filters ? t("text_with_filters") : t("text_without_filters")}</Text>
-            {!has_filters && <Button text={t("button_text")} size="large" onClick={create_invoice}/>}
+            {!has_filters && <Button text={t("button_text")} size="large" onClick={create_invoice} />}
         </EmptyWrapper>
     )
 }
