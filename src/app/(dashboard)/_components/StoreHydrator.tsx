@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useSyncExternalStore } from "react";
 import { useAuthStore } from "@/stores/authStore";
 import { DEFAULT_SETTINGS, Language, Role, UserSettingsInput, useUserStore } from "@/stores/userStore";
 import { useProjectsStore } from "@/stores/projectStore";
 import { Session } from "@supabase/supabase-js";
 import { Project } from "@/types/project";
 import { deepMerge } from "@/lib/deep-merge";
+import { DashboardSkeleton } from "./DashboardSkeleton";
 
 const VALID_LANGUAGES: Language[] = ["es", "en", "de"];
 
@@ -18,12 +19,29 @@ function toRole(value: string): Role {
     return value === "admin" ? "admin" : "client";
 }
 
-export function StoreHydrator({ session, profile, projects }: {
+function subscribe() {
+    return () => {};
+}
+
+function getClientSnapshot() {
+    return true;
+}
+
+function getServerSnapshot() {
+    return false;
+}
+
+export function StoreHydrator({ session, profile, projects, children }: {
     session: Session;
     profile: { full_name: string | null; email: string | null; language: string; role: string; settings: UserSettingsInput | null; } | null;
     projects: Project[];
+    children: React.ReactNode;
 }) {
-    useState(() => {
+    const isClient = useSyncExternalStore(subscribe, getClientSnapshot, getServerSnapshot);
+
+    useState(function initializeStores() {
+        if (typeof window === "undefined") return false;
+
         useAuthStore.setState({ session });
 
         if (profile) {
@@ -39,8 +57,10 @@ export function StoreHydrator({ session, profile, projects }: {
 
         useProjectsStore.setState({ projects, project: projects.length > 0 ? projects[0] : null });
 
-        return true; // valor inicial del state, no lo usamos para nada más
+        return true;
     });
 
-    return null;
+    const content = isClient ? children : <DashboardSkeleton />;
+
+    return <>{content}</>;
 }

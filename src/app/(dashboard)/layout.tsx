@@ -22,7 +22,7 @@ export default async function DashboardLayout({
         redirect("/login");
     }
 
-    const [{ data: profile }, { data: projects }] = await Promise.all([
+    const [{ data: profile, error: profileError }, { data: projects, error: projectsError }] = await Promise.all([
         supabase
             .from("profiles")
             .select("full_name, email, language, role, settings")
@@ -34,19 +34,26 @@ export default async function DashboardLayout({
             .order("created_at", { ascending: true }),
     ]);
 
+    if (profileError || projectsError) {
+        console.error("Dashboard load failed", { profileError, projectsError });
+        throw new Error("No se pudieron cargar los datos del dashboard");
+    }
+
     const normalizedProfile = profile
         ? { ...profile, settings: profile.settings as UserSettingsInput | null }
         : null;
 
     return (
         <DashboardContainer>
-            <StoreHydrator session={session} profile={normalizedProfile} projects={projects ?? []} />
             <AuthListener />
-            <Sidenav />
-            <MobileHeader />
-            <Main>
-                {children}
-            </Main>
+
+            <StoreHydrator session={session} profile={normalizedProfile} projects={projects ?? []}>
+                <Sidenav />
+                <MobileHeader />
+                <Main>
+                    {children}
+                </Main>
+            </StoreHydrator>
         </DashboardContainer>
     );
 }

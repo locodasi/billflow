@@ -39,6 +39,7 @@ const PaymentsPage = () => {
     const [filters, setFilters] = useState<PaymentFilters>({ projectId: '', page: 1, search: "", status: "all" });
     const [totalCount, setTotalCount] = useState(0);
     const [selectedPayment, setSelectedPayment] = useState<Payment | null>(null);
+    const [isLoading, setIsLoading] = useState(false)
     const device = useDevice();
     const router = useRouter();
 
@@ -47,6 +48,8 @@ const PaymentsPage = () => {
 
     const fetchPayments = async (filters: PaymentFilters) => {
         if (!filters.projectId) return
+
+        setIsLoading(true)
 
         let query = supabase
             .from('payments')
@@ -65,6 +68,8 @@ const PaymentsPage = () => {
         }
 
         const { data, error, count } = await query
+
+        setIsLoading(false)
 
         if (error) {
             console.error('Error fetching payments:', error)
@@ -130,19 +135,20 @@ const PaymentsPage = () => {
 
             <div style={{ padding: '1rem', display: 'flex', flexDirection: 'column', gap: '1rem', overflow: "auto", height: "100%" }}>
                 <Filters filters={filters} setFilters={setFilters} count={totalCount} />
-
                 {
-                    payments.length > 0 ? (
-                        <div style={{
-                            display: 'grid',
-                            gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
-                            gap: '1rem'
-                        }}>
-                            {payments.map(payment => (
-                                <PaymentCard key={payment.id} payment={payment} onClick={() => onCardClick(payment)} />
-                            ))}
-                        </div>
-                    ) : <EmptyPayments has_filters={filters.status !== "all" || filters.search !== ""} create_payment={() => setIsModalOpen(true)} />
+                    isLoading ? <SkeletonCards /> : (
+                        payments.length > 0 ? (
+                            <div style={{
+                                display: 'grid',
+                                gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
+                                gap: '1rem'
+                            }}>
+                                {payments.map(payment => (
+                                    <PaymentCard key={payment.id} payment={payment} onClick={() => onCardClick(payment)} />
+                                ))}
+                            </div>
+                        ) : <EmptyPayments has_filters={filters.status !== "all" || filters.search !== ""} create_payment={() => setIsModalOpen(true)} />
+                    )
                 }
             </div>
 
@@ -155,14 +161,31 @@ export default PaymentsPage;
 
 import styled from "styled-components";
 
-const EmptyPayments = ({has_filters, create_payment}: {has_filters: boolean, create_payment: () => void}) => {
+import Skeleton from "@/components/Skeleton";
+
+const SkeletonCards = () => {
+
+    return (
+        <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
+            gap: '1rem'
+        }}>
+            {Array(ITEMS_PER_PAGE).fill(0).map((_, index) => (
+                <Skeleton key={index} customStyles={{height: "150px", borderRadius:"0.5rem"}}/>
+            ))}
+        </div>
+    )
+}
+
+const EmptyPayments = ({ has_filters, create_payment }: { has_filters: boolean, create_payment: () => void }) => {
 
     const t = useTranslations("payments.empty")
 
-    return(
+    return (
         <EmptyWrapper>
             <Text>{has_filters ? t("text_with_filters") : t("text_without_filters")}</Text>
-            {!has_filters && <Button text={t("button_text")} size="large" onClick={create_payment}/>}
+            {!has_filters && <Button text={t("button_text")} size="large" onClick={create_payment} />}
         </EmptyWrapper>
     )
 }
