@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0](https://github.com/locodasi/billflow/compare/v1.0.1...v1.1.0) (2026-10-06)
+
+
+### Features
+
+* Skeletons ([7f6fd70](https://github.com/locodasi/billflow/commit/7f6fd7063bf3fa86678a42e32b5fd098ea1a91f3))
+
 ## [1.0.1](https://github.com/locodasi/billflow/compare/v1.0.0...v1.0.1) (2026-09-28)
 
 
