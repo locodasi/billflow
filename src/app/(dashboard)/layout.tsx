@@ -40,13 +40,15 @@ export default async function DashboardLayout({
 
     return (
         <DashboardContainer>
-            <StoreHydrator session={session} profile={normalizedProfile} projects={projects ?? []} />
             <AuthListener />
-            <Sidenav />
-            <MobileHeader />
-            <Main>
-                {children}
-            </Main>
+
+            <StoreHydrator session={session} profile={normalizedProfile} projects={projects ?? []}>
+                <Sidenav />
+                <MobileHeader />
+                <Main>
+                    {children}
+                </Main>
+            </StoreHydrator>
         </DashboardContainer>
     );
 }
