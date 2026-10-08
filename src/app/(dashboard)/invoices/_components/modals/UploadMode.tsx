@@ -163,8 +163,7 @@ const UploadMode = ({close, addInvoice}: {close: () => void, addInvoice: (invoic
                 onChange={(v) => setInvoiceData({ ...invoiceData, currency: { automatic: false, value: v.value } })}
                 underText={invoiceData.currency.automatic ? t("values.from_pdf") : ""}
                 styles={getAutoStyle(invoiceData.currency.automatic)}
-
-            />
+            /> 
 
             <TextArea value={invoiceData.notes} onChange={(v) => setInvoiceData({ ...invoiceData, notes: v })} label={t("values.notes")} placeholder={t("values.notes_placeholder")} minLines={5} />
 
