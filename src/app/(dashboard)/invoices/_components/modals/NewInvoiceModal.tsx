@@ -10,7 +10,7 @@ import Icon from "@/components/icons/Icon";
 import { InvoiceSummary } from "@/types/Invoice";
 
 import UploadMode from "./UploadMode";
-import ManualMode from "./ManualMode";
+import ManualMode from "./manualMode/ManualMode";
 
 const NewInvoiceModal = ({ onClose, addInvoice }: { onClose: () => void, addInvoice: (invoice: InvoiceSummary) => void }) => {
 

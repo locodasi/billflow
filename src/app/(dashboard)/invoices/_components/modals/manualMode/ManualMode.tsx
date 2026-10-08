@@ -11,8 +11,9 @@ import NormalSelect, { Option } from "@/components/Select";
 import TextArea from "@/components/inputs/Textarea";
 import Button from "@/components/Button";
 import NumberInput from "@/components/inputs/NumberInput";
-import IconButton from "@/components/IconButton";
 import PreviewInvoicePdf from "@/lib/pdf/PreviewInvoicePDf";
+import { Section } from "./common";
+import Items from "./Items";
 
 const createItem = (): InvoiceItem => ({
     id: crypto.randomUUID(),
@@ -75,68 +76,12 @@ const ManualMode = ({ close, addInvoice }: { close: () => void, addInvoice: (inv
         }));
     };
 
-    const updateItem = (
-        id: string,
-        changes: Partial<InvoiceItem>,
-    ) => {
+    const updateInvoiceItems = (items: InvoiceItem[]) => {
         setInvoiceData((current) => ({
             ...current,
-            items: current.items.map((item) =>
-                item.id === id
-                    ? {
-                        ...item,
-                        ...changes,
-                    }
-                    : item,
-            ),
-        }));
-    };
-
-    const addItem = () => {
-        setInvoiceData((current) => ({
-            ...current,
-            items: [
-                ...current.items,
-                createItem(),
-            ],
-        }));
-    };
-
-    const removeItem = (id: string) => {
-        setInvoiceData((current) => ({
-            ...current,
-            items: current.items.filter(
-                (item) => item.id !== id,
-            ),
-        }));
-    };
-
-    const moveItemUp = (id: string) => {
-        setInvoiceData((current) => {
-            const index = current.items.findIndex(
-                (item) => item.id === id,
-            );
-
-            if (index <= 0) {
-                return current;
-            }
-
-            const items = [...current.items];
-
-            [
-                items[index - 1],
-                items[index],
-            ] = [
-                    items[index],
-                    items[index - 1],
-                ];
-
-            return {
-                ...current,
-                items,
-            };
-        });
-    };
+            items: items
+        }))
+    }
 
     const subtotal = useMemo(() => {
         return invoiceData.items.reduce(
@@ -291,149 +236,7 @@ const ManualMode = ({ close, addInvoice }: { close: () => void, addInvoice: (inv
                 </BillingGrid>
             </Section>
 
-            {/* Items */}
-            <Section>
-                <ItemsTable>
-                    <ItemsHeader>
-                        <DescriptionColumn>
-                            Description
-                        </DescriptionColumn>
-
-                        <UnitColumn>
-                            Unit cost
-                        </UnitColumn>
-
-                        <QuantityColumn>
-                            QTY
-                        </QuantityColumn>
-
-                        <AmountColumn>
-                            Amount
-                        </AmountColumn>
-
-                        <ActionColumn />
-                    </ItemsHeader>
-
-                    {invoiceData.items.map(
-                        (item, index) => (
-                            <ItemRow key={item.id}>
-                                <DescriptionColumn>
-                                    <TextInput
-                                        value={
-                                            item.description
-                                        }
-                                        onChange={(
-                                            value,
-                                        ) =>
-                                            updateItem(
-                                                item.id,
-                                                {
-                                                    description:
-                                                        value,
-                                                },
-                                            )
-                                        }
-                                        placeholder="Hours worked"
-                                    />
-                                </DescriptionColumn>
-
-                                <UnitColumn>
-                                    <NumberInput
-                                        value={
-                                            item.unitCost
-                                        }
-                                        onChange={(
-                                            value,
-                                        ) =>
-                                            updateItem(
-                                                item.id,
-                                                {
-                                                    unitCost:
-                                                        value,
-                                                },
-                                            )
-                                        }
-                                        min={0}
-                                        step={0.01}
-                                        placeholder="0.00"
-                                    />
-                                </UnitColumn>
-
-                                <QuantityColumn>
-                                    <NumberInput
-                                        value={
-                                            item.quantity
-                                        }
-                                        onChange={(
-                                            value,
-                                        ) =>
-                                            updateItem(
-                                                item.id,
-                                                {
-                                                    quantity:
-                                                        value,
-                                                },
-                                            )
-                                        }
-                                        min={1}
-                                        step={1}
-                                        placeholder="1"
-                                    />
-                                </QuantityColumn>
-
-                                <AmountColumn>
-                                    <CalculatedValue>
-                                        {formatCurrency(
-                                            item.unitCost *
-                                            item.quantity,
-                                            invoiceData.currency,
-                                        )}
-                                    </CalculatedValue>
-                                </AmountColumn>
-
-                                <ActionColumn>
-                                    <IconButton
-                                        icon="arrow-up"
-                                        onClick={() =>
-                                            moveItemUp(
-                                                item.id,
-                                            )
-                                        }
-                                        disabled={
-                                            index === 0
-                                        }
-                                        size="small"
-                                        style="outline"
-                                    />
-
-                                    <IconButton
-                                        icon="cancel"
-                                        onClick={() =>
-                                            removeItem(
-                                                item.id,
-                                            )
-                                        }
-                                        type="error"
-                                        style="outline"
-                                        size="small"
-                                    />
-                                </ActionColumn>
-                            </ItemRow>
-                        ),
-                    )}
-                </ItemsTable>
-
-                <AddItemContainer>
-                    <Button
-                        text="Add item"
-                        onClick={addItem}
-                        type="primary"
-                        style="outline"
-                        size="small"
-                        cssStyles={{ width: "100%" }}
-                    />
-                </AddItemContainer>
-            </Section>
+            <Items items={invoiceData.items} currency={invoiceData.currency} updateInvoiceItems={updateInvoiceItems} />
 
             {/* Bank details + totals */}
             <BottomGrid>
@@ -585,13 +388,7 @@ const ManualMode = ({ close, addInvoice }: { close: () => void, addInvoice: (inv
 
 export default ManualMode
 
-const Section = styled.section`
-    width: 100%;
 
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-`;
 
 const Fields = styled.div<{
     columns: number;
@@ -623,156 +420,7 @@ const BillingGrid = styled.div`
 
 /* Items */
 
-const ItemsTable = styled.div`
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-`;
 
-const ItemsHeader = styled.div`
-    display: grid;
-    grid-template-columns:
-        minmax(220px, 1fr)
-        140px
-        100px
-        140px
-        180px;
-
-    gap: 12px;
-    padding: 0 12px 8px;
-
-    color: var(--Text-text-tertiary);
-    font-size: 11px;
-    line-height: 16px;
-    font-weight: 600;
-    text-transform: uppercase;
-
-    @media (max-width: 1050px) {
-        grid-template-columns:
-            minmax(180px, 1fr)
-            120px
-            90px
-            120px
-            160px;
-    }
-
-    @media (max-width: 850px) {
-        display: none;
-    }
-`;
-
-const DescriptionColumn = styled.div`
-    min-width: 0;
-`;
-
-const UnitColumn = styled.div`
-    min-width: 0;
-`;
-
-const QuantityColumn = styled.div`
-    min-width: 0;
-`;
-
-const AmountColumn = styled.div`
-    min-width: 0;
-`;
-
-const ActionColumn = styled.div`
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 8px;
-`;
-
-const ItemRow = styled.div`
-    display: grid;
-    grid-template-columns:
-        minmax(220px, 1fr)
-        140px
-        100px
-        140px
-        100px;
-
-    gap: 12px;
-    align-items: center;
-
-    padding: 12px;
-
-    border: 1px solid
-        var(--Border-Colors-border-primary);
-    border-radius: 10px;
-
-    & + & {
-        margin-top: 8px;
-    }
-
-    @media (max-width: 1050px) {
-        grid-template-columns:
-            minmax(180px, 1fr)
-            120px
-            90px
-            120px
-            100px;
-    }
-
-    @media (max-width: 850px) {
-        grid-template-columns: 1fr 1fr;
-
-        ${DescriptionColumn} {
-            grid-column: 1 / -1;
-        }
-
-        ${AmountColumn} {
-            grid-column: 1;
-        }
-
-        ${ActionColumn} {
-            grid-column: 2;
-            justify-content: flex-end;
-        }
-    }
-
-    @media (max-width: 550px) {
-        grid-template-columns: 1fr;
-
-        ${DescriptionColumn},
-        ${AmountColumn},
-        ${ActionColumn} {
-            grid-column: 1;
-        }
-
-        ${ActionColumn} {
-            justify-content: flex-start;
-        }
-    }
-`;
-
-const CalculatedValue = styled.div`
-    min-height: 36px;
-    display: flex;
-    align-items: center;
-
-    padding: 0 12px;
-
-    border: 1px solid
-        var(--Border-Colors-border-primary);
-    border-radius: 8px;
-
-    background: var(
-        --Background-Colors-bg-secondary
-    );
-
-    color: var(--Text-text-primary);
-    font-size: 14px;
-    font-weight: 500;
-    white-space: nowrap;
-`;
-
-const AddItemContainer = styled.div`
-    display: flex;
-    justify-content: center;
-    margin-top: -4px;
-`;
 
 /* Bottom */
 
