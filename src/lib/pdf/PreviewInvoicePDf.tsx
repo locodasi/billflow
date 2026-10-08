@@ -126,7 +126,7 @@ const PreviewInvoicePdf = ({
                         isUploading
                             ? () => {}
                             : onClose
-                    }
+                    } 
                 />
 
                 <Content>

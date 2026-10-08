@@ -21,7 +21,7 @@ export type InvoiceData = {
     billedTo: string;
     from: string;
     items: InvoiceItem[];
-    taxRate: number;
+    taxRate: number; 
     shipping: number;
     currency: string;
     bankDetails: string;

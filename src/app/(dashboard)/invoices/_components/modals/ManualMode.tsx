@@ -1,25 +1,23 @@
-'use client';
+import styled from "styled-components";
 
-import { useMemo, useState } from 'react';
-import { PDFDownloadLink } from '@react-pdf/renderer';
-import styled from 'styled-components';
+import { useMemo, useState } from "react";
 
-import { InvoiceData, InvoiceItem, TestInvoice } from '@/lib/pdf/TestInvoice';
+import { InvoiceData, InvoiceItem } from "@/lib/pdf/TestInvoice";
 
-import Button from '@/components/Button';
-import TextInput from '@/components/inputs/TextInput';
-import NumberInput from '@/components/inputs/NumberInput';
-import TextArea from '@/components/inputs/Textarea';
-import NormalSelect, { Option } from '@/components/Select';
-
-import { useCurrencyOptions } from '@/hooks/useCurrencyOptions';
-import PreviewInvoicePdf from '@/lib/pdf/PreviewInvoicePDf';
-
+import { InvoiceSummary } from "@/types/Invoice"
+import TextInput from "@/components/inputs/TextInput";
+import { useCurrencyOptions } from "@/hooks/useCurrencyOptions";
+import NormalSelect, { Option } from "@/components/Select";
+import TextArea from "@/components/inputs/Textarea";
+import Button from "@/components/Button";
+import NumberInput from "@/components/inputs/NumberInput";
+import IconButton from "@/components/IconButton";
+import PreviewInvoicePdf from "@/lib/pdf/PreviewInvoicePDf";
 
 const createItem = (): InvoiceItem => ({
     id: crypto.randomUUID(),
-    description: '',
-    unitCost: 0,
+    description: 'Hours worked',
+    unitCost: 8,
     quantity: 1,
 });
 
@@ -52,7 +50,8 @@ const formatCurrency = (
     }).format(amount);
 };
 
-export default function TestPdfPage() {
+const ManualMode = ({ close, addInvoice }: { close: () => void, addInvoice: (invoice: InvoiceSummary) => void }) => {
+
     const [invoiceData, setInvoiceData] =
         useState<InvoiceData>(initialInvoice);
 
@@ -185,31 +184,8 @@ export default function TestPdfPage() {
     };
 
     return (
-        <PageContainer>
-            <Header>
-                <HeaderContent>
-                    <Title>Invoice</Title>
-
-                    <Subtitle>
-                        Create and download your invoice
-                    </Subtitle>
-                </HeaderContent>
-            </Header>
-
-            {/* Invoice information */}
+        <div style={{ display: "flex", flexDirection: "column", gap: "1rem", overflow: "auto" }}>
             <Section>
-                <SectionHeader>
-                    <div>
-                        <SectionTitle>
-                            Invoice information
-                        </SectionTitle>
-
-                        <SectionDescription>
-                            Basic information about the invoice.
-                        </SectionDescription>
-                    </div>
-                </SectionHeader>
-
                 <Fields columns={2}>
                     <TextInput
                         label="Invoice number"
@@ -277,23 +253,6 @@ export default function TestPdfPage() {
                         placeholder="15/08/2026"
                     />
                 </Fields>
-            </Section>
-
-            {/* Billing information */}
-            <Section>
-                <SectionHeader>
-                    <div>
-                        <SectionTitle>
-                            Billing information
-                        </SectionTitle>
-
-                        <SectionDescription>
-                            Add any information you want to
-                            display for the billed party and
-                            invoice issuer.
-                        </SectionDescription>
-                    </div>
-                </SectionHeader>
 
                 <BillingGrid>
                     <TextArea
@@ -334,19 +293,6 @@ export default function TestPdfPage() {
 
             {/* Items */}
             <Section>
-                <SectionHeader>
-                    <div>
-                        <SectionTitle>
-                            Items
-                        </SectionTitle>
-
-                        <SectionDescription>
-                            Add the products or services
-                            included in this invoice.
-                        </SectionDescription>
-                    </div>
-                </SectionHeader>
-
                 <ItemsTable>
                     <ItemsHeader>
                         <DescriptionColumn>
@@ -446,8 +392,8 @@ export default function TestPdfPage() {
                                 </AmountColumn>
 
                                 <ActionColumn>
-                                    <Button
-                                        text="Subir"
+                                    <IconButton
+                                        icon="arrow-up"
                                         onClick={() =>
                                             moveItemUp(
                                                 item.id,
@@ -456,12 +402,12 @@ export default function TestPdfPage() {
                                         disabled={
                                             index === 0
                                         }
-                                        size="ultra-small"
+                                        size="small"
                                         style="outline"
                                     />
 
-                                    <Button
-                                        text="Eliminar"
+                                    <IconButton
+                                        icon="cancel"
                                         onClick={() =>
                                             removeItem(
                                                 item.id,
@@ -469,7 +415,7 @@ export default function TestPdfPage() {
                                         }
                                         type="error"
                                         style="outline"
-                                        size="ultra-small"
+                                        size="small"
                                     />
                                 </ActionColumn>
                             </ItemRow>
@@ -484,6 +430,7 @@ export default function TestPdfPage() {
                         type="primary"
                         style="outline"
                         size="small"
+                        cssStyles={{ width: "100%" }}
                     />
                 </AddItemContainer>
             </Section>
@@ -491,18 +438,6 @@ export default function TestPdfPage() {
             {/* Bank details + totals */}
             <BottomGrid>
                 <Section>
-                    <SectionHeader>
-                        <div>
-                            <SectionTitle>
-                                Bank account details
-                            </SectionTitle>
-
-                            <SectionDescription>
-                                This information will appear
-                                at the bottom of the invoice.
-                            </SectionDescription>
-                        </div>
-                    </SectionHeader>
 
                     <TextArea
                         value={
@@ -516,19 +451,13 @@ export default function TestPdfPage() {
                         placeholder={
                             'IBAN: ...\nBIC: ...\nBank: ...'
                         }
-                        minLines={7}
+                        minLines={8}
                         maxLines={12}
                     />
                 </Section>
 
                 <TotalsSection>
-                    <SectionHeader>
-                        <div>
-                            <SectionTitle>
-                                Totals
-                            </SectionTitle>
-                        </div>
-                    </SectionHeader>
+
 
                     <TotalsCard>
                         <TotalRow>
@@ -650,85 +579,18 @@ export default function TestPdfPage() {
                     onUpload={handleUploadInvoice}
                 />
             )}
-        </PageContainer>
-    ); 
+        </div>
+    )
 }
 
-/* -------------------------------------------------------------------------- */
-/* Styled components                                                          */
-/* -------------------------------------------------------------------------- */
-
-const PageContainer = styled.main`
-    width: 100%;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 40px;
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-`;
-
-const Header = styled.header`
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 24px;
-`;
-
-const HeaderContent = styled.div`
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-`;
-
-const Title = styled.h1`
-    margin: 0;
-    font-size: 28px;
-    line-height: 36px;
-    font-weight: 700;
-    color: var(--Text-text-primary);
-`;
-
-const Subtitle = styled.p`
-    margin: 0;
-    font-size: 14px;
-    line-height: 20px;
-    color: var(--Text-text-tertiary);
-`;
+export default ManualMode
 
 const Section = styled.section`
     width: 100%;
-    padding: 24px;
-    border: 1px solid
-        var(--Border-Colors-border-primary);
-    border-radius: 12px;
-    background: var(--Background-Colors-bg-primary);
 
     display: flex;
     flex-direction: column;
-    gap: 20px;
-`;
-
-const SectionHeader = styled.div`
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 16px;
-`;
-
-const SectionTitle = styled.h2`
-    margin: 0;
-    font-size: 16px;
-    line-height: 24px;
-    font-weight: 600;
-    color: var(--Text-text-primary);
-`;
-
-const SectionDescription = styled.p`
-    margin: 4px 0 0;
-    font-size: 13px;
-    line-height: 18px;
-    color: var(--Text-text-tertiary);
+    gap: 1rem;
 `;
 
 const Fields = styled.div<{
@@ -829,7 +691,7 @@ const ItemRow = styled.div`
         140px
         100px
         140px
-        180px;
+        100px;
 
     gap: 12px;
     align-items: center;
@@ -850,7 +712,7 @@ const ItemRow = styled.div`
             120px
             90px
             120px
-            160px;
+            100px;
     }
 
     @media (max-width: 850px) {
@@ -908,7 +770,7 @@ const CalculatedValue = styled.div`
 
 const AddItemContainer = styled.div`
     display: flex;
-    justify-content: flex-start;
+    justify-content: center;
     margin-top: -4px;
 `;
 
@@ -938,7 +800,7 @@ const TotalsSection = styled(Section)`
 
 const TotalsCard = styled.div`
     width: 100%;
-    padding: 20px;
+    padding: 1rem;
 
     border: 1px solid
         var(--Border-Colors-border-primary);
@@ -950,7 +812,7 @@ const TotalsCard = styled.div`
 
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 0.25rem;
 `;
 
 const TotalRow = styled.div`
