@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://github.com/locodasi/billflow/compare/v1.1.0...v1.2.0) (2026-10-09)
+
+
+### Features
+
+* Pdf creator ([1c64b4d](https://github.com/locodasi/billflow/commit/1c64b4dacfc8d655a327432f5d2303cd0751ee7c))
+
 ## [1.1.0](https://github.com/locodasi/billflow/compare/v1.0.1...v1.1.0) (2026-10-06)
 
 
