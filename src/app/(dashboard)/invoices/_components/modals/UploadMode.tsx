@@ -112,10 +112,20 @@ const UploadMode = ({close, addInvoice}: {close: () => void, addInvoice: (invoic
     const saveInvoice = async () => {
         try {
             if (!projectId) throw new Error("Project ID no disponible");
+            if (!invoiceData.file) throw new Error("Debes pasar un file")
 
             setIsLoading(true);
             setError(null);
-            const invoice = await createInvoice(invoiceData, projectId);
+            // const invoice = await createInvoice(invoiceData, projectId);
+            const invoice = await createInvoice({
+                projectId,
+                amount: invoiceData.amount.value,
+                currency: invoiceData.currency.value,
+                invoiceNumber: invoiceData.invoiceNumber.value,
+                pdf: invoiceData.file,
+                notes: invoiceData.notes,
+                metadata: invoiceData.metadata
+            });
             addInvoice(invoice);
             close();
         } catch (error) {
@@ -163,8 +173,7 @@ const UploadMode = ({close, addInvoice}: {close: () => void, addInvoice: (invoic
                 onChange={(v) => setInvoiceData({ ...invoiceData, currency: { automatic: false, value: v.value } })}
                 underText={invoiceData.currency.automatic ? t("values.from_pdf") : ""}
                 styles={getAutoStyle(invoiceData.currency.automatic)}
-
-            />
+            /> 
 
             <TextArea value={invoiceData.notes} onChange={(v) => setInvoiceData({ ...invoiceData, notes: v })} label={t("values.notes")} placeholder={t("values.notes_placeholder")} minLines={5} />
 

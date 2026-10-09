@@ -10,6 +10,7 @@ import Icon from "@/components/icons/Icon";
 import { InvoiceSummary } from "@/types/Invoice";
 
 import UploadMode from "./UploadMode";
+import ManualMode from "./manualMode/ManualMode";
 
 const NewInvoiceModal = ({ onClose, addInvoice }: { onClose: () => void, addInvoice: (invoice: InvoiceSummary) => void }) => {
 
@@ -30,7 +31,7 @@ const NewInvoiceModal = ({ onClose, addInvoice }: { onClose: () => void, addInvo
                             <p className="subtitle">{t("pdf.subtitle")}</p>
                         </div>
                     </ModeOption>
-                    <ModeOption $active={mode === "manual"} $disabled={true} onClick={() => setMode("manual")}>
+                    <ModeOption $active={mode === "manual"} onClick={() => setMode("manual")}>
                         <Icon icon="edit-pencil" size={30} />
                         <div style={{ display: "flex", flexDirection: "column", gap: "0.25rem" }}>
                             <p className="title">{t("manual.title")}</p>
@@ -40,6 +41,7 @@ const NewInvoiceModal = ({ onClose, addInvoice }: { onClose: () => void, addInvo
                 </div>
 
                 {mode === "upload" && <UploadMode close={onClose} addInvoice={addInvoice}/>}
+                {mode === "manual" && <ManualMode close={onClose} addInvoice={addInvoice}/>}
 
             </WrapperModal>
         </Modal>

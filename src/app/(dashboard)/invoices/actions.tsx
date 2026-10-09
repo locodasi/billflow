@@ -45,78 +45,169 @@ import { convertToUSD } from '@/lib/exchange-rate'
 import { invoiceUploadedEmailTemplate } from '@/lib/notifications/templates/email/helper'
 import { getUserByProjectId } from '@/lib/supabaseFunctions'
 
-import { UploadInvoice } from './_components/modals/UploadMode'
+type CreateInvoiceInput = {
+    projectId: string;
+    invoiceNumber: string;
+    amount: number;
+    currency: string;
+    pdf: File | Blob;
+    dueDate?: string | null;
+    notes?: string | null;
+    metadata?: Record<string, any> | null;
+};
 
-export async function createInvoice(data: UploadInvoice, projectId: string): Promise<InvoiceSummary> {
-    // Validación
-    if (!data.invoiceNumber?.value) throw new Error('Invoice number requerido')
-    if (!data.amount?.value) throw new Error('Amount requerido')
-    if (!data.currency?.value) throw new Error('Currency requerido')
-    if (!data.file) throw new Error('Archivo PDF requerido')
+export async function createInvoice(data: CreateInvoiceInput) {
+    // 1. Validaciones obligatorias
+    if (!data.projectId?.trim()) {
+        throw new Error("Project ID requerido");
+    }
+
+    if (!data.invoiceNumber?.trim()) {
+        throw new Error("Invoice number requerido");
+    }
+
+    if (
+        typeof data.amount !== "number" ||
+        !Number.isFinite(data.amount) ||
+        data.amount <= 0
+    ) {
+        throw new Error("Amount debe ser un número mayor que cero");
+    }
+
+    if (!data.currency?.trim()) {
+        throw new Error("Currency requerido");
+    }
+
+    if (!data.pdf || data.pdf.size === 0) {
+        throw new Error("Archivo PDF requerido");
+    }
+
+    // 2. Validar fecha de vencimiento, si fue proporcionada
+    const dueDate = data.dueDate?.trim() || null;
+
+    function isValidDateOnly(value: string): boolean {
+        const [year, month, day] = value.split("-").map(Number);
+
+        const date = new Date(Date.UTC(year, month - 1, day));
+
+        return (
+            date.getUTCFullYear() === year &&
+            date.getUTCMonth() === month - 1 &&
+            date.getUTCDate() === day
+        );
+    }
+
+    if (
+        dueDate !== null &&
+        (
+            !/^\d{4}-\d{2}-\d{2}$/.test(dueDate) ||
+            !isValidDateOnly(dueDate)
+        )
+    ) {
+        throw new Error("Due date inválida. Usá el formato YYYY-MM-DD");
+    }
 
     const supabase = await createServerClient();
 
-    // Upload PDF
-    const arrayBuffer = await data.file.arrayBuffer()
-    const filePath = `${projectId}/invoices/${data.invoiceNumber.value}.pdf`
+    // 3. Subir PDF
+    const arrayBuffer = await data.pdf.arrayBuffer();
+    const filePath =
+        `${data.projectId}/invoices/${data.invoiceNumber.trim()}.pdf`;
 
     const { error: uploadError } = await supabase.storage
-        .from('documents')
+        .from("documents")
         .upload(filePath, arrayBuffer, {
-            contentType: 'application/pdf',
+            contentType: "application/pdf",
             upsert: false,
-        })
+        });
 
-    if (uploadError) throw new Error(`Upload fallido: ${uploadError.message}`)
+    if (uploadError) {
+        throw new Error(`Upload fallido: ${uploadError.message}`);
+    }
 
-    const { exchangeRate, amountUsd } = await convertToUSD(data.amount.value, data.currency.value)
+    // 4. Convertir moneda
+    const { exchangeRate, amountUsd } = await convertToUSD(
+        data.amount,
+        data.currency
+    );
 
-    // Insert invoice
+    // 5. Insertar factura
     const { data: invoice, error: insertError } = await supabase
-        .from('invoices')
+        .from("invoices")
         .insert({
-            invoice_number: data.invoiceNumber.value,
-            project_id: projectId,
-            amount: data.amount.value,
-            currency: data.currency.value,
-            notes: data.notes,
-            metadata: data.metadata,
+            invoice_number: data.invoiceNumber.trim(),
+            project_id: data.projectId,
+            amount: data.amount,
+            currency: data.currency,
+            due_date: dueDate,
+            notes: data.notes ?? null,
+            metadata: data.metadata ?? {},
             pdf_path: filePath,
             exchange_rate_to_usd: exchangeRate,
             amount_usd: amountUsd,
         })
         .select()
-        .single()
+        .single();
 
-    if (insertError) throw new Error(`Insert fallido: ${insertError.message}`)
+    if (insertError) {
+        // Evita dejar el PDF huérfano si falla el INSERT.
+        const { error: cleanupError } = await supabase.storage
+            .from("documents")
+            .remove([filePath]);
 
-    const user = await getUserByProjectId(projectId);
-
-    const { data: project } = await supabase
-        .from('projects')
-        .select('name')
-        .eq('id', projectId)
-        .single()
-
-    if (user.settings.notifications.email.invoiceUploaded) {
-        // Enviar notificación de nueva factura
-        const result = await notificationService.send(
-            await invoiceUploadedEmailTemplate({ recipient: { name: user.fullName, email: user.email }, locale: user.language, amount: data.amount.value, currency: data.currency.value, invoiceNumber: data.invoiceNumber.value, invoiceId: invoice.id, projectName: project?.name ?? "Tu proyecto" })
-        );
-
-        if (!result.success) {
-            console.error("[sendWelcomeNotification]", result.error);
+        if (cleanupError) {
+            console.error("Error eliminando PDF tras fallar el INSERT:", cleanupError);
         }
+
+        throw new Error(`Insert fallido: ${insertError.message}`);
     }
 
+    // 6. Notificación
+    try {
+        const user = await getUserByProjectId(data.projectId);
+
+        const { data: project } = await supabase
+            .from("projects")
+            .select("name")
+            .eq("id", data.projectId)
+            .single();
+
+        if (user.settings.notifications.email.invoiceUploaded) {
+            const result = await notificationService.send(
+                await invoiceUploadedEmailTemplate({
+                    recipient: {
+                        name: user.fullName,
+                        email: user.email,
+                    },
+                    locale: user.language,
+                    amount: data.amount,
+                    currency: data.currency,
+                    invoiceNumber: data.invoiceNumber.trim(),
+                    invoiceId: invoice.id,
+                    projectName: project?.name ?? "Tu proyecto",
+                })
+            );
+
+            if (!result.success) {
+                console.error("[invoiceUploadedNotification]", result.error);
+            }
+        }
+    } catch (error) {
+        // La factura ya fue creada; un fallo de notificación no debería
+        // hacer que el flujo informe que la creación falló.
+        console.error("[invoiceUploadedNotification]", error);
+    }
+
+    // 7. Devolver factura
     return {
         ...invoice,
         paid_amount: 0,
         pending_amount: 0,
         outstanding_amount: invoice.amount,
         computed_status: "unpaid",
-    } as InvoiceSummary
+    } as InvoiceSummary;
 }
+
 
 import { notificationService } from "@/lib/notifications/notification-service";
 

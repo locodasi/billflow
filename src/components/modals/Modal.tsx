@@ -1,4 +1,4 @@
-import styled, { CSSProperties } from "styled-components";
+import styled, { css, CSSProperties } from "styled-components";
 
 import { createPortal } from "react-dom";
 
@@ -91,16 +91,35 @@ export const HeaderTitle = styled.h2`
     font-weight: 500;
 `;
 
-export const WrapperModal = ({children, styles}: {children: React.ReactNode, styles?: React.CSSProperties}) => {
+export type ModalVariant  = "large" | "default" | "wide"
+
+const MODAL_VARIANTS: Record<ModalVariant, any> = {
+    default: css`
+    `,
+
+    large: css`
+        width: min(1000px, 95vw);
+        height: 90vh;
+    `,
+
+    wide: css`
+        width: min(1200px, 95vw);
+        height: 80vh;
+    `,
+} as const;
+
+export const WrapperModal = ({children, styles, variant = "default"}: {children: React.ReactNode, styles?: React.CSSProperties, variant?: ModalVariant}) => {
 
     return(
-        <Wrapper style={styles}>
+        <Wrapper style={styles} $variant={variant}>
             {children}
         </Wrapper>
     )
 }
 
-const Wrapper = styled.div`
+const Wrapper = styled.div<{
+    $variant: ModalVariant;
+}>`
     display: flex;
     flex-direction: column;
     gap: 1rem;
@@ -110,6 +129,8 @@ const Wrapper = styled.div`
     border-radius: 0.5rem;
 
     max-height: 90vh;
+
+    ${({ $variant }) => MODAL_VARIANTS[$variant]}
 
     @media (max-width: 768px) {
         width: 100%;
