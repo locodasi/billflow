@@ -18,6 +18,7 @@ import { createItem, Section } from "./common";
 import Items from "./Items";
 import BottomSection from "./BottomSection";
 import { useProjectsStore } from "@/stores/projectStore";
+import { createInvoice } from "../../../actions";
 
 const initialInvoice: InvoiceData = {
     invoiceNumber: '0042',
@@ -74,11 +75,10 @@ const ManualMode = ({ close, addInvoice }: { close: () => void, addInvoice: (inv
 
             if (error) return
 
-            let invoiceNumber = "INV_0001";
-
-            if (data && data.length > 0) {
-                invoiceNumber = `INV_${String(parseInt(data[0].invoice_number.replace("INV_", "")) + 1).padStart(4, "0")}`;
-            }
+            let invoiceNumber = "0001"
+            try {
+                invoiceNumber = String(parseInt(data[0].invoice_number.replace("INV_", "")) + 1).padStart(4, "0")
+            }catch{}
 
             setInvoiceData((current) => ({
                 ...current,
@@ -119,20 +119,54 @@ const ManualMode = ({ close, addInvoice }: { close: () => void, addInvoice: (inv
         }))
     }
 
+    function calculateTotal(invoiceData: InvoiceData): number {
+        const subtotal = invoiceData.items.reduce(
+            (total, item) => total + item.quantity * item.unitCost,
+            0
+        );
 
+        const tax = subtotal * (invoiceData.taxRate / 100);
+
+        return Number((subtotal + tax + invoiceData.shipping).toFixed(2));
+    }
+
+    function toISODate(value: string | null | undefined): string | null {
+        if (!value?.trim()) return null;
+
+        const match = value.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+
+        // Si no coincide con el formato esperado, no inventamos una fecha.
+        if (!match) return null;
+
+        const [, day, month, year] = match;
+
+        return `${year}-${month}-${day}`;
+    }
 
     const handleUploadInvoice = async (
         file: Blob,
+        invoiceData: InvoiceData
     ) => {
-        // Acá posteriormente:
-        //
-        // 1. Crear invoice en DB
-        // 2. Crear path del PDF
-        // 3. Subir `file` a Supabase Storage
-        // 4. Guardar el path en la invoice
-        //
-        // Cuando termina:
-        setShowPreview(false);
+        try {
+            if (!projectId) return
+            console.log(invoiceData.dueDate)
+            const invoice = await createInvoice({
+                projectId,
+                invoiceNumber: `INV_${invoiceData.invoiceNumber}`,
+                amount: calculateTotal(invoiceData),
+                currency: invoiceData.currency,
+                pdf: file,
+                dueDate: toISODate(invoiceData.dueDate) || null,
+            });
+
+            // Actualizar la lista del componente padre.
+            addInvoice(invoice);
+
+            // Cerrar el modal solamente si la creación salió bien.
+            close();
+        } catch (error) {
+            console.error("Error al crear la factura:", error);
+        }
     };
 
     return (

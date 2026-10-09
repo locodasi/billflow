@@ -17,7 +17,7 @@ import { TestInvoice } from '@/lib/pdf/TestInvoice';
 interface PreviewInvoicePdfProps {
     data: InvoiceData;
     onClose: () => void;
-    onUpload: (file: Blob) => Promise<void>;
+    onUpload: (file: Blob, invoiceData: InvoiceData) => Promise<void>;
 }
 
 const PreviewInvoicePdf = ({
@@ -102,7 +102,7 @@ const PreviewInvoicePdf = ({
             setIsUploading(true);
             setError(null);
 
-            await onUpload(pdfBlob);
+            await onUpload(pdfBlob, data);
         } catch (error) {
             console.error(
                 'Error uploading invoice PDF:',
