@@ -5,7 +5,7 @@ import IconButton from "@/components/IconButton";
 import NumberInput from "@/components/inputs/NumberInput";
 import TextInput from "@/components/inputs/TextInput";
 
-import { InvoiceData, InvoiceItem } from "@/lib/pdf/TestInvoice";
+import { InvoiceItem } from "@/lib/pdf/TestInvoice";
 
 import { createItem, formatCurrency, Section } from "./common";
 
