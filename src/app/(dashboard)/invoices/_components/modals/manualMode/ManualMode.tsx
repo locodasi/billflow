@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { InvoiceData, InvoiceItem } from "@/lib/pdf/TestInvoice";
 
@@ -10,18 +10,14 @@ import { useCurrencyOptions } from "@/hooks/useCurrencyOptions";
 import NormalSelect, { Option } from "@/components/Select";
 import TextArea from "@/components/inputs/Textarea";
 import Button from "@/components/Button";
-import NumberInput from "@/components/inputs/NumberInput";
 import PreviewInvoicePdf from "@/lib/pdf/PreviewInvoicePDf";
-import { Section } from "./common";
+import { supabase } from "@/lib/supabase";
+import env from "@/lib/env";
+
+import { createItem, Section } from "./common";
 import Items from "./Items";
 import BottomSection from "./BottomSection";
-
-const createItem = (): InvoiceItem => ({
-    id: crypto.randomUUID(),
-    description: 'Hours worked',
-    unitCost: 8,
-    quantity: 1,
-});
+import { useProjectsStore } from "@/stores/projectStore";
 
 const initialInvoice: InvoiceData = {
     invoiceNumber: '0042',
@@ -42,16 +38,6 @@ const initialInvoice: InvoiceData = {
     bankDetails: '',
 };
 
-const formatCurrency = (
-    amount: number,
-    currency: string,
-) => {
-    return new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency,
-    }).format(amount);
-};
-
 const ManualMode = ({ close, addInvoice }: { close: () => void, addInvoice: (invoice: InvoiceSummary) => void }) => {
 
     const [invoiceData, setInvoiceData] =
@@ -59,6 +45,55 @@ const ManualMode = ({ close, addInvoice }: { close: () => void, addInvoice: (inv
 
     const [showPreview, setShowPreview] =
         useState(false);
+
+    const bill_adress = useProjectsStore(state => state.project?.bill_address)
+    const currency = useProjectsStore(state => state.project?.currency)
+    const projectId = useProjectsStore(state => state.project?.id)
+
+    // @ts-ignore
+    const formatDate = (date: Temporal.PlainDate) => {
+        return `${String(date.day).padStart(2, "0")}/${String(date.month).padStart(2, "0")}/${date.year}`;
+    };
+
+    // @ts-ignore
+    const today = Temporal.Now.plainDateISO();
+    const due = today.add({ days: 15 });
+
+    useEffect(() => {
+        if (!bill_adress || !currency || !projectId) return
+
+
+        const getStartInvoiceData = async () => {
+
+            const { data, error } = await supabase
+                .from('invoices')
+                .select('invoice_number')
+                .eq('project_id', projectId)
+                .order('invoice_number', { ascending: false })
+                .range(0, 1)
+
+            if (error) return
+
+            let invoiceNumber = "INV_0001";
+
+            if (data && data.length > 0) {
+                invoiceNumber = `INV_${String(parseInt(data[0].invoice_number.replace("INV_", "")) + 1).padStart(4, "0")}`;
+            }
+
+            setInvoiceData((current) => ({
+                ...current,
+                invoiceNumber: invoiceNumber,
+                billedTo: bill_adress,
+                from: env.FROM_INVOICE_ADRESS,
+                currency,
+                invoiceDate: formatDate(today),
+                dueDate: formatDate(due)
+            }))
+        }
+
+        getStartInvoiceData()
+
+    }, [bill_adress, currency, projectId])
 
     const CURRENCIES = useCurrencyOptions();
 
@@ -84,7 +119,7 @@ const ManualMode = ({ close, addInvoice }: { close: () => void, addInvoice: (inv
         }))
     }
 
-    
+
 
     const handleUploadInvoice = async (
         file: Blob,
@@ -103,7 +138,7 @@ const ManualMode = ({ close, addInvoice }: { close: () => void, addInvoice: (inv
     return (
         <div style={{ display: "flex", flexDirection: "column", gap: "1rem", overflow: "auto" }}>
             <Section>
-                <Fields columns={2}>
+                {/* <Fields columns={2}>
                     <TextInput
                         label="Invoice number"
                         value={
@@ -129,7 +164,7 @@ const ManualMode = ({ close, addInvoice }: { close: () => void, addInvoice: (inv
                         }
                         placeholder="PO-000123"
                     />
-                </Fields>
+                </Fields> */}
 
                 <Fields columns={3}>
                     <NormalSelect
@@ -211,7 +246,7 @@ const ManualMode = ({ close, addInvoice }: { close: () => void, addInvoice: (inv
             <Items items={invoiceData.items} currency={invoiceData.currency} updateInvoiceItems={updateInvoiceItems} />
 
             {/* Bank details + totals */}
-            <BottomSection invoiceData={invoiceData} updateInvoice={updateInvoice}/>
+            <BottomSection invoiceData={invoiceData} updateInvoice={updateInvoice} />
 
             <Button
                 text="Create invoice"
