@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 import { useEffect, useMemo, useState } from "react";
 
-import { InvoiceData, InvoiceItem } from "@/lib/pdf/TestInvoice";
+import { InvoiceData, InvoiceItem } from "@/lib/pdf/InvoicePDF";
 
 import { InvoiceSummary } from "@/types/Invoice"
 import TextInput from "@/components/inputs/TextInput";
@@ -19,6 +19,7 @@ import Items from "./Items";
 import BottomSection from "./BottomSection";
 import { useProjectsStore } from "@/stores/projectStore";
 import { createInvoice } from "../../../actions";
+import { useTranslations } from "next-intl";
 
 const initialInvoice: InvoiceData = {
     invoiceNumber: '0042',
@@ -40,6 +41,8 @@ const initialInvoice: InvoiceData = {
 };
 
 const ManualMode = ({ close, addInvoice }: { close: () => void, addInvoice: (invoice: InvoiceSummary) => void }) => {
+
+    const t = useTranslations("invoices.upload.manual");
 
     const [invoiceData, setInvoiceData] =
         useState<InvoiceData>(initialInvoice);
@@ -78,7 +81,7 @@ const ManualMode = ({ close, addInvoice }: { close: () => void, addInvoice: (inv
             let invoiceNumber = "0001"
             try {
                 invoiceNumber = String(parseInt(data[0].invoice_number.replace("INV_", "")) + 1).padStart(4, "0")
-            }catch{}
+            } catch { }
 
             setInvoiceData((current) => ({
                 ...current,
@@ -170,14 +173,20 @@ const ManualMode = ({ close, addInvoice }: { close: () => void, addInvoice: (inv
     };
 
     return (
-        <div style={{ display: "flex", flexDirection: "column", gap: "1rem", overflow: "auto" }}>
+        <div
+            style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: "1rem",
+                overflow: "auto",
+            }}
+        >
             <Section>
-                {/* <Fields columns={2}>
+                {/* 
+                <Fields columns={2}>
                     <TextInput
                         label="Invoice number"
-                        value={
-                            invoiceData.invoiceNumber
-                        }
+                        value={invoiceData.invoiceNumber}
                         onChange={(value) =>
                             updateInvoice({
                                 invoiceNumber: value,
@@ -185,12 +194,10 @@ const ManualMode = ({ close, addInvoice }: { close: () => void, addInvoice: (inv
                         }
                         placeholder="0042"
                     />
-
+    
                     <TextInput
                         label="Purchase order"
-                        value={
-                            invoiceData.purchaseOrder
-                        }
+                        value={invoiceData.purchaseOrder}
                         onChange={(value) =>
                             updateInvoice({
                                 purchaseOrder: value,
@@ -198,26 +205,24 @@ const ManualMode = ({ close, addInvoice }: { close: () => void, addInvoice: (inv
                         }
                         placeholder="PO-000123"
                     />
-                </Fields> */}
+                </Fields>
+                */}
 
                 <Fields columns={3}>
                     <NormalSelect
-                        title="Currency"
+                        title={t("currency")}
                         options={CURRENCIES}
                         value={selectedCurrency}
                         onChange={(option: Option) =>
                             updateInvoice({
-                                currency:
-                                    option.value,
+                                currency: option.value,
                             })
                         }
                     />
 
                     <TextInput
-                        label="Invoice date"
-                        value={
-                            invoiceData.invoiceDate
-                        }
+                        label={t("invoice_date")}
+                        value={invoiceData.invoiceDate}
                         onChange={(value) =>
                             updateInvoice({
                                 invoiceDate: value,
@@ -227,10 +232,8 @@ const ManualMode = ({ close, addInvoice }: { close: () => void, addInvoice: (inv
                     />
 
                     <TextInput
-                        label="Due date"
-                        value={
-                            invoiceData.dueDate
-                        }
+                        label={t("due_date")}
+                        value={invoiceData.dueDate}
                         onChange={(value) =>
                             updateInvoice({
                                 dueDate: value,
@@ -242,48 +245,47 @@ const ManualMode = ({ close, addInvoice }: { close: () => void, addInvoice: (inv
 
                 <BillingGrid>
                     <TextArea
-                        label="Billed to"
-                        value={
-                            invoiceData.billedTo
-                        }
+                        label={t("billed_to")}
+                        value={invoiceData.billedTo}
                         onChange={(value) =>
                             updateInvoice({
                                 billedTo: value,
                             })
                         }
-                        placeholder={
-                            'Company name\nAddress\nTax number\nContact information'
-                        }
+                        placeholder={t("billed_to_placeholder")}
                         minLines={5}
                         maxLines={8}
                     />
 
                     <TextArea
-                        label="From"
-                        value={
-                            invoiceData.from
-                        }
+                        label={t("from")}
+                        value={invoiceData.from}
                         onChange={(value) =>
                             updateInvoice({
                                 from: value,
                             })
                         }
-                        placeholder={
-                            'Your name / company\nAddress\nTax number\nContact information'
-                        }
+                        placeholder={t("from_placeholder")}
                         minLines={5}
                         maxLines={8}
                     />
                 </BillingGrid>
             </Section>
 
-            <Items items={invoiceData.items} currency={invoiceData.currency} updateInvoiceItems={updateInvoiceItems} />
+            <Items
+                items={invoiceData.items}
+                currency={invoiceData.currency}
+                updateInvoiceItems={updateInvoiceItems}
+            />
 
             {/* Bank details + totals */}
-            <BottomSection invoiceData={invoiceData} updateInvoice={updateInvoice} />
+            <BottomSection
+                invoiceData={invoiceData}
+                updateInvoice={updateInvoice}
+            />
 
             <Button
-                text="Create invoice"
+                text={t("create_invoice")}
                 onClick={() => setShowPreview(true)}
                 type="primary"
                 style="filled"
@@ -298,7 +300,7 @@ const ManualMode = ({ close, addInvoice }: { close: () => void, addInvoice: (inv
                 />
             )}
         </div>
-    )
+    );
 }
 
 export default ManualMode

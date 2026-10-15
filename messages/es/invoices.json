@@ -28,7 +28,49 @@
     },
     "manual": {
       "title": "Crear manualmente",
-      "subtitle": "Crea el pdf desde aqui."
+      "subtitle": "Crea el PDF aquí.",
+      "currency": "Moneda",
+      "invoice_date": "Fecha de emisión",
+      "due_date": "Fecha de vencimiento",
+      "billed_to": "Facturar a",
+      "from": "De",
+      "billed_to_placeholder": "Nombre de la empresa\nDirección\nNúmero fiscal\nInformación de contacto",
+      "from_placeholder": "Tu nombre / empresa\nDirección\nNúmero fiscal\nInformación de contacto",
+      "create_invoice": "Crear factura",
+      "items": {
+        "description": "Descripción",
+        "unit_cost": "Precio unitario",
+        "quantity": "Cant.",
+        "amount": "Importe",
+        "description_placeholder": "Horas trabajadas",
+        "unit_cost_placeholder": "0,00",
+        "quantity_placeholder": "1",
+        "add_item": "Añadir artículo",
+        "remove_item": "Eliminar artículo",
+        "move_item_up": "Mover artículo hacia arriba"
+      },
+      "bank_details": {
+        "label": "Datos bancarios",
+        "placeholder": "IBAN: ...\nBIC: ...\nBanco: ..."
+      },
+      "totals": {
+        "subtotal": "Subtotal",
+        "tax": "Impuestos",
+        "tax_rate_placeholder": "0",
+        "shipping": "Envío",
+        "shipping_placeholder": "0,00",
+        "invoice_total": "Total de la factura"
+      },
+      "preview": {
+        "title": "Vista previa de la factura",
+        "generating_title": "Generando factura...",
+        "generating_text": "Espera mientras preparamos la vista previa del PDF.",
+        "error_title": "Algo salió mal",
+        "iframe_title": "Vista previa de la factura",
+        "cancel": "Cancelar",
+        "upload": "Subir factura",
+        "uploading": "Subiendo..."
+      }
     },
     "values": {
       "invoice_number": "Número de factura",

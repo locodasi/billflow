@@ -1,10 +1,9 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { PDFDownloadLink } from '@react-pdf/renderer';
 import styled from 'styled-components';
 
-import { InvoiceData, InvoiceItem, TestInvoice } from '@/lib/pdf/TestInvoice';
+import { InvoiceData, InvoiceItem } from '@/lib/pdf/InvoicePDF';
 
 import Button from '@/components/Button';
 import TextInput from '@/components/inputs/TextInput';

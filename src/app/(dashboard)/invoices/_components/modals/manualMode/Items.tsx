@@ -1,11 +1,13 @@
 import styled from "styled-components";
 
+import { useTranslations } from "next-intl";
+
 import Button from "@/components/Button";
 import IconButton from "@/components/IconButton";
 import NumberInput from "@/components/inputs/NumberInput";
 import TextInput from "@/components/inputs/TextInput";
 
-import { InvoiceItem } from "@/lib/pdf/TestInvoice";
+import { InvoiceItem } from "@/lib/pdf/InvoicePDF";
 
 import { createItem, formatCurrency, Section } from "./common";
 
@@ -15,6 +17,8 @@ interface Props {
     updateInvoiceItems: (items: InvoiceItem[]) => void
 }
 const Items = ({ items, currency, updateInvoiceItems }: Props) => {
+
+    const t = useTranslations("invoices.upload.manual.items");
 
     const updateItem = (
         id: string,
@@ -40,21 +44,21 @@ const Items = ({ items, currency, updateInvoiceItems }: Props) => {
 
     const moveItemUp = (id: string) => {
         const index = items.findIndex((item) => item.id === id);
-    
+
         if (index <= 0) {
             return;
         }
-    
+
         const updatedItems = [...items];
-    
+
         [
             updatedItems[index - 1],
             updatedItems[index],
         ] = [
-            updatedItems[index],
-            updatedItems[index - 1],
-        ];
-    
+                updatedItems[index],
+                updatedItems[index - 1],
+            ];
+
         updateInvoiceItems(updatedItems);
     };
 
@@ -63,136 +67,103 @@ const Items = ({ items, currency, updateInvoiceItems }: Props) => {
             <ItemsTable>
                 <ItemsHeader>
                     <DescriptionColumn>
-                        Description
+                        {t("description")}
                     </DescriptionColumn>
 
                     <UnitColumn>
-                        Unit cost
+                        {t("unit_cost")}
                     </UnitColumn>
 
                     <QuantityColumn>
-                        QTY
+                        {t("quantity")}
                     </QuantityColumn>
 
                     <AmountColumn>
-                        Amount
+                        {t("amount")}
                     </AmountColumn>
 
                     <ActionColumn />
                 </ItemsHeader>
 
-                {items.map(
-                    (item, index) => (
-                        <ItemRow key={item.id}>
-                            <DescriptionColumn>
-                                <TextInput
-                                    value={
-                                        item.description
-                                    }
-                                    onChange={(
-                                        value,
-                                    ) =>
-                                        updateItem(
-                                            item.id,
-                                            {
-                                                description:
-                                                    value,
-                                            },
-                                        )
-                                    }
-                                    placeholder="Hours worked"
-                                />
-                            </DescriptionColumn>
+                {items.map((item, index) => (
+                    <ItemRow key={item.id}>
+                        <DescriptionColumn>
+                            <TextInput
+                                value={item.description}
+                                onChange={(value) =>
+                                    updateItem(item.id, {
+                                        description: value,
+                                    })
+                                }
+                                placeholder={t("description_placeholder")}
+                            />
+                        </DescriptionColumn>
 
-                            <UnitColumn>
-                                <NumberInput
-                                    value={
-                                        item.unitCost
-                                    }
-                                    onChange={(
-                                        value,
-                                    ) =>
-                                        updateItem(
-                                            item.id,
-                                            {
-                                                unitCost:
-                                                    value,
-                                            },
-                                        )
-                                    }
-                                    min={0}
-                                    step={0.01}
-                                    placeholder="0.00"
-                                />
-                            </UnitColumn>
+                        <UnitColumn>
+                            <NumberInput
+                                value={item.unitCost}
+                                onChange={(value) =>
+                                    updateItem(item.id, {
+                                        unitCost: value,
+                                    })
+                                }
+                                min={0}
+                                step={0.01}
+                                placeholder={t("unit_cost_placeholder")}
+                            />
+                        </UnitColumn>
 
-                            <QuantityColumn>
-                                <NumberInput
-                                    value={
-                                        item.quantity
-                                    }
-                                    onChange={(
-                                        value,
-                                    ) =>
-                                        updateItem(
-                                            item.id,
-                                            {
-                                                quantity:
-                                                    value,
-                                            },
-                                        )
-                                    }
-                                    min={1}
-                                    step={1}
-                                    placeholder="1"
-                                />
-                            </QuantityColumn>
+                        <QuantityColumn>
+                            <NumberInput
+                                value={item.quantity}
+                                onChange={(value) =>
+                                    updateItem(item.id, {
+                                        quantity: value,
+                                    })
+                                }
+                                min={1}
+                                step={1}
+                                placeholder={t("quantity_placeholder")}
+                            />
+                        </QuantityColumn>
 
-                            <AmountColumn>
-                                <CalculatedValue>
-                                    {formatCurrency(
-                                        item.unitCost *
-                                        item.quantity,
-                                        currency,
-                                    )}
-                                </CalculatedValue>
-                            </AmountColumn>
+                        <AmountColumn>
+                            <CalculatedValue>
+                                {formatCurrency(
+                                    item.unitCost * item.quantity,
+                                    currency,
+                                )}
+                            </CalculatedValue>
+                        </AmountColumn>
 
-                            <ActionColumn>
-                                <IconButton
-                                    icon="arrow-up"
-                                    onClick={() =>
-                                        moveItemUp(
-                                            item.id,
-                                        )
-                                    }
-                                    disabled={
-                                        index === 0
-                                    }
-                                    size="small"
-                                    style="outline"
-                                />
+                        <ActionColumn>
+                            <IconButton
+                                icon="arrow-up"
+                                onClick={() => moveItemUp(item.id)}
+                                disabled={index === 0}
+                                size="small"
+                                style="outline"
+                            // Si IconButton admite title o aria-label:
+                            // title={t("move_item_up")}
+                            />
 
-                                <IconButton
-                                    icon="cancel"
-                                    onClick={() =>
-                                        removeItem(
-                                            item.id,
-                                        )
-                                    }
-                                    type="error"
-                                    style="outline"
-                                    size="small"
-                                />
-                            </ActionColumn>
-                        </ItemRow>
-                    ),
-                )}
+                            <IconButton
+                                icon="cancel"
+                                onClick={() => removeItem(item.id)}
+                                type="error"
+                                style="outline"
+                                size="small"
+                            // Si IconButton admite title o aria-label:
+                            // title={t("remove_item")}
+                            />
+                        </ActionColumn>
+                    </ItemRow>
+                ))}
             </ItemsTable>
 
             <AddItemContainer>
                 <Button
-                    text="Add item"
+                    text={t("add_item")}
                     onClick={addItem}
                     type="primary"
                     style="outline"
@@ -200,44 +171,39 @@ const Items = ({ items, currency, updateInvoiceItems }: Props) => {
                     cssStyles={{ width: "100%" }}
                 />
             </AddItemContainer>
-        </Section >
-    )
+        </Section>
+    );
 }
 
 export default Items
+
+const itemGridColumns = `
+    minmax(0, 1fr)
+    minmax(110px, 140px)
+    minmax(75px, 100px)
+    minmax(110px, 140px)
+    100px
+`;
 
 const ItemsTable = styled.div`
     width: 100%;
     display: flex;
     flex-direction: column;
+    gap: 8px;
 `;
 
 const ItemsHeader = styled.div`
     display: grid;
-    grid-template-columns:
-        minmax(220px, 1fr)
-        140px
-        100px
-        140px
-        180px;
-
+    grid-template-columns: ${itemGridColumns};
     gap: 12px;
-    padding: 0 12px 8px;
+    align-items: end;
+    padding: 0 12px 4px;
 
     color: var(--Text-text-tertiary);
     font-size: 11px;
     line-height: 16px;
     font-weight: 600;
     text-transform: uppercase;
-
-    @media (max-width: 1050px) {
-        grid-template-columns:
-            minmax(180px, 1fr)
-            120px
-            90px
-            120px
-            160px;
-    }
 
     @media (max-width: 850px) {
         display: none;
@@ -246,63 +212,88 @@ const ItemsHeader = styled.div`
 
 const DescriptionColumn = styled.div`
     min-width: 0;
+    width: 100%;
 `;
 
 const UnitColumn = styled.div`
     min-width: 0;
+    width: 100%;
 `;
 
 const QuantityColumn = styled.div`
     min-width: 0;
+    width: 100%;
 `;
 
 const AmountColumn = styled.div`
     min-width: 0;
+    width: 100%;
 `;
 
 const ActionColumn = styled.div`
+    min-width: 0;
     display: flex;
     align-items: center;
     justify-content: flex-end;
     gap: 8px;
 `;
 
+const CalculatedValue = styled.div`
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 0;
+    min-height: 36px;
+
+    display: flex;
+    align-items: center;
+
+    padding: 0 12px;
+
+    border: 1px solid var(--Border-Colors-border-primary);
+    border-radius: 8px;
+
+    background: var(--Background-Colors-bg-secondary);
+    color: var(--Text-text-primary);
+
+    font-size: 14px;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+`;
+
+
 const ItemRow = styled.div`
     display: grid;
-    grid-template-columns:
-        minmax(220px, 1fr)
-        140px
-        100px
-        140px
-        100px;
-
+    grid-template-columns: ${itemGridColumns};
     gap: 12px;
     align-items: center;
 
     padding: 12px;
 
-    border: 1px solid
-        var(--Border-Colors-border-primary);
+    border: 1px solid var(--Border-Colors-border-primary);
     border-radius: 10px;
 
-    & + & {
-        margin-top: 8px;
-    }
-
-    @media (max-width: 1050px) {
+    @media (max-width: 1050px) and (min-width: 851px) {
         grid-template-columns:
-            minmax(180px, 1fr)
-            120px
-            90px
-            120px
+            minmax(0, 1fr)
+            110px
+            75px
+            110px
             100px;
+        gap: 8px;
     }
 
     @media (max-width: 850px) {
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        gap: 12px;
 
         ${DescriptionColumn} {
             grid-column: 1 / -1;
+        }
+
+        ${UnitColumn},
+        ${QuantityColumn} {
+            grid-column: auto;
         }
 
         ${AmountColumn} {
@@ -316,9 +307,12 @@ const ItemRow = styled.div`
     }
 
     @media (max-width: 550px) {
-        grid-template-columns: 1fr;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 12px;
 
         ${DescriptionColumn},
+        ${UnitColumn},
+        ${QuantityColumn},
         ${AmountColumn},
         ${ActionColumn} {
             grid-column: 1;
@@ -330,26 +324,7 @@ const ItemRow = styled.div`
     }
 `;
 
-const CalculatedValue = styled.div`
-    min-height: 36px;
-    display: flex;
-    align-items: center;
 
-    padding: 0 12px;
-
-    border: 1px solid
-        var(--Border-Colors-border-primary);
-    border-radius: 8px;
-
-    background: var(
-        --Background-Colors-bg-secondary
-    );
-
-    color: var(--Text-text-primary);
-    font-size: 14px;
-    font-weight: 500;
-    white-space: nowrap;
-`;
 
 const AddItemContainer = styled.div`
     display: flex;

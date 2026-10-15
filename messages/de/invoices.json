@@ -28,7 +28,49 @@
     },
     "manual": {
       "title": "Manuell erstellen",
-      "subtitle": "Erstelle das PDF von hier aus."
+      "subtitle": "Erstelle die PDF hier.",
+      "currency": "Währung",
+      "invoice_date": "Rechnungsdatum",
+      "due_date": "Fälligkeitsdatum",
+      "billed_to": "Rechnungsempfänger",
+      "from": "Absender",
+      "billed_to_placeholder": "Firmenname\nAdresse\nSteuernummer\nKontaktinformationen",
+      "from_placeholder": "Dein Name / Unternehmen\nAdresse\nSteuernummer\nKontaktinformationen",
+      "create_invoice": "Rechnung erstellen",
+      "items": {
+        "description": "Beschreibung",
+        "unit_cost": "Stückpreis",
+        "quantity": "Menge",
+        "amount": "Betrag",
+        "description_placeholder": "Gearbeitete Stunden",
+        "unit_cost_placeholder": "0,00",
+        "quantity_placeholder": "1",
+        "add_item": "Position hinzufügen",
+        "remove_item": "Position entfernen",
+        "move_item_up": "Position nach oben verschieben"
+      },
+      "bank_details": {
+        "label": "Bankverbindung",
+        "placeholder": "IBAN: ...\nBIC: ...\nBank: ..."
+      },
+      "totals": {
+        "subtotal": "Zwischensumme",
+        "tax": "Steuer",
+        "tax_rate_placeholder": "0",
+        "shipping": "Versandkosten",
+        "shipping_placeholder": "0,00",
+        "invoice_total": "Rechnungsbetrag"
+      },
+      "preview": {
+        "title": "Rechnungsvorschau",
+        "generating_title": "Rechnung wird erstellt...",
+        "generating_text": "Bitte warte, während wir die PDF-Vorschau vorbereiten.",
+        "error_title": "Ein Fehler ist aufgetreten",
+        "iframe_title": "Rechnungsvorschau",
+        "cancel": "Abbrechen",
+        "upload": "Rechnung hochladen",
+        "uploading": "Wird hochgeladen..."
+      }
     },
     "values": {
       "invoice_number": "Rechnungsnummer",
