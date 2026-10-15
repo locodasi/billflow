@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-import { InvoiceItem } from "@/lib/pdf/TestInvoice";
+import { InvoiceItem } from "@/lib/pdf/InvoicePDF";
 
 export const Section = styled.section`
 width: 100%;

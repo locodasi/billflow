@@ -1,18 +1,20 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
+
 import { useEffect, useState } from 'react';
 import { pdf } from '@react-pdf/renderer';
 import styled from 'styled-components';
 
-import Modal, {HeaderModal, WrapperModal} from '@/components/modals/Modal';
+import Modal, { HeaderModal, WrapperModal } from '@/components/modals/Modal';
 
 import Button from '@/components/Button';
 
 import {
     InvoiceData,
-} from './TestInvoice'
+} from './InvoicePDF'
 
-import { TestInvoice } from '@/lib/pdf/TestInvoice';
+import { InvoicePDF } from '@/lib/pdf/InvoicePDF';
 
 interface PreviewInvoicePdfProps {
     data: InvoiceData;
@@ -25,6 +27,8 @@ const PreviewInvoicePdf = ({
     onClose,
     onUpload,
 }: PreviewInvoicePdfProps) => {
+    const t = useTranslations("invoices.upload.manual.preview");
+
     const [pdfUrl, setPdfUrl] = useState<string | null>(
         null,
     );
@@ -53,7 +57,7 @@ const PreviewInvoicePdf = ({
                 setError(null);
 
                 const blob = await pdf(
-                    <TestInvoice data={data} />,
+                    <InvoicePDF data={data} />,
                 ).toBlob();
 
                 if (cancelled) {
@@ -118,15 +122,11 @@ const PreviewInvoicePdf = ({
     };
 
     return (
-        <Modal onClose={isUploading ? () => {} : onClose}>
-            <WrapperModal variant={'large'}>
+        <Modal onClose={isUploading ? () => { } : onClose}>
+            <WrapperModal variant="large">
                 <HeaderModal
-                    title="Preview invoice"
-                    onClose={
-                        isUploading
-                            ? () => {}
-                            : onClose
-                    } 
+                    title={t("title")}
+                    onClose={isUploading ? () => { } : onClose}
                 />
 
                 <Content>
@@ -135,12 +135,11 @@ const PreviewInvoicePdf = ({
                             <Spinner />
 
                             <LoadingTitle>
-                                Generating invoice...
+                                {t("generating_title")}
                             </LoadingTitle>
 
                             <LoadingText>
-                                Please wait while we prepare
-                                your PDF preview.
+                                {t("generating_text")}
                             </LoadingText>
                         </LoadingContainer>
                     )}
@@ -148,30 +147,26 @@ const PreviewInvoicePdf = ({
                     {!isGenerating && error && (
                         <ErrorContainer>
                             <ErrorTitle>
-                                Something went wrong
+                                {t("error_title")}
                             </ErrorTitle>
 
-                            <ErrorText>
-                                {error}
-                            </ErrorText>
+                            <ErrorText>{error}</ErrorText>
                         </ErrorContainer>
                     )}
 
-                    {!isGenerating &&
-                        !error &&
-                        pdfUrl && (
-                            <PdfPreview>
-                                <iframe
-                                    src={pdfUrl}
-                                    title="Invoice preview"
-                                />
-                            </PdfPreview>
-                        )}
+                    {!isGenerating && !error && pdfUrl && (
+                        <PdfPreview>
+                            <iframe
+                                src={pdfUrl}
+                                title={t("iframe_title")}
+                            />
+                        </PdfPreview>
+                    )}
                 </Content>
 
                 <Footer>
                     <Button
-                        text="Cancel"
+                        text={t("cancel")}
                         onClick={onClose}
                         disabled={isUploading}
                         type="default"
@@ -182,8 +177,8 @@ const PreviewInvoicePdf = ({
                     <Button
                         text={
                             isUploading
-                                ? 'Uploading...'
-                                : 'Upload invoice'
+                                ? t("uploading")
+                                : t("upload")
                         }
                         onClick={handleUpload}
                         disabled={

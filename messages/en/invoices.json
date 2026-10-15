@@ -6,7 +6,7 @@
     "unpaid_singular": "Unpaid",
     "unpaid_plural": "Unpaid",
     "paid_singular": "Paid",
-    "paid_plural": "Paid", 
+    "paid_plural": "Paid",
     "processing_singular": "Processing",
     "processing_plural": "Processing",
     "pending_singular": "Pending",
@@ -28,7 +28,49 @@
     },
     "manual": {
       "title": "Create manually",
-      "subtitle": "Create the PDF here."
+      "subtitle": "Create the PDF here.",
+      "currency": "Currency",
+      "invoice_date": "Invoice date",
+      "due_date": "Due date",
+      "billed_to": "Billed to",
+      "from": "From",
+      "billed_to_placeholder": "Company name\nAddress\nTax number\nContact information",
+      "from_placeholder": "Your name / company\nAddress\nTax number\nContact information",
+      "create_invoice": "Create invoice",
+      "items": {
+        "description": "Description",
+        "unit_cost": "Unit cost",
+        "quantity": "QTY",
+        "amount": "Amount",
+        "description_placeholder": "Hours worked",
+        "unit_cost_placeholder": "0.00",
+        "quantity_placeholder": "1",
+        "add_item": "Add item",
+        "remove_item": "Remove item",
+        "move_item_up": "Move item up"
+      },
+      "bank_details": {
+        "label": "Bank details",
+        "placeholder": "IBAN: ...\nBIC: ...\nBank: ..."
+      },
+      "totals": {
+        "subtotal": "Subtotal",
+        "tax": "Tax",
+        "tax_rate_placeholder": "0",
+        "shipping": "Shipping",
+        "shipping_placeholder": "0.00",
+        "invoice_total": "Invoice total"
+      },
+      "preview": {
+        "title": "Preview invoice",
+        "generating_title": "Generating invoice...",
+        "generating_text": "Please wait while we prepare your PDF preview.",
+        "error_title": "Something went wrong",
+        "iframe_title": "Invoice preview",
+        "cancel": "Cancel",
+        "upload": "Upload invoice",
+        "uploading": "Uploading..."
+      }
     },
     "values": {
       "invoice_number": "Invoice number",

@@ -27,7 +27,7 @@ export type InvoiceData = {
     bankDetails: string;
 };
 
-type TestInvoiceProps = {
+type InvoicePDFProps = {
     data: InvoiceData;
 };
 
@@ -206,7 +206,7 @@ function formatMoney(
     }).format(value);
 }
 
-export function TestInvoice({ data }: TestInvoiceProps) {
+export function InvoicePDF({ data }: InvoicePDFProps) {
     const subtotal = data.items.reduce(
         (sum, item) => sum + item.unitCost * item.quantity,
         0,

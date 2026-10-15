@@ -1,11 +1,13 @@
 import styled from "styled-components";
 
+import { useTranslations } from "next-intl";
+
 import { useMemo } from "react";
 
 import TextArea from "@/components/inputs/Textarea";
 import NumberInput from "@/components/inputs/NumberInput";
 
-import { InvoiceData } from "@/lib/pdf/TestInvoice";
+import { InvoiceData } from "@/lib/pdf/InvoicePDF";
 
 import { formatCurrency, Section } from "./common"
 
@@ -14,7 +16,10 @@ interface Props {
     updateInvoice: (invoiceData: Partial<InvoiceData>) => void
 }
 
-const BottomSection = ({invoiceData, updateInvoice}: Props) => {
+const BottomSection = ({ invoiceData, updateInvoice }: Props) => {
+
+    const tBank = useTranslations("invoices.upload.manual.bank_details");
+    const t = useTranslations("invoices.upload.manual.totals");
 
     const subtotal = useMemo(() => {
         return invoiceData.items.reduce(
@@ -50,31 +55,24 @@ const BottomSection = ({invoiceData, updateInvoice}: Props) => {
     return (
         <BottomGrid>
             <Section>
-
                 <TextArea
-                    value={
-                        invoiceData.bankDetails
-                    }
+                    value={invoiceData.bankDetails}
                     onChange={(value) =>
                         updateInvoice({
                             bankDetails: value,
                         })
                     }
-                    placeholder={
-                        'IBAN: ...\nBIC: ...\nBank: ...'
-                    }
+                    placeholder={tBank("placeholder")}
                     minLines={8}
                     maxLines={12}
                 />
             </Section>
 
             <TotalsSection>
-
-
                 <TotalsCard>
                     <TotalRow>
                         <TotalLabel>
-                            Subtotal
+                            {t("subtotal")}
                         </TotalLabel>
 
                         <TotalValue>
@@ -87,32 +85,25 @@ const BottomSection = ({invoiceData, updateInvoice}: Props) => {
 
                     <TotalRow>
                         <TotalLabel>
-                            Tax
+                            {t("tax")}
                         </TotalLabel>
 
                         <TaxInput>
                             <TaxRateInput>
                                 <NumberInput
-                                    value={
-                                        invoiceData.taxRate
-                                    }
-                                    onChange={(
-                                        value,
-                                    ) =>
+                                    value={invoiceData.taxRate}
+                                    onChange={(value) =>
                                         updateInvoice({
-                                            taxRate:
-                                                value,
+                                            taxRate: value,
                                         })
                                     }
                                     min={0}
                                     max={100}
                                     step={0.01}
-                                    placeholder="0"
+                                    placeholder={t("tax_rate_placeholder")}
                                 />
 
-                                <Percent>
-                                    %
-                                </Percent>
+                                <Percent>%</Percent>
                             </TaxRateInput>
 
                             <TotalValue>
@@ -126,26 +117,21 @@ const BottomSection = ({invoiceData, updateInvoice}: Props) => {
 
                     <TotalRow>
                         <TotalLabel>
-                            Shipping
+                            {t("shipping")}
                         </TotalLabel>
 
                         <TaxInput>
                             <ShippingInput>
                                 <NumberInput
-                                    value={
-                                        invoiceData.shipping
-                                    }
-                                    onChange={(
-                                        value,
-                                    ) =>
+                                    value={invoiceData.shipping}
+                                    onChange={(value) =>
                                         updateInvoice({
-                                            shipping:
-                                                value,
+                                            shipping: value,
                                         })
                                     }
                                     min={0}
                                     step={0.01}
-                                    placeholder="0.00"
+                                    placeholder={t("shipping_placeholder")}
                                 />
                             </ShippingInput>
 
@@ -162,7 +148,7 @@ const BottomSection = ({invoiceData, updateInvoice}: Props) => {
 
                     <GrandTotalRow>
                         <GrandTotalLabel>
-                            Invoice total
+                            {t("invoice_total")}
                         </GrandTotalLabel>
 
                         <GrandTotal>
@@ -175,7 +161,7 @@ const BottomSection = ({invoiceData, updateInvoice}: Props) => {
                 </TotalsCard>
             </TotalsSection>
         </BottomGrid>
-    )
+    );
 }
 
 export default BottomSection
