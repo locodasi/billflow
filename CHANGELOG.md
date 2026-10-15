@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.1](https://github.com/locodasi/billflow/compare/v1.2.0...v1.2.1) (2026-10-15)
+
+
+### Bug Fixes
+
+* fix lenguage ([77c925a](https://github.com/locodasi/billflow/commit/77c925ab5d698c0579cf99cfd1384bc7c57f4a02))
+
 ## [1.2.0](https://github.com/locodasi/billflow/compare/v1.1.0...v1.2.0) (2026-10-09)
 
 
