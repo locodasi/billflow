@@ -12,8 +12,6 @@ export async function getCardsValue(period: Period, offset: number = 0) {
     const { startUtc, endUtc } = getPeriodRange(period, offset);
     const { startUtc: prevStartUtc, endUtc: prevEndUtc } = getPeriodRange(period, offset + 1);
 
-    console.log(startUtc, endUtc)
-
     const supabase = await createServerClient();
     const projectId = await getCurrentProjectId();
 
@@ -73,7 +71,6 @@ export type InvoiceMetricBucket = {
 export async function getChartsValue(period: Period, offset: number = 0) {
     const { startUtc, endUtc, granularity } = getPeriodRange(period, offset);
 
-    console.log(startUtc, endUtc, granularity);
     const supabase = await createServerClient();
     const projectId = await getCurrentProjectId();
     const locale = await getUserLocale();

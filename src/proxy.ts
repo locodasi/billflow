@@ -54,8 +54,9 @@ export async function proxy(req: NextRequest) {
     const pathname = req.nextUrl.pathname;
     const isPublicRoute = PUBLIC_ROUTES.some(route => pathname.startsWith(route));
     const isLoginPage = pathname.startsWith("/login");
+    const isApiRoute = pathname.startsWith("/api/");
 
-    if (!isAuth && !isPublicRoute) {
+    if (!isAuth && !isPublicRoute && !isApiRoute) {
         return NextResponse.redirect(new URL("/login", req.url));
     }
 
@@ -73,6 +74,7 @@ export async function proxy(req: NextRequest) {
         return NextResponse.redirect(new URL("/invoices", req.url));
     }
 
+    return res;
 }
 
 export const config = {

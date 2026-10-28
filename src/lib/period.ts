@@ -1,40 +1,59 @@
 // lib/period.ts
+import { DateTime } from "luxon";
+
 const VALID_PERIODS = ["month", "quarter", "year"] as const;
 type Period = (typeof VALID_PERIODS)[number];
 
-function getPeriodRange(period: Period, offset: number = 0, referenceDate: Date = new Date()) {
-    const year = referenceDate.getUTCFullYear();
-    const month = referenceDate.getUTCMonth();
+function getPeriodRange(
+    period: Period,
+    offset: number = 0,
+    timezone: string = "UTC",
+) {
+    const reference = DateTime.now().setZone(timezone);
 
-    let start: Date;
-    let end: Date;
-    let granularity: "week" | "month" = "month";
+    if (!reference.isValid) {
+        throw new Error(`Invalid timezone: ${timezone}`);
+    }
+
+    if (!Number.isInteger(offset)) {
+        throw new Error("Invalid period offset");
+    }
+
+    let start: DateTime;
+    let durationMonths: number;
 
     switch (period) {
         case "month":
-            start = new Date(Date.UTC(year, month - offset, 1));
-            end = new Date(Date.UTC(year, month - offset + 1, 1));
-            granularity = "week";
+            start = reference.startOf("month").minus({ months: offset });
+            durationMonths = 1;
             break;
-        case "quarter": {
-            const currentQuarterStartMonth = Math.floor(month / 3) * 3;
-            const targetStartMonth = currentQuarterStartMonth - offset * 3;
-            start = new Date(Date.UTC(year, targetStartMonth, 1));
-            end = new Date(Date.UTC(year, targetStartMonth + 3, 1));
-            granularity = "month";
+
+        case "quarter":
+            start = reference.startOf("quarter").minus({
+                months: offset * 3,
+            });
+            durationMonths = 3;
             break;
-        }
+
         case "year":
-            start = new Date(Date.UTC(year - offset, 0, 1));
-            end = new Date(Date.UTC(year - offset + 1, 0, 1));
-            granularity = "month";
+            start = reference.startOf("year").minus({ years: offset });
+            durationMonths = 12;
             break;
     }
 
+    const end = start.plus({ months: durationMonths });
+
+    const startUtc = start.toUTC().toISO();
+    const endUtc = end.toUTC().toISO();
+
+    if (!startUtc || !endUtc) {
+        throw new Error("Could not calculate period range");
+    }
+
     return {
-        startUtc: start.toISOString(),
-        endUtc: end.toISOString(),
-        granularity,
+        startUtc,
+        endUtc,
+        granularity: period === "month" ? "week" : "month" as "week" | "month",
     };
 }
 
