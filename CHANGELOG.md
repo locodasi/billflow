@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.3.0](https://github.com/locodasi/billflow/compare/v1.2.1...v1.3.0) (2026-10-30)
+
+
+### Features
+
+* widget endpoint + luxon ([057a9da](https://github.com/locodasi/billflow/commit/057a9dacc69010024ab6b8694a05434f16e54ed1))
+
+
+### Bug Fixes
+
+* add bearer token ([10cbf64](https://github.com/locodasi/billflow/commit/10cbf64ab3e985d13d7d9618824f25084c62df12))
+
 ## [1.2.1](https://github.com/locodasi/billflow/compare/v1.2.0...v1.2.1) (2026-10-15)
 
 
