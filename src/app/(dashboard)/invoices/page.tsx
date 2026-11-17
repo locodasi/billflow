@@ -95,11 +95,8 @@ const Invoices = () => {
     const addInvoice = (invoice: InvoiceSummary) => {
         if (totalCount >= ITEMS_PER_PAGE) {
             setTotalCount(prev => prev + 1)
-            return
         }
-
-
-        setInvoices(prev => [invoice, ...prev])
+        setInvoices(prev => [invoice, ...prev.slice(0, ITEMS_PER_PAGE - 1)])
     }
 
     const handleDownloadUnpaidInvoices = async () => {
