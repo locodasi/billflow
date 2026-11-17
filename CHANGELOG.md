@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.1](https://github.com/locodasi/billflow/compare/v1.3.0...v1.3.1) (2026-11-17)
+
+
+### Bug Fixes
+
+* load-inovice-bug ([671b719](https://github.com/locodasi/billflow/commit/671b719931413a6d44315b1e5c26e549ed207aa0))
+
 ## [1.3.0](https://github.com/locodasi/billflow/compare/v1.2.1...v1.3.0) (2026-10-30)
 
 
